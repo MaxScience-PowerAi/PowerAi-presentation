@@ -17,6 +17,7 @@ import {
   Users,
   Target,
   CheckCircle2,
+  X,
   Smartphone,
   TrendingUp,
   Award,
@@ -79,16 +80,20 @@ export default function App() {
     }
   };
 
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
   const exportToPDF = async () => {
     if (!documentRef.current) return;
     setExportStatus('exporting');
+    setPdfUrl(null);
     
     try {
       const element = documentRef.current;
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Petit délai pour s'assurer que le DOM est stable
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const canvas = await html2canvas(element, {
-        scale: 1.5,
+        scale: 1.2, // Équilibre entre qualité et poids du fichier
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
@@ -96,19 +101,28 @@ export default function App() {
         windowHeight: element.scrollHeight
       });
       
-      const imgData = canvas.toDataURL('image/jpeg', 0.8);
+      const imgData = canvas.toDataURL('image/jpeg', 0.6); // Compression JPEG pour éviter les fichiers trop lourds
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'px',
-        format: [canvas.width / 1.5, canvas.height / 1.5]
+        format: [canvas.width / 1.2, canvas.height / 1.2]
       });
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
       
-      pdf.save(`Rapport_PowerAi_${new Date().toISOString().split('T')[0]}.pdf`);
+      const blob = pdf.output('blob');
+      const url = URL.createObjectURL(blob);
+      setPdfUrl(url);
       setExportStatus('idle');
+      
+      // Tentative de téléchargement automatique (peut être bloquée)
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `PowerAi_Rapport_${new Date().toISOString().split('T')[0]}.pdf`;
+      link.click();
+      
     } catch (error) {
       console.error('Error generating PDF:', error);
       setExportStatus('error');
@@ -143,11 +157,11 @@ export default function App() {
           <div className="w-80 h-96 bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden mb-4 animate-in slide-in-from-bottom-4 duration-300">
             <div className="bg-black p-4 text-white flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <Zap size={16} className="text-blue-400" />
-                <span className="text-xs font-bold uppercase tracking-widest">Assistant PowerAi</span>
+                <Zap size={18} className="text-white" fill="currentColor" />
+                <span className="text-sm font-bold uppercase tracking-widest">PowerAi</span>
               </div>
-              <button onClick={() => setIsChatOpen(false)} className="text-gray-400 hover:text-white">
-                <CheckCircle2 size={16} />
+              <button onClick={() => setIsChatOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+                <X size={18} />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
@@ -182,22 +196,40 @@ export default function App() {
           </div>
         )}
 
-        {/* Main Download Button */}
-        <button
-          onClick={exportToPDF}
-          disabled={exportStatus === 'exporting'}
-          className={cn(
-            "flex items-center gap-2 bg-[#1a1a1a] text-white px-8 py-4 rounded-full shadow-2xl hover:scale-105 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed group",
-            exportStatus === 'exporting' && "animate-pulse"
+        {/* Action Buttons Container */}
+        <div className="flex flex-col items-end gap-3">
+          {pdfUrl && (
+            <div className="flex flex-col items-end gap-2 animate-in fade-in slide-in-from-right-4">
+              <span className="bg-green-600 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest shadow-lg">
+                Fichier Prêt !
+              </span>
+              <a 
+                href={pdfUrl} 
+                download={`PowerAi_Rapport_${new Date().toISOString().split('T')[0]}.pdf`}
+                className="bg-green-600 text-white text-sm font-bold px-8 py-5 rounded-2xl shadow-2xl hover:bg-green-700 flex items-center gap-3 transform hover:scale-105 transition-all active:scale-95 border-4 border-white"
+              >
+                <Download size={20} />
+                ENREGISTRER LE PDF MAINTENANT
+              </a>
+            </div>
           )}
-        >
-          <Download size={20} className="group-hover:translate-y-0.5 transition-transform" />
-          <span className="font-semibold tracking-tight">
-            {exportStatus === 'idle' && 'Télécharger le Rapport PDF'}
-            {exportStatus === 'exporting' && 'Génération du PDF...'}
-            {exportStatus === 'error' && 'Erreur (Réessayer)'}
-          </span>
-        </button>
+
+          <button
+            onClick={exportToPDF}
+            disabled={exportStatus === 'exporting'}
+            className={cn(
+              "flex items-center gap-2 bg-[#1a1a1a] text-white px-8 py-4 rounded-full shadow-2xl hover:scale-105 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed group",
+              exportStatus === 'exporting' && "animate-pulse"
+            )}
+          >
+            <Download size={20} className={cn("transition-transform", exportStatus === 'exporting' && "animate-spin")} />
+            <span className="font-semibold tracking-tight">
+              {exportStatus === 'idle' && (pdfUrl ? 'Générer à nouveau' : 'Télécharger le Rapport PDF')}
+              {exportStatus === 'exporting' && 'Création en cours...'}
+              {exportStatus === 'error' && 'Erreur (Réessayer)'}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Document Container */}
