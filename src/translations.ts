@@ -32,67 +32,96 @@ export const translations = {
       printFallback: "Utiliser l'impression système (Secours)",
       section1: {
         num: "01",
-        title: "Équipe & Vision",
-        loweRole: "Responsable Technique / IA. En charge de la réalisation des solutions, du développement et de la mise en œuvre concrète des modèles.",
-        kouamRole: "Responsable Communication & Partenariats. Gestion des relations stratégiques, structuration des offres et analyse des besoins marché.",
-        visionTitle: "Notre Vision",
-        visionPoints: [
-          "Résoudre des problèmes réels au Cameroun (temps perdu, sécurité, visibilité).",
-          "Rendre l’IA accessible aux PME, pas seulement aux grandes structures.",
-          "Bâtir une communauté de jeunes formés aux compétences du futur."
-        ]
+        title: "Qui nous sommes & Équipe",
+        whoWeAre: "PowerAi est une initiative portée par deux jeunes mathématiciens camerounais décidés à mettre l’intelligence artificielle au service des réalités locales. Notre ambition n’est pas seulement de “faire de la tech”, mais de résoudre des problèmes concrets des entreprises et de créer des opportunités pour les jeunes du pays.",
+        pillars: "Nous sommes basés à Douala, et nous construisons PowerAi autour de trois piliers : des services B2B utiles et accessibles, le programme AI Start 237, et une communauté de talents.",
+        mission: "Notre mission est de démocratiser l’accès à l’IA au Cameroun, en proposant des solutions adaptées : WhatsApp first, Mobile Money, et besoins réels des PME.",
+        vision: "Devenir un point de référence en IA appliquée en Afrique Centrale, en combinant impact social et sérieux technique.",
+        values: [
+          { title: "Complémentarité", desc: "La force d’un binôme où chacun apporte son expertise." },
+          { title: "Impact local", desc: "Chaque solution doit répondre à un besoin réel du terrain." },
+          { title: "Ambition collective", desc: "Construire un écosystème, pas seulement une réussite individuelle." }
+        ],
+        founders: {
+          wilfried: {
+            name: "Kouam Tchamou Wilfried",
+            title: "CEO & Chief Vision Officer",
+            bio: "21 ans, étudiant en L3 Mathématiques. Il transforme les besoins du terrain en offres claires. Il s'occupe de la stratégie, du développement commercial et du branding.",
+            tasks: ["Stratégie & Vision", "Développement commercial", "Culture de la communauté", "Communication & Branding"]
+          },
+          christ: {
+            name: "Lowe Christ",
+            title: "CTO & Architecte Technique",
+            bio: "22 ans, étudiant en L3 Mathématiques. Passionné par l'IA et le code, il transforme les idées en produits fonctionnels (chatbots, assistants, systèmes biométriques).",
+            tasks: ["Architecture technique", "Réalisation & Intégration", "Veille technologique", "Qualité & Performances"]
+          }
+        },
+        duo: {
+          title: "Notre Binôme : Pourquoi nous sommes complémentaires",
+          desc: "Nous partageons la même rigueur mathématique, appliquée à deux mondes différents.",
+          wilfriedRole: "Wilfried dessine la route : il identifie où aller, pourquoi, et avec qui.",
+          christRole: "Christ construit la voiture : il fabrique le véhicule pour parcourir cette route.",
+          conclusion: "Ensemble, nous formons une équipe capable de comprendre les enjeux business et de livrer une solution technique qui fonctionne réellement."
+        }
       },
       section2: {
         num: "02",
-        title: "Services B2B",
-        service1: {
-          title: "Chatbot WhatsApp Hôtels & Boutiques",
-          probLabel: "Problème",
-          prob: "Appels répétitifs et messages non répondus la nuit.",
-          solLabel: "Solution",
-          sol: "Assistant 24h/24, photos, prix et réservations automatiques."
+        title: "Mission, Vision & Valeurs",
+        mission: {
+          title: "Mission de PowerAi",
+          desc: "Démocratiser l’accès à l’intelligence artificielle au Cameroun, en aidant les entreprises à gagner en efficacité et en offrant aux jeunes des opportunités d’apprentissage adaptées à leur réalité.",
+          points: [
+            "Transformer l’IA en outil pratique pour les hôtels, boutiques, écoles, institutions et PME.",
+            "Rendre ces solutions accessibles financièrement et techniquement (WhatsApp, mobile).",
+            "Permettre aux jeunes de se former sans avoir besoin de gros moyens."
+          ]
         },
-        service2: {
-          title: "Assistant IA Interne pour Agents",
-          probLabel: "Problème",
-          prob: "Perte de temps dans les PDF et contrats complexes.",
-          solLabel: "Solution",
-          sol: "IA connectée aux docs pour réponses instantanées en français."
+        vision: {
+          title: "Vision de PowerAi",
+          desc: "À 3–5 ans, devenir une référence de l’IA appliquée dans la sous‑région Afrique centrale, reconnue pour sa qualité technique, son impact social et ses partenariats durables."
         },
-        service3: {
-          title: "Reconnaissance & Contrôle d'Accès",
-          probLabel: "Problème",
-          prob: "Badges perdus et pointage truqué peu fiable.",
-          solLabel: "Solution",
-          sol: "Biométrie faciale/vocale et alertes d'intrusion."
-        },
-        service4: {
-          title: "Communication Digitale Low-Cost",
-          probLabel: "Objectif",
-          prob: "Visibilité pro pour restaurants et boutiques.",
-          solLabel: "Offre",
-          sol: "Sites web simples, flyers et vidéos publicitaires IA."
+        values: {
+          title: "Nos Valeurs",
+          list: [
+            { title: "Complémentarité", desc: "La force des équipes où chacun apporte sa spécialité." },
+            { title: "Apprentissage continu", desc: "S'améliorer en permanence en apprenant du terrain." },
+            { title: "Impact local", desc: "Répondre à un problème réel du quotidien camerounais." },
+            { title: "Ambition collective", desc: "Construire un écosystème pour tous les jeunes talents." }
+          ]
         }
       },
       section3: {
         num: "03",
-        title: "AI Start 237",
-        subtitle: "Démocratiser l'IA via WhatsApp",
-        desc: "Une plateforme de formation accessible aux jeunes camerounais, sans besoin d'ordinateur puissant, à un coût dérisoire.",
-        ecoTitle: "Modèle Éco",
-        ecoDesc: "Abonnement hebdomadaire via Mobile Money (prix d'une sucrerie).",
-        impactTitle: "Impact",
-        impactDesc: "Micro-learning de 5-10 min/jour pour construire des compétences réelles.",
-        contentTitle: "Contenus WhatsApp",
-        contentPoints: [
-          "Leçons quotidiennes (Audio/Vidéo)",
-          "Assistant pédagogique IA",
-          "Défis pratiques hebdomadaires",
-          "Système de badges & niveaux",
-          "Communauté d'entraide"
-        ],
-        finalGoal: "Objectif Final",
-        finalGoalDesc: "Identifier les futurs talents pour PowerAi."
+        title: "Notre Offre en Trois Blocs",
+        b2b: {
+          title: "4.1 Services B2B pour entreprises",
+          desc: "Solutions sur mesure avec une approche pratique et accessible.",
+          services: [
+            { title: "Chatbots WhatsApp", desc: "Assistants 24h/24 pour hôtels et boutiques (prix, réservations)." },
+            { title: "Assistants IA Internes", desc: "Outils pour agents (banque, assurance) pour interroger les docs internes." },
+            { title: "Contrôle d'Accès", desc: "Reconnaissance faciale/vocale pour sécuriser et fiabiliser le pointage." },
+            { title: "Com Digitale", desc: "Sites web optimisés et vidéos publicitaires IA à budget limité." }
+          ]
+        },
+        aistart: {
+          title: "4.2 AI Start 237 – Formation WhatsApp",
+          desc: "Programme dédié aux jeunes camerounais pour découvrir l'IA sans gros moyens.",
+          principles: [
+            "Formation via WhatsApp, abonnement Mobile Money (prix d'une sucrerie).",
+            "Leçons quotidiennes courtes (audio, vidéo, texte).",
+            "Assistant pédagogique IA et défis pratiques."
+          ],
+          goals: "Impact social massif et constitution d'un vivier de talents pour PowerAi."
+        },
+        community: {
+          title: "4.3 Une Communauté Active",
+          desc: "Devenir un réseau de développeurs, créatifs et passionnés d'IA.",
+          benefits: [
+            "Partage de ressources et d'opportunités.",
+            "Identification et croissance de profils prometteurs.",
+            "Lancement de nouveaux projets collaboratifs."
+          ]
+        }
       },
       section4: {
         num: "04",
@@ -139,67 +168,96 @@ export const translations = {
       printFallback: "Use System Print (Fallback)",
       section1: {
         num: "01",
-        title: "Team & Vision",
-        loweRole: "Technical / AI Lead. In charge of solution implementation, development, and concrete model deployment.",
-        kouamRole: "Communication & Partnerships Lead. Management of strategic relationships, offer structuring, and market needs analysis.",
-        visionTitle: "Our Vision",
-        visionPoints: [
-          "Solve real problems in Cameroon (time loss, security, visibility).",
-          "Make AI accessible to SMEs, not just large structures.",
-          "Build a community of young people trained in future skills."
-        ]
+        title: "Who We Are & Team",
+        whoWeAre: "PowerAi is an initiative led by two young Cameroonian mathematicians determined to put artificial intelligence at the service of local realities. Our ambition is not just to 'do tech,' but to solve concrete problems for businesses and create opportunities for the country's youth.",
+        pillars: "Based in Douala, we build PowerAi around three pillars: useful and accessible B2B services, the AI Start 237 program, and a talent community.",
+        mission: "Our mission is to democratize access to AI in Cameroon by proposing adapted solutions: WhatsApp first, Mobile Money, and real needs of SMEs.",
+        vision: "To become a reference point in applied AI in Central Africa, combining social impact and technical seriousness.",
+        values: [
+          { title: "Complementarity", desc: "The strength of a duo where each brings their expertise." },
+          { title: "Local Impact", desc: "Every solution must answer a real field need." },
+          { title: "Collective Ambition", desc: "Building an ecosystem, not just individual success." }
+        ],
+        founders: {
+          wilfried: {
+            name: "Kouam Tchamou Wilfried",
+            title: "CEO & Chief Vision Officer",
+            bio: "21 years old, L3 Mathematics student. He transforms field needs into clear offers. He handles strategy, business development, and branding.",
+            tasks: ["Strategy & Vision", "Business Development", "Community Culture", "Communication & Branding"]
+          },
+          christ: {
+            name: "Lowe Christ",
+            title: "CTO & Technical Architect",
+            bio: "22 years old, L3 Mathematics student. Passionate about AI and code, he transforms ideas into functional products (chatbots, assistants, biometric systems).",
+            tasks: ["Technical Architecture", "Implementation & Integration", "Tech Watch", "Quality & Performance"]
+          }
+        },
+        duo: {
+          title: "Our Duo: Why We Are Complementary",
+          desc: "We share the same mathematical rigor, applied to two different worlds.",
+          wilfriedRole: "Wilfried draws the road: he identifies where to go, why, and with whom.",
+          christRole: "Christ builds the car: he manufactures the vehicle to travel this road.",
+          conclusion: "Together, we form a team capable of understanding business challenges and delivering a technical solution that actually works."
+        }
       },
       section2: {
         num: "02",
-        title: "B2B Services",
-        service1: {
-          title: "WhatsApp Chatbot for Hotels & Shops",
-          probLabel: "Problem",
-          prob: "Repetitive calls and unanswered messages at night.",
-          solLabel: "Solution",
-          sol: "24/7 assistant, photos, prices, and automatic bookings."
+        title: "Mission, Vision & Values",
+        mission: {
+          title: "PowerAi Mission",
+          desc: "Democratize access to artificial intelligence in Cameroon by helping businesses gain efficiency and offering young people learning opportunities adapted to their reality.",
+          points: [
+            "Transform AI into a practical tool for hotels, shops, schools, and SMEs.",
+            "Make solutions financially and technically accessible (WhatsApp, mobile).",
+            "Allow youth to train without needing expensive equipment."
+          ]
         },
-        service2: {
-          title: "Internal AI Assistant for Agents",
-          probLabel: "Problem",
-          prob: "Time lost in complex PDFs and contracts.",
-          solLabel: "Solution",
-          sol: "AI connected to documents for instant responses in French/English."
+        vision: {
+          title: "PowerAi Vision",
+          desc: "In 3–5 years, become a reference for applied AI in Central Africa, recognized for technical quality, social impact, and sustainable partnerships."
         },
-        service3: {
-          title: "Recognition & Access Control",
-          probLabel: "Problem",
-          prob: "Lost badges and unreliable attendance tracking.",
-          solLabel: "Solution",
-          sol: "Facial/voice biometrics and intrusion alerts."
-        },
-        service4: {
-          title: "Low-Cost Digital Communication",
-          probLabel: "Objective",
-          prob: "Professional visibility for restaurants and shops.",
-          solLabel: "Offer",
-          sol: "Simple websites, flyers, and AI advertising videos."
+        values: {
+          title: "Our Values",
+          list: [
+            { title: "Complementarity", desc: "The strength of teams where everyone brings their specialty." },
+            { title: "Continuous Learning", desc: "Constantly improving by learning from the field." },
+            { title: "Local Impact", desc: "Answering real daily problems in Cameroon." },
+            { title: "Collective Ambition", desc: "Building an ecosystem for all young talents." }
+          ]
         }
       },
       section3: {
         num: "03",
-        title: "AI Start 237",
-        subtitle: "Democratizing AI via WhatsApp",
-        desc: "A training platform accessible to young Cameroonians, without the need for a powerful computer, at a very low cost.",
-        ecoTitle: "Eco Model",
-        ecoDesc: "Weekly subscription via Mobile Money (price of a candy).",
-        impactTitle: "Impact",
-        impactDesc: "Micro-learning of 5-10 min/day to build real skills.",
-        contentTitle: "WhatsApp Content",
-        contentPoints: [
-          "Daily lessons (Audio/Video)",
-          "AI pedagogical assistant",
-          "Weekly practical challenges",
-          "Badge & level system",
-          "Support community"
-        ],
-        finalGoal: "Final Goal",
-        finalGoalDesc: "Identify future talents for PowerAi."
+        title: "Our Offer in Three Pillars",
+        b2b: {
+          title: "4.1 B2B Services for Businesses",
+          desc: "Custom solutions with a practical and accessible approach.",
+          services: [
+            { title: "WhatsApp Chatbots", desc: "24/7 assistants for hotels and shops (prices, bookings)." },
+            { title: "Internal AI Assistants", desc: "Tools for agents (banking, insurance) to query internal docs." },
+            { title: "Access Control", desc: "Facial/voice recognition to secure and reliable attendance tracking." },
+            { title: "Digital Com", desc: "Optimized websites and AI advertising videos for limited budgets." }
+          ]
+        },
+        aistart: {
+          title: "4.2 AI Start 237 – WhatsApp Training",
+          desc: "Program dedicated to young Cameroonians to discover AI without major means.",
+          principles: [
+            "Training via WhatsApp, Mobile Money subscription (price of a candy).",
+            "Short daily lessons (audio, video, text).",
+            "AI pedagogical assistant and practical challenges."
+          ],
+          goals: "Massive social impact and building a talent pool for PowerAi."
+        },
+        community: {
+          title: "4.3 An Active Community",
+          desc: "Become a network of developers, creatives, and AI enthusiasts.",
+          benefits: [
+            "Sharing resources and opportunities.",
+            "Identifying and growing promising profiles.",
+            "Launching new collaborative projects."
+          ]
+        }
       },
       section4: {
         num: "04",

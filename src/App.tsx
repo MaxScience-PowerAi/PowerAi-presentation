@@ -327,146 +327,166 @@ export default function App() {
           </div>
         </section>
 
-        {/* Section 1: Équipe et Vision */}
+        {/* Section 1: Qui nous sommes & Équipe */}
         <section className="p-24 border-b border-gray-100">
           <div className="flex items-center gap-6 mb-16">
             <span className="text-5xl font-serif italic text-gray-200">{t.report.section1.num}</span>
             <h2 className="text-4xl font-bold tracking-tight">{t.report.section1.title}</h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-16 mb-20">
-            <div className="space-y-8 group">
-              <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-500">
-                <Cpu className="text-blue-600 group-hover:text-white transition-colors" size={28} />
+          {/* Introduction: Qui nous sommes */}
+          <div className="mb-24 space-y-8">
+            <p className="text-2xl text-gray-800 leading-relaxed font-light">
+              {t.report.section1.whoWeAre}
+            </p>
+            <div className="grid grid-cols-3 gap-8 pt-8 border-t border-gray-100">
+              <div>
+                <p className="text-[10px] uppercase tracking-widest font-bold text-blue-600 mb-2">Piliers</p>
+                <p className="text-sm text-gray-600">{t.report.section1.pillars}</p>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-4">Lowe Christ</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {t.report.section1.loweRole}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-8 group">
-              <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center group-hover:bg-orange-600 transition-colors duration-500">
-                <Globe className="text-orange-600 group-hover:text-white transition-colors" size={28} />
+                <p className="text-[10px] uppercase tracking-widest font-bold text-orange-600 mb-2">Mission</p>
+                <p className="text-sm text-gray-600">{t.report.section1.mission}</p>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-4">Kouam Wilfried</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {t.report.section1.kouamRole}
-                </p>
+                <p className="text-[10px] uppercase tracking-widest font-bold text-green-600 mb-2">Vision</p>
+                <p className="text-sm text-gray-600">{t.report.section1.vision}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-50 p-12 rounded-[2rem] border border-gray-100">
-            <div className="flex items-center gap-3 mb-8">
-              <Target className="text-blue-600" size={24} />
-              <h4 className="text-sm uppercase tracking-widest font-bold">{t.report.section1.visionTitle}</h4>
-            </div>
-            <div className="grid grid-cols-1 gap-8">
-              {t.report.section1.visionPoints.map((item, i) => (
-                <div key={i} className="flex gap-4 items-start">
-                  <CheckCircle2 className="text-blue-600 mt-1 flex-shrink-0" size={20} />
-                  <p className="text-lg text-gray-800 font-medium leading-snug">{item}</p>
+          {/* Les Fondateurs */}
+          <div className="grid grid-cols-2 gap-16 mb-24">
+            {/* Wilfried */}
+            <div className="space-y-8 p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
+              <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center group-hover:bg-orange-600 transition-colors duration-500">
+                <Users className="text-orange-600 group-hover:text-white transition-colors" size={28} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-1">{t.report.section1.founders.wilfried.name}</h3>
+                <p className="text-xs text-orange-600 font-bold uppercase tracking-widest mb-6">{t.report.section1.founders.wilfried.title}</p>
+                <p className="text-gray-600 leading-relaxed mb-8 text-sm">
+                  {t.report.section1.founders.wilfried.bio}
+                </p>
+                <div className="space-y-3">
+                  {t.report.section1.founders.wilfried.tasks.map((task, i) => (
+                    <div key={i} className="flex items-center gap-2 text-[11px] font-medium text-gray-500">
+                      <div className="w-1 h-1 bg-orange-400 rounded-full" />
+                      {task}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* Christ */}
+            <div className="space-y-8 p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
+              <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-500">
+                <Cpu className="text-blue-600 group-hover:text-white transition-colors" size={28} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-1">{t.report.section1.founders.christ.name}</h3>
+                <p className="text-xs text-blue-600 font-bold uppercase tracking-widest mb-6">{t.report.section1.founders.christ.title}</p>
+                <p className="text-gray-600 leading-relaxed mb-8 text-sm">
+                  {t.report.section1.founders.christ.bio}
+                </p>
+                <div className="space-y-3">
+                  {t.report.section1.founders.christ.tasks.map((task, i) => (
+                    <div key={i} className="flex items-center gap-2 text-[11px] font-medium text-gray-500">
+                      <div className="w-1 h-1 bg-blue-400 rounded-full" />
+                      {task}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Notre Binôme */}
+          <div className="bg-[#1a1a1a] text-white p-16 rounded-[3rem] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full -mr-32 -mt-32 blur-[80px]" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-4 mb-10">
+                <Handshake className="text-blue-400" size={24} />
+                <h3 className="text-2xl font-bold">{t.report.section1.duo.title}</h3>
+              </div>
+              <p className="text-lg text-gray-400 mb-12 font-light leading-relaxed max-w-2xl">
+                {t.report.section1.duo.desc}
+              </p>
+              <div className="grid grid-cols-2 gap-12 mb-12">
+                <div className="p-8 bg-white/5 rounded-3xl border border-white/10">
+                  <p className="text-sm leading-relaxed italic text-gray-300">
+                    "{t.report.section1.duo.wilfriedRole}"
+                  </p>
+                </div>
+                <div className="p-8 bg-white/5 rounded-3xl border border-white/10">
+                  <p className="text-sm leading-relaxed italic text-gray-300">
+                    "{t.report.section1.duo.christRole}"
+                  </p>
+                </div>
+              </div>
+              <p className="text-sm text-blue-300 font-medium border-t border-white/10 pt-8">
+                {t.report.section1.duo.conclusion}
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Section 2: Services B2B */}
+        {/* Section 2: Mission, Vision & Valeurs */}
         <section className="p-24 border-b border-gray-100 bg-[#fafafa]">
           <div className="flex items-center gap-6 mb-20">
             <span className="text-5xl font-serif italic text-gray-200">{t.report.section2.num}</span>
             <h2 className="text-4xl font-bold tracking-tight">{t.report.section2.title}</h2>
           </div>
 
-          <div className="space-y-12">
-            {/* Service 1 */}
-            <div className="bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100 grid grid-cols-[1fr_2fr] gap-12 items-center">
-              <div className="space-y-4">
-                <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center">
-                  <MessageSquare className="text-green-600" size={28} />
+          <div className="grid grid-cols-2 gap-16 mb-16">
+            <div className="space-y-8">
+              <div className="p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <Target className="text-blue-600" size={24} />
+                  <h3 className="text-2xl font-bold">{t.report.section2.mission.title}</h3>
                 </div>
-                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service1.title}</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service1.probLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service1.prob}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service1.solLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service1.sol}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Service 2 */}
-            <div className="bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100 grid grid-cols-[1fr_2fr] gap-12 items-center">
-              <div className="space-y-4">
-                <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center">
-                  <Cpu className="text-blue-600" size={28} />
-                </div>
-                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service2.title}</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service2.probLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service2.prob}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service2.solLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service2.sol}</p>
-                </div>
+                <p className="text-gray-600 leading-relaxed mb-8">
+                  {t.report.section2.mission.desc}
+                </p>
+                <ul className="space-y-4">
+                  {t.report.section2.mission.points.map((point, i) => (
+                    <li key={i} className="flex gap-3 text-sm text-gray-700">
+                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-1.5 flex-shrink-0" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
-            {/* Service 3 */}
-            <div className="bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100 grid grid-cols-[1fr_2fr] gap-12 items-center">
-              <div className="space-y-4">
-                <div className="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center">
-                  <ShieldCheck className="text-orange-600" size={28} />
+            <div className="space-y-8">
+              <div className="p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <Globe className="text-orange-600" size={24} />
+                  <h3 className="text-2xl font-bold">{t.report.section2.vision.title}</h3>
                 </div>
-                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service3.title}</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {t.report.section2.vision.desc}
+                </p>
               </div>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service3.probLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service3.prob}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service3.solLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service3.sol}</p>
-                </div>
-              </div>
-            </div>
 
-            {/* Service 4 */}
-            <div className="bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100 grid grid-cols-[1fr_2fr] gap-12 items-center">
-              <div className="space-y-4">
-                <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center">
-                  <Smartphone className="text-purple-600" size={28} />
-                </div>
-                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service4.title}</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service4.probLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service4.prob}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service4.solLabel}</p>
-                  <p className="text-sm text-gray-600">{t.report.section2.service4.sol}</p>
+              <div className="p-10 bg-blue-600 text-white rounded-[2.5rem] shadow-lg">
+                <h3 className="text-xl font-bold mb-6">{t.report.section2.values.title}</h3>
+                <div className="grid grid-cols-2 gap-6">
+                  {t.report.section2.values.list.map((val, i) => (
+                    <div key={i}>
+                      <p className="text-xs font-bold uppercase tracking-widest mb-1 opacity-70">{val.title}</p>
+                      <p className="text-[11px] leading-tight opacity-90">{val.desc}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Section 3: AI Start 237 */}
+        {/* Section 3: Notre Offre en Trois Blocs */}
         <section className="p-24 border-b border-gray-100 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-50 rounded-full -mr-48 -mt-48 blur-3xl opacity-50" />
           
@@ -476,45 +496,68 @@ export default function App() {
               <h2 className="text-4xl font-bold tracking-tight">{t.report.section3.title}</h2>
             </div>
 
-            <div className="grid grid-cols-[1.5fr_1fr] gap-16">
-              <div className="space-y-10">
-                <div className="space-y-4">
-                  <h3 className="text-3xl font-bold text-blue-600">{t.report.section3.subtitle}</h3>
-                  <p className="text-xl text-gray-600 leading-relaxed">
-                    {t.report.section3.desc}
-                  </p>
+            <div className="space-y-16">
+              {/* 4.1 B2B */}
+              <div className="bg-white p-12 rounded-[3rem] shadow-sm border border-gray-100">
+                <div className="flex justify-between items-start mb-10">
+                  <div className="max-w-md">
+                    <h3 className="text-2xl font-bold mb-3">{t.report.section3.b2b.title}</h3>
+                    <p className="text-gray-500 text-sm">{t.report.section3.b2b.desc}</p>
+                  </div>
+                  <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
+                    <Cpu className="text-blue-600" size={24} />
+                  </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="p-6 bg-gray-50 rounded-2xl">
-                    <TrendingUp className="text-blue-600 mb-4" size={24} />
-                    <h4 className="font-bold mb-2">{t.report.section3.ecoTitle}</h4>
-                    <p className="text-xs text-gray-500">{t.report.section3.ecoDesc}</p>
-                  </div>
-                  <div className="p-6 bg-gray-50 rounded-2xl">
-                    <Award className="text-blue-600 mb-4" size={24} />
-                    <h4 className="font-bold mb-2">{t.report.section3.impactTitle}</h4>
-                    <p className="text-xs text-gray-500">{t.report.section3.impactDesc}</p>
-                  </div>
+                <div className="grid grid-cols-4 gap-8">
+                  {t.report.section3.b2b.services.map((s, i) => (
+                    <div key={i} className="space-y-3">
+                      <p className="text-xs font-bold uppercase tracking-widest text-blue-600">{s.title}</p>
+                      <p className="text-[11px] text-gray-600 leading-relaxed">{s.desc}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="bg-[#1a1a1a] text-white p-10 rounded-[2.5rem] space-y-8">
-                <div className="flex items-center gap-3">
-                  <BookOpen className="text-blue-400" size={20} />
-                  <span className="text-xs uppercase tracking-widest font-bold">{t.report.section3.contentTitle}</span>
+              {/* 4.2 AI Start 237 */}
+              <div className="grid grid-cols-[1.5fr_1fr] gap-12">
+                <div className="bg-[#1a1a1a] text-white p-12 rounded-[3rem]">
+                  <div className="flex items-center gap-4 mb-8">
+                    <Smartphone className="text-blue-400" size={24} />
+                    <h3 className="text-2xl font-bold">{t.report.section3.aistart.title}</h3>
+                  </div>
+                  <p className="text-gray-400 mb-8 leading-relaxed">
+                    {t.report.section3.aistart.desc}
+                  </p>
+                  <div className="space-y-4 mb-8">
+                    {t.report.section3.aistart.principles.map((p, i) => (
+                      <div key={i} className="flex gap-3 text-sm">
+                        <CheckCircle2 className="text-blue-400 mt-1 flex-shrink-0" size={16} />
+                        <p>{p}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs italic text-blue-300 border-t border-white/10 pt-6">
+                    {t.report.section3.aistart.goals}
+                  </p>
                 </div>
-                <ul className="space-y-4">
-                  {t.report.section3.contentPoints.map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm font-medium">
-                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="pt-6 border-t border-white/10">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-2">{t.report.section3.finalGoal}</p>
-                  <p className="text-xs italic text-blue-300">{t.report.section3.finalGoalDesc}</p>
+
+                {/* 4.3 Community */}
+                <div className="bg-orange-50 p-12 rounded-[3rem] border border-orange-100">
+                  <div className="flex items-center gap-4 mb-8">
+                    <Users className="text-orange-600" size={24} />
+                    <h3 className="text-2xl font-bold text-orange-900">{t.report.section3.community.title}</h3>
+                  </div>
+                  <p className="text-orange-800/70 mb-8 text-sm leading-relaxed">
+                    {t.report.section3.community.desc}
+                  </p>
+                  <ul className="space-y-4">
+                    {t.report.section3.community.benefits.map((b, i) => (
+                      <li key={i} className="flex gap-3 text-sm text-orange-900 font-medium">
+                        <div className="w-1.5 h-1.5 bg-orange-400 rounded-full mt-1.5 flex-shrink-0" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
