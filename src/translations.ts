@@ -62,6 +62,32 @@ export const translations = {
           wilfriedRole: "Wilfried dessine la route : il identifie où aller, pourquoi, et avec qui.",
           christRole: "Christ construit la voiture : il fabrique le véhicule pour parcourir cette route.",
           conclusion: "Ensemble, nous formons une équipe capable de comprendre les enjeux business et de livrer une solution technique qui fonctionne réellement."
+        },
+        roadmap: {
+          title: "Feuille de Route Stratégique",
+          steps: [
+            { date: "Aujourd'hui", title: "Lancement", desc: "Déploiement des services B2B et AI Start 237 à Douala." },
+            { date: "6 Mois", title: "Expansion", desc: "5 000+ apprenants et 15+ clients B2B actifs." },
+            { date: "1 An", title: "Partenariats", desc: "Accords avec des institutions éducatives et expansion nationale." },
+            { date: "3 Ans", title: "Référence", desc: "Leader de l'IA appliquée en Afrique Centrale (50k+ apprenants)." }
+          ]
+        },
+        impact: {
+          title: "Indicateurs d'Impact (Projetés)",
+          timeSaving: { label: "Gain de temps B2B", value: "-65%" },
+          accessibility: { label: "Accessibilité Mobile", value: "100%" },
+          costReduction: { label: "Coût de formation", value: "-90%" }
+        },
+        contact: {
+          title: "Prêt à construire l'avenir ?",
+          desc: "Contactez-nous pour discuter d'une collaboration ou d'une démonstration.",
+          whatsapp: "WhatsApp",
+          numbers: {
+            christ: "+237 678 831 868 (Christ)",
+            kouam: "+237 688 605 807 (Kouam)"
+          },
+          email: "Email",
+          location: "Douala, Cameroun"
         }
       },
       section2: {
@@ -198,6 +224,32 @@ export const translations = {
           wilfriedRole: "Wilfried draws the road: he identifies where to go, why, and with whom.",
           christRole: "Christ builds the car: he manufactures the vehicle to travel this road.",
           conclusion: "Together, we form a team capable of understanding business challenges and delivering a technical solution that actually works."
+        },
+        roadmap: {
+          title: "Strategic Roadmap",
+          steps: [
+            { date: "Today", title: "Launch", desc: "Deployment of B2B services and AI Start 237 in Douala." },
+            { date: "6 Months", title: "Expansion", desc: "5,000+ learners and 15+ active B2B clients." },
+            { date: "1 Year", title: "Partnerships", desc: "Agreements with educational institutions and national expansion." },
+            { date: "3 Years", title: "Reference", desc: "Leader of applied AI in Central Africa (50k+ learners)." }
+          ]
+        },
+        impact: {
+          title: "Impact Indicators (Projected)",
+          timeSaving: { label: "B2B Time Saving", value: "-65%" },
+          accessibility: { label: "Mobile Accessibility", value: "100%" },
+          costReduction: { label: "Training Cost", value: "-90%" }
+        },
+        contact: {
+          title: "Ready to build the future?",
+          desc: "Contact us to discuss collaboration or a demonstration.",
+          whatsapp: "WhatsApp",
+          numbers: {
+            christ: "+237 678 831 868 (Christ)",
+            kouam: "+237 688 605 807 (Kouam)"
+          },
+          email: "Email",
+          location: "Douala, Cameroon"
         }
       },
       section2: {

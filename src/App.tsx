@@ -22,7 +22,12 @@ import {
   Smartphone,
   TrendingUp,
   Award,
-  BookOpen
+  BookOpen,
+  Calendar,
+  BarChart3,
+  Mail,
+  Phone,
+  MapPin,
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -335,7 +340,7 @@ export default function App() {
           </div>
 
           {/* Introduction: Qui nous sommes */}
-          <div className="mb-24 space-y-8">
+          <div className="mb-24 space-y-12">
             <p className="text-2xl text-gray-800 leading-relaxed font-light">
               {t.report.section1.whoWeAre}
             </p>
@@ -564,6 +569,30 @@ export default function App() {
           </div>
         </section>
 
+        {/* Roadmap Section */}
+        <section className="p-24 bg-gray-50 border-b border-gray-100">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center gap-4 mb-16">
+              <Calendar className="text-blue-600" size={24} />
+              <h2 className="text-3xl font-bold">{t.report.section1.roadmap.title}</h2>
+            </div>
+            <div className="relative space-y-12">
+              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200" />
+              {t.report.section1.roadmap.steps.map((step, i) => (
+                <div key={i} className="relative flex gap-12 items-start">
+                  <div className="w-16 h-16 bg-white rounded-2xl border-2 border-blue-600 flex items-center justify-center z-10 flex-shrink-0 shadow-sm">
+                    <span className="text-[10px] font-bold text-blue-600 uppercase text-center leading-tight">{step.date}</span>
+                  </div>
+                  <div className="pt-2">
+                    <h4 className="text-xl font-bold mb-2">{step.title}</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Section 4: Intention Rendez-vous */}
         <section className="p-24 bg-[#0a0a0a] text-white">
           <div className="flex items-center gap-6 mb-16">
@@ -601,6 +630,33 @@ export default function App() {
                 <span className="text-sm font-bold tracking-tighter">PowerAi 2026</span>
               </div>
               <span className="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold">{t.report.section4.footerTag}</span>
+            </div>
+          </div>
+        </section>
+        {/* Contact Section */}
+        <section className="p-24 bg-blue-600 text-white rounded-b-[3rem]">
+          <div className="max-w-2xl mx-auto text-center space-y-12">
+            <div className="space-y-4">
+              <h2 className="text-4xl font-bold">{t.report.section1.contact.title}</h2>
+              <p className="text-blue-100 text-lg font-light">{t.report.section1.contact.desc}</p>
+            </div>
+            <div className="grid grid-cols-3 gap-8">
+              <div className="space-y-2">
+                <Phone className="mx-auto text-blue-300" size={20} />
+                <p className="text-xs font-bold uppercase tracking-widest">{t.report.section1.contact.whatsapp}</p>
+                <p className="text-[11px] font-medium">{t.report.section1.contact.numbers.christ}</p>
+                <p className="text-[11px] font-medium">{t.report.section1.contact.numbers.kouam}</p>
+              </div>
+              <div className="space-y-2">
+                <Mail className="mx-auto text-blue-300" size={20} />
+                <p className="text-xs font-bold uppercase tracking-widest">{t.report.section1.contact.email}</p>
+                <p className="text-sm font-medium">contact@powerai.cm</p>
+              </div>
+              <div className="space-y-2">
+                <MapPin className="mx-auto text-blue-300" size={20} />
+                <p className="text-xs font-bold uppercase tracking-widest">Location</p>
+                <p className="text-sm font-medium">{t.report.section1.contact.location}</p>
+              </div>
             </div>
           </div>
         </section>
