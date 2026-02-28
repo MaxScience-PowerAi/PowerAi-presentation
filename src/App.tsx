@@ -18,6 +18,7 @@ import {
   Target,
   CheckCircle2,
   X,
+  Printer,
   Smartphone,
   TrendingUp,
   Award,
@@ -106,35 +107,44 @@ export default function App() {
     
     try {
       const element = documentRef.current;
-      // Petit délai pour s'assurer que le DOM est stable
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      const canvas = await html2canvas(element, {
-        scale: 1.2, // Équilibre entre qualité et poids du fichier
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight
-      });
+      const sections = element.querySelectorAll('section');
       
-      const imgData = canvas.toDataURL('image/jpeg', 0.6); // Compression JPEG pour éviter les fichiers trop lourds
+      // Initialiser le PDF
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'px',
-        format: [canvas.width / 1.2, canvas.height / 1.2]
+        format: 'a4'
       });
-      
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i] as HTMLElement;
+        
+        const canvas = await html2canvas(section, {
+          scale: 1.5,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          width: section.offsetWidth,
+          height: section.offsetHeight
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.7);
+        
+        if (i > 0) pdf.addPage();
+        
+        // Ajuster l'image à la page A4
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      }
       
       const blob = pdf.output('blob');
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
       setExportStatus('idle');
       
-      // Tentative de téléchargement automatique (peut être bloquée)
+      // Tentative de téléchargement automatique
       const link = document.createElement('a');
       link.href = url;
       link.download = `PowerAi_Rapport_${new Date().toISOString().split('T')[0]}.pdf`;
@@ -157,13 +167,25 @@ export default function App() {
         </div>
         <div className="flex items-center gap-4">
           <button 
+            onClick={() => {
+              try {
+                window.print();
+              } catch (e) {
+                alert(lang === 'fr' ? "L'impression n'est pas supportée sur ce navigateur." : "Printing is not supported on this browser.");
+              }
+            }}
+            className="text-[10px] uppercase tracking-widest font-bold text-gray-500 hover:text-black transition-colors flex items-center gap-1 border-r border-gray-200 pr-4"
+          >
+            <Printer size={12} />
+            {t.report.printFallback}
+          </button>
+          <button 
             onClick={() => setIsChatOpen(!isChatOpen)}
             className="text-[10px] uppercase tracking-widest font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
           >
             <MessageSquare size={12} />
             {t.header.aiAssistant}
           </button>
-          <p className="text-[10px] text-gray-400 italic">{t.header.scrollInfo}</p>
         </div>
       </div>
 

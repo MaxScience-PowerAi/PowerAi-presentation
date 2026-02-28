@@ -29,6 +29,7 @@ export const translations = {
         founders: "Fondateurs",
         dateLabel: "Date d'édition"
       },
+      printFallback: "Utiliser l'impression système (Secours)",
       section1: {
         num: "01",
         title: "Équipe & Vision",
@@ -135,6 +136,7 @@ export const translations = {
         founders: "Founders",
         dateLabel: "Edition Date"
       },
+      printFallback: "Use System Print (Fallback)",
       section1: {
         num: "01",
         title: "Team & Vision",
