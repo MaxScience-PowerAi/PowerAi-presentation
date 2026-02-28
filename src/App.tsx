@@ -282,7 +282,7 @@ export default function App() {
         className="max-w-[850px] mx-auto bg-white shadow-[0_0_80px_rgba(0,0,0,0.03)] overflow-hidden"
       >
         {/* Page 1: Hero Cover */}
-        <section className="min-h-[1100px] flex flex-col justify-between p-24 border-b border-gray-100 relative overflow-hidden bg-[#0a0a0a] text-white">
+        <section className="min-h-[1100px] flex flex-col justify-between p-8 md:p-24 border-b border-gray-100 relative overflow-hidden bg-[#0a0a0a] text-white">
           {/* Abstract Background Elements */}
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full -mr-64 -mt-64 blur-[120px]" />
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-600/10 rounded-full -ml-48 -mb-48 blur-[100px]" />
@@ -299,7 +299,7 @@ export default function App() {
               <div className="inline-block px-4 py-1.5 bg-white/10 rounded-full border border-white/10 mb-8">
                 <span className="text-xs uppercase tracking-[0.3em] font-bold text-blue-400">{t.report.cover.tag}</span>
               </div>
-              <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif italic leading-[1.1] mb-8">
+              <h1 className="text-5xl md:text-8xl font-serif italic leading-[1.1] mb-8">
                 {t.report.cover.title1} <br />
                 <span className="not-italic font-bold text-white">{t.report.cover.title2}</span>
               </h1>
@@ -309,11 +309,11 @@ export default function App() {
             </div>
           </div>
 
-          <div className="relative z-10 flex justify-between items-end border-t border-white/10 pt-12">
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end border-t border-white/10 pt-12 gap-8">
             <div className="space-y-6">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold mb-3">{t.report.cover.founders}</p>
-                <div className="flex gap-8">
+                <div className="flex flex-col sm:flex-row gap-8">
                   <div>
                     <p className="text-lg font-bold">Lowe Christ</p>
                     <p className="text-xs text-blue-400 font-medium tracking-wide uppercase">Technique / IA</p>
@@ -325,7 +325,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div className="text-right">
+            <div className="text-left md:text-right">
               <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold mb-3">{t.report.cover.dateLabel}</p>
               <p className="text-lg font-medium">{new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
             </div>
@@ -333,18 +333,18 @@ export default function App() {
         </section>
 
         {/* Section 1: Qui nous sommes & Équipe */}
-        <section className="p-24 border-b border-gray-100">
+        <section className="p-8 md:p-24 border-b border-gray-100">
           <div className="flex items-center gap-6 mb-16">
-            <span className="text-5xl font-serif italic text-gray-200">{t.report.section1.num}</span>
-            <h2 className="text-4xl font-bold tracking-tight">{t.report.section1.title}</h2>
+            <span className="text-3xl md:text-5xl font-serif italic text-gray-200">{t.report.section1.num}</span>
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight">{t.report.section1.title}</h2>
           </div>
 
           {/* Introduction: Qui nous sommes */}
           <div className="mb-24 space-y-12">
-            <p className="text-2xl text-gray-800 leading-relaxed font-light">
+            <p className="text-xl md:text-2xl text-gray-800 leading-relaxed font-light">
               {t.report.section1.whoWeAre}
             </p>
-            <div className="grid grid-cols-3 gap-8 pt-8 border-t border-gray-100">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8 border-t border-gray-100">
               <div>
                 <p className="text-[10px] uppercase tracking-widest font-bold text-blue-600 mb-2">Piliers</p>
                 <p className="text-sm text-gray-600">{t.report.section1.pillars}</p>
@@ -361,9 +361,9 @@ export default function App() {
           </div>
 
           {/* Les Fondateurs */}
-          <div className="grid grid-cols-2 gap-16 mb-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-24">
             {/* Wilfried */}
-            <div className="space-y-8 p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
+            <div className="space-y-8 p-6 md:p-10 bg-gray-50 rounded-3xl md:rounded-[2.5rem] border border-gray-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
               <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center group-hover:bg-orange-600 transition-colors duration-500">
                 <Users className="text-orange-600 group-hover:text-white transition-colors" size={28} />
               </div>
@@ -385,7 +385,7 @@ export default function App() {
             </div>
 
             {/* Christ */}
-            <div className="space-y-8 p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
+            <div className="space-y-8 p-6 md:p-10 bg-gray-50 rounded-3xl md:rounded-[2.5rem] border border-gray-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
               <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-500">
                 <Cpu className="text-blue-600 group-hover:text-white transition-colors" size={28} />
               </div>
@@ -408,23 +408,23 @@ export default function App() {
           </div>
 
           {/* Notre Binôme */}
-          <div className="bg-[#1a1a1a] text-white p-16 rounded-[3rem] relative overflow-hidden">
+          <div className="bg-[#1a1a1a] text-white p-8 md:p-16 rounded-3xl md:rounded-[3rem] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full -mr-32 -mt-32 blur-[80px]" />
             <div className="relative z-10">
               <div className="flex items-center gap-4 mb-10">
                 <Handshake className="text-blue-400" size={24} />
-                <h3 className="text-2xl font-bold">{t.report.section1.duo.title}</h3>
+                <h3 className="text-xl md:text-2xl font-bold">{t.report.section1.duo.title}</h3>
               </div>
-              <p className="text-lg text-gray-400 mb-12 font-light leading-relaxed max-w-2xl">
+              <p className="text-base md:text-lg text-gray-400 mb-12 font-light leading-relaxed max-w-2xl">
                 {t.report.section1.duo.desc}
               </p>
-              <div className="grid grid-cols-2 gap-12 mb-12">
-                <div className="p-8 bg-white/5 rounded-3xl border border-white/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-12">
+                <div className="p-6 md:p-8 bg-white/5 rounded-3xl border border-white/10">
                   <p className="text-sm leading-relaxed italic text-gray-300">
                     "{t.report.section1.duo.wilfriedRole}"
                   </p>
                 </div>
-                <div className="p-8 bg-white/5 rounded-3xl border border-white/10">
+                <div className="p-6 md:p-8 bg-white/5 rounded-3xl border border-white/10">
                   <p className="text-sm leading-relaxed italic text-gray-300">
                     "{t.report.section1.duo.christRole}"
                   </p>
@@ -438,18 +438,18 @@ export default function App() {
         </section>
 
         {/* Section 2: Mission, Vision & Valeurs */}
-        <section className="p-24 border-b border-gray-100 bg-[#fafafa]">
+        <section className="p-8 md:p-24 border-b border-gray-100 bg-[#fafafa]">
           <div className="flex items-center gap-6 mb-20">
-            <span className="text-5xl font-serif italic text-gray-200">{t.report.section2.num}</span>
-            <h2 className="text-4xl font-bold tracking-tight">{t.report.section2.title}</h2>
+            <span className="text-3xl md:text-5xl font-serif italic text-gray-200">{t.report.section2.num}</span>
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight">{t.report.section2.title}</h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-16 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-16">
             <div className="space-y-8">
-              <div className="p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100">
+              <div className="p-6 md:p-10 bg-white rounded-3xl md:rounded-[2.5rem] shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3 mb-6">
                   <Target className="text-blue-600" size={24} />
-                  <h3 className="text-2xl font-bold">{t.report.section2.mission.title}</h3>
+                  <h3 className="text-xl md:text-2xl font-bold">{t.report.section2.mission.title}</h3>
                 </div>
                 <p className="text-gray-600 leading-relaxed mb-8">
                   {t.report.section2.mission.desc}
@@ -466,23 +466,23 @@ export default function App() {
             </div>
 
             <div className="space-y-8">
-              <div className="p-10 bg-white rounded-[2.5rem] shadow-sm border border-gray-100">
+              <div className="p-6 md:p-10 bg-white rounded-3xl md:rounded-[2.5rem] shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3 mb-6">
                   <Globe className="text-orange-600" size={24} />
-                  <h3 className="text-2xl font-bold">{t.report.section2.vision.title}</h3>
+                  <h3 className="text-xl md:text-2xl font-bold">{t.report.section2.vision.title}</h3>
                 </div>
                 <p className="text-gray-600 leading-relaxed">
                   {t.report.section2.vision.desc}
                 </p>
               </div>
 
-              <div className="p-10 bg-blue-600 text-white rounded-[2.5rem] shadow-lg">
-                <h3 className="text-xl font-bold mb-6">{t.report.section2.values.title}</h3>
+              <div className="p-6 md:p-10 bg-blue-600 text-white rounded-3xl md:rounded-[2.5rem] shadow-lg">
+                <h3 className="text-lg md:text-xl font-bold mb-6">{t.report.section2.values.title}</h3>
                 <div className="grid grid-cols-2 gap-6">
                   {t.report.section2.values.list.map((val, i) => (
                     <div key={i}>
-                      <p className="text-xs font-bold uppercase tracking-widest mb-1 opacity-70">{val.title}</p>
-                      <p className="text-[11px] leading-tight opacity-90">{val.desc}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-70">{val.title}</p>
+                      <p className="text-[10px] leading-tight opacity-90">{val.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -492,45 +492,45 @@ export default function App() {
         </section>
 
         {/* Section 3: Notre Offre en Trois Blocs */}
-        <section className="p-24 border-b border-gray-100 relative overflow-hidden">
+        <section className="p-8 md:p-24 border-b border-gray-100 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-50 rounded-full -mr-48 -mt-48 blur-3xl opacity-50" />
           
           <div className="relative z-10">
             <div className="flex items-center gap-6 mb-16">
-              <span className="text-5xl font-serif italic text-gray-200">{t.report.section3.num}</span>
-              <h2 className="text-4xl font-bold tracking-tight">{t.report.section3.title}</h2>
+              <span className="text-3xl md:text-5xl font-serif italic text-gray-200">{t.report.section3.num}</span>
+              <h2 className="text-2xl md:text-4xl font-bold tracking-tight">{t.report.section3.title}</h2>
             </div>
 
             <div className="space-y-16">
               {/* 4.1 B2B */}
-              <div className="bg-white p-12 rounded-[3rem] shadow-sm border border-gray-100">
+              <div className="bg-white p-6 md:p-12 rounded-3xl md:rounded-[3rem] shadow-sm border border-gray-100">
                 <div className="flex justify-between items-start mb-10">
                   <div className="max-w-md">
-                    <h3 className="text-2xl font-bold mb-3">{t.report.section3.b2b.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold mb-3">{t.report.section3.b2b.title}</h3>
                     <p className="text-gray-500 text-sm">{t.report.section3.b2b.desc}</p>
                   </div>
                   <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
                     <Cpu className="text-blue-600" size={24} />
                   </div>
                 </div>
-                <div className="grid grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                   {t.report.section3.b2b.services.map((s, i) => (
                     <div key={i} className="space-y-3">
-                      <p className="text-xs font-bold uppercase tracking-widest text-blue-600">{s.title}</p>
-                      <p className="text-[11px] text-gray-600 leading-relaxed">{s.desc}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600">{s.title}</p>
+                      <p className="text-[10px] text-gray-600 leading-relaxed">{s.desc}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* 4.2 AI Start 237 */}
-              <div className="grid grid-cols-[1.5fr_1fr] gap-12">
-                <div className="bg-[#1a1a1a] text-white p-12 rounded-[3rem]">
+              <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8 md:gap-12">
+                <div className="bg-[#1a1a1a] text-white p-6 md:p-12 rounded-3xl md:rounded-[3rem]">
                   <div className="flex items-center gap-4 mb-8">
                     <Smartphone className="text-blue-400" size={24} />
-                    <h3 className="text-2xl font-bold">{t.report.section3.aistart.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold">{t.report.section3.aistart.title}</h3>
                   </div>
-                  <p className="text-gray-400 mb-8 leading-relaxed">
+                  <p className="text-gray-400 mb-8 leading-relaxed text-sm">
                     {t.report.section3.aistart.desc}
                   </p>
                   <div className="space-y-4 mb-8">
@@ -541,16 +541,16 @@ export default function App() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs italic text-blue-300 border-t border-white/10 pt-6">
+                  <p className="text-[10px] italic text-blue-300 border-t border-white/10 pt-6">
                     {t.report.section3.aistart.goals}
                   </p>
                 </div>
 
                 {/* 4.3 Community */}
-                <div className="bg-orange-50 p-12 rounded-[3rem] border border-orange-100">
+                <div className="bg-orange-50 p-6 md:p-12 rounded-3xl md:rounded-[3rem] border border-orange-100">
                   <div className="flex items-center gap-4 mb-8">
                     <Users className="text-orange-600" size={24} />
-                    <h3 className="text-2xl font-bold text-orange-900">{t.report.section3.community.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-orange-900">{t.report.section3.community.title}</h3>
                   </div>
                   <p className="text-orange-800/70 mb-8 text-sm leading-relaxed">
                     {t.report.section3.community.desc}
@@ -570,22 +570,22 @@ export default function App() {
         </section>
 
         {/* Roadmap Section */}
-        <section className="p-24 bg-gray-50 border-b border-gray-100">
+        <section className="p-8 md:p-24 bg-gray-50 border-b border-gray-100">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-16">
               <Calendar className="text-blue-600" size={24} />
-              <h2 className="text-3xl font-bold">{t.report.section1.roadmap.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold">{t.report.section1.roadmap.title}</h2>
             </div>
             <div className="relative space-y-12">
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200" />
               {t.report.section1.roadmap.steps.map((step, i) => (
-                <div key={i} className="relative flex gap-12 items-start">
+                <div key={i} className="relative flex gap-8 md:gap-12 items-start">
                   <div className="w-16 h-16 bg-white rounded-2xl border-2 border-blue-600 flex items-center justify-center z-10 flex-shrink-0 shadow-sm">
                     <span className="text-[10px] font-bold text-blue-600 uppercase text-center leading-tight">{step.date}</span>
                   </div>
                   <div className="pt-2">
-                    <h4 className="text-xl font-bold mb-2">{step.title}</h4>
-                    <p className="text-gray-600 text-sm leading-relaxed">{step.desc}</p>
+                    <h4 className="text-lg md:text-xl font-bold mb-2">{step.title}</h4>
+                    <p className="text-gray-600 text-xs md:text-sm leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
               ))}
@@ -594,18 +594,18 @@ export default function App() {
         </section>
 
         {/* Section 4: Intention Rendez-vous */}
-        <section className="p-24 bg-[#0a0a0a] text-white">
+        <section className="p-8 md:p-24 bg-[#0a0a0a] text-white">
           <div className="flex items-center gap-6 mb-16">
-            <span className="text-5xl font-serif italic text-white/10">{t.report.section4.num}</span>
-            <h2 className="text-4xl font-bold tracking-tight">{t.report.section4.title}</h2>
+            <span className="text-3xl md:text-5xl font-serif italic text-white/10">{t.report.section4.num}</span>
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight">{t.report.section4.title}</h2>
           </div>
 
           <div className="max-w-2xl space-y-12">
-            <p className="text-2xl font-light leading-relaxed text-gray-300">
+            <p className="text-xl md:text-2xl font-light leading-relaxed text-gray-300">
               {t.report.section4.mainText}
             </p>
 
-            <div className="grid grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
               <div className="space-y-4">
                 <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
                   <Handshake className="text-blue-400" size={24} />
@@ -622,7 +622,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="pt-16 border-t border-white/10 flex justify-between items-center">
+            <div className="pt-16 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                   <Zap size={16} fill="white" />
@@ -634,27 +634,27 @@ export default function App() {
           </div>
         </section>
         {/* Contact Section */}
-        <section className="p-24 bg-blue-600 text-white rounded-b-[3rem]">
+        <section className="p-8 md:p-24 bg-blue-600 text-white rounded-b-3xl md:rounded-b-[3rem]">
           <div className="max-w-2xl mx-auto text-center space-y-12">
             <div className="space-y-4">
-              <h2 className="text-4xl font-bold">{t.report.section1.contact.title}</h2>
-              <p className="text-blue-100 text-lg font-light">{t.report.section1.contact.desc}</p>
+              <h2 className="text-3xl md:text-4xl font-bold">{t.report.section1.contact.title}</h2>
+              <p className="text-blue-100 text-base md:text-lg font-light">{t.report.section1.contact.desc}</p>
             </div>
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
               <div className="space-y-2">
                 <Phone className="mx-auto text-blue-300" size={20} />
-                <p className="text-xs font-bold uppercase tracking-widest">{t.report.section1.contact.whatsapp}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest">{t.report.section1.contact.whatsapp}</p>
                 <p className="text-[11px] font-medium">{t.report.section1.contact.numbers.christ}</p>
                 <p className="text-[11px] font-medium">{t.report.section1.contact.numbers.kouam}</p>
               </div>
               <div className="space-y-2">
                 <Mail className="mx-auto text-blue-300" size={20} />
-                <p className="text-xs font-bold uppercase tracking-widest">{t.report.section1.contact.email}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest">{t.report.section1.contact.email}</p>
                 <p className="text-sm font-medium">contact@powerai.cm</p>
               </div>
               <div className="space-y-2">
                 <MapPin className="mx-auto text-blue-300" size={20} />
-                <p className="text-xs font-bold uppercase tracking-widest">Location</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest">Location</p>
                 <p className="text-sm font-medium">{t.report.section1.contact.location}</p>
               </div>
             </div>
