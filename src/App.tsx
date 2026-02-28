@@ -26,16 +26,25 @@ import {
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { cn } from './lib/utils';
+import { translations } from './translations';
 
 export default function App() {
   const documentRef = useRef<HTMLDivElement>(null);
   const [exportStatus, setExportStatus] = useState<'idle' | 'exporting' | 'error'>('idle');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
-  const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([
-    { role: 'model', text: 'Bonjour ! Je suis l\'assistant IA de PowerAi. Comment puis-je vous aider avec votre rapport aujourd\'hui ?' }
-  ]);
+  const [lang, setLang] = useState<'fr' | 'en'>('fr');
+  const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+
+  React.useEffect(() => {
+    const browserLang = navigator.language.split('-')[0];
+    const initialLang = browserLang === 'en' ? 'en' : 'fr';
+    setLang(initialLang);
+    setChatMessages([{ role: 'model', text: translations[initialLang].chat.welcome }]);
+  }, []);
+
+  const t = translations[lang];
 
   const handleSendMessage = async () => {
     if (!chatInput.trim()) return;
@@ -49,32 +58,40 @@ export default function App() {
       const { GoogleGenAI } = await import("@google/genai");
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
       
+      const context = lang === 'fr' 
+        ? `Tu es l'assistant de PowerAi. Voici le contexte du projet :
+          - Fondateurs : Lowe Christ (Technique/IA) et Kouam Wilfried (Com/Partenariats).
+          - Services : Chatbot WhatsApp, Assistant IA interne, Contrôle d'accès biométrique, Com digitale.
+          - Initiative : AI Start 237 (formation IA via WhatsApp à bas coût).
+          - Vision : Démocratiser l'IA au Cameroun.
+          
+          Réponds de manière professionnelle et encourageante.`
+        : `You are the PowerAi assistant. Here is the project context:
+          - Founders: Lowe Christ (Technical/AI) and Kouam Wilfried (Com/Partnerships).
+          - Services: WhatsApp Chatbot, Internal AI Assistant, Biometric Access Control, Digital Com.
+          - Initiative: AI Start 237 (low-cost AI training via WhatsApp).
+          - Vision: Democratize AI in Cameroon.
+          
+          Respond professionally and encouragingly.`;
+
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: [
           {
             role: "user",
-            parts: [{ text: `Tu es l'assistant de PowerAi. Voici le contexte du projet :
-              - Fondateurs : Lowe Christ (Technique/IA) et Kouam Wilfried (Com/Partenariats).
-              - Services : Chatbot WhatsApp, Assistant IA interne, Contrôle d'accès biométrique, Com digitale.
-              - Initiative : AI Start 237 (formation IA via WhatsApp à bas coût).
-              - Vision : Démocratiser l'IA au Cameroun.
-              
-              Réponds de manière professionnelle et encourageante.
-              
-              Question de l'utilisateur : ${userMessage}` }]
+            parts: [{ text: `${context}\n\nQuestion: ${userMessage}` }]
           }
         ],
         config: {
-          systemInstruction: "Tu es l'assistant expert de PowerAi. Tu aides les fondateurs à présenter leur projet et à répondre aux questions des partenaires."
+          systemInstruction: t.chat.systemInstruction
         }
       });
 
-      const aiText = response.text || "Désolé, je n'ai pas pu générer de réponse.";
+      const aiText = response.text || (lang === 'fr' ? "Désolé, je n'ai pas pu générer de réponse." : "Sorry, I couldn't generate a response.");
       setChatMessages(prev => [...prev, { role: 'model', text: aiText }]);
     } catch (error) {
       console.error('Chat error:', error);
-      setChatMessages(prev => [...prev, { role: 'model', text: "Une erreur est survenue lors de la connexion à l'IA." }]);
+      setChatMessages(prev => [...prev, { role: 'model', text: t.chat.error }]);
     } finally {
       setIsTyping(false);
     }
@@ -136,7 +153,7 @@ export default function App() {
       <div className="max-w-[850px] mx-auto mb-6 flex justify-between items-center no-print">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Rapport PowerAi Interactif</span>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">{t.header.title}</span>
         </div>
         <div className="flex items-center gap-4">
           <button 
@@ -144,9 +161,9 @@ export default function App() {
             className="text-[10px] uppercase tracking-widest font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
           >
             <MessageSquare size={12} />
-            Assistant IA
+            {t.header.aiAssistant}
           </button>
-          <p className="text-[10px] text-gray-400 italic">Faites défiler pour voir tout le rapport</p>
+          <p className="text-[10px] text-gray-400 italic">{t.header.scrollInfo}</p>
         </div>
       </div>
 
@@ -173,7 +190,7 @@ export default function App() {
               ))}
               {isTyping && (
                 <div className="bg-gray-100 text-gray-400 p-3 rounded-2xl text-[10px] w-fit italic animate-pulse">
-                  L'IA réfléchit...
+                  {t.chat.thinking}
                 </div>
               )}
             </div>
@@ -183,7 +200,7 @@ export default function App() {
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Posez une question..."
+                placeholder={t.chat.placeholder}
                 className="flex-1 text-xs bg-gray-50 border-none rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
               />
               <button 
@@ -201,7 +218,7 @@ export default function App() {
           {pdfUrl && (
             <div className="flex flex-col items-end gap-2 animate-in fade-in slide-in-from-right-4">
               <span className="bg-green-600 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest shadow-lg">
-                Fichier Prêt !
+                {t.export.ready}
               </span>
               <a 
                 href={pdfUrl} 
@@ -209,7 +226,7 @@ export default function App() {
                 className="bg-green-600 text-white text-sm font-bold px-8 py-5 rounded-2xl shadow-2xl hover:bg-green-700 flex items-center gap-3 transform hover:scale-105 transition-all active:scale-95 border-4 border-white"
               >
                 <Download size={20} />
-                ENREGISTRER LE PDF MAINTENANT
+                {t.export.save}
               </a>
             </div>
           )}
@@ -224,9 +241,9 @@ export default function App() {
           >
             <Download size={20} className={cn("transition-transform", exportStatus === 'exporting' && "animate-spin")} />
             <span className="font-semibold tracking-tight">
-              {exportStatus === 'idle' && (pdfUrl ? 'Générer à nouveau' : 'Télécharger le Rapport PDF')}
-              {exportStatus === 'exporting' && 'Création en cours...'}
-              {exportStatus === 'error' && 'Erreur (Réessayer)'}
+              {exportStatus === 'idle' && (pdfUrl ? t.export.again : t.export.prepare)}
+              {exportStatus === 'exporting' && t.export.preparing}
+              {exportStatus === 'error' && t.export.error}
             </span>
           </button>
         </div>
@@ -253,14 +270,14 @@ export default function App() {
             
             <div className="mt-12">
               <div className="inline-block px-4 py-1.5 bg-white/10 rounded-full border border-white/10 mb-8">
-                <span className="text-xs uppercase tracking-[0.3em] font-bold text-blue-400">Rapport de Travail Interne</span>
+                <span className="text-xs uppercase tracking-[0.3em] font-bold text-blue-400">{t.report.cover.tag}</span>
               </div>
               <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif italic leading-[1.1] mb-8">
-                L'avenir de <br />
-                <span className="not-italic font-bold text-white">l'IA au 237</span>
+                {t.report.cover.title1} <br />
+                <span className="not-italic font-bold text-white">{t.report.cover.title2}</span>
               </h1>
               <p className="text-lg sm:text-xl text-gray-400 max-w-md leading-relaxed font-light">
-                Stratégie de déploiement, services B2B et démocratisation de l'intelligence artificielle au Cameroun.
+                {t.report.cover.desc}
               </p>
             </div>
           </div>
@@ -268,7 +285,7 @@ export default function App() {
           <div className="relative z-10 flex justify-between items-end border-t border-white/10 pt-12">
             <div className="space-y-6">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold mb-3">Fondateurs</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold mb-3">{t.report.cover.founders}</p>
                 <div className="flex gap-8">
                   <div>
                     <p className="text-lg font-bold">Lowe Christ</p>
@@ -282,8 +299,8 @@ export default function App() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold mb-3">Date d'édition</p>
-              <p className="text-lg font-medium">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold mb-3">{t.report.cover.dateLabel}</p>
+              <p className="text-lg font-medium">{new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
             </div>
           </div>
         </section>
@@ -291,8 +308,8 @@ export default function App() {
         {/* Section 1: Équipe et Vision */}
         <section className="p-24 border-b border-gray-100">
           <div className="flex items-center gap-6 mb-16">
-            <span className="text-5xl font-serif italic text-gray-200">01</span>
-            <h2 className="text-4xl font-bold tracking-tight">Équipe & Vision</h2>
+            <span className="text-5xl font-serif italic text-gray-200">{t.report.section1.num}</span>
+            <h2 className="text-4xl font-bold tracking-tight">{t.report.section1.title}</h2>
           </div>
 
           <div className="grid grid-cols-2 gap-16 mb-20">
@@ -303,7 +320,7 @@ export default function App() {
               <div>
                 <h3 className="text-2xl font-bold mb-4">Lowe Christ</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Responsable <span className="text-black font-semibold">Technique / IA</span>. En charge de la réalisation des solutions, du développement et de la mise en œuvre concrète des modèles.
+                  {t.report.section1.loweRole}
                 </p>
               </div>
             </div>
@@ -315,7 +332,7 @@ export default function App() {
               <div>
                 <h3 className="text-2xl font-bold mb-4">Kouam Wilfried</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Responsable <span className="text-black font-semibold">Communication & Partenariats</span>. Gestion des relations stratégiques, structuration des offres et analyse des besoins marché.
+                  {t.report.section1.kouamRole}
                 </p>
               </div>
             </div>
@@ -324,14 +341,10 @@ export default function App() {
           <div className="bg-gray-50 p-12 rounded-[2rem] border border-gray-100">
             <div className="flex items-center gap-3 mb-8">
               <Target className="text-blue-600" size={24} />
-              <h4 className="text-sm uppercase tracking-widest font-bold">Notre Vision</h4>
+              <h4 className="text-sm uppercase tracking-widest font-bold">{t.report.section1.visionTitle}</h4>
             </div>
             <div className="grid grid-cols-1 gap-8">
-              {[
-                "Résoudre des problèmes réels au Cameroun (temps perdu, sécurité, visibilité).",
-                "Rendre l’IA accessible aux PME, pas seulement aux grandes structures.",
-                "Bâtir une communauté de jeunes formés aux compétences du futur."
-              ].map((item, i) => (
+              {t.report.section1.visionPoints.map((item, i) => (
                 <div key={i} className="flex gap-4 items-start">
                   <CheckCircle2 className="text-blue-600 mt-1 flex-shrink-0" size={20} />
                   <p className="text-lg text-gray-800 font-medium leading-snug">{item}</p>
@@ -344,8 +357,8 @@ export default function App() {
         {/* Section 2: Services B2B */}
         <section className="p-24 border-b border-gray-100 bg-[#fafafa]">
           <div className="flex items-center gap-6 mb-20">
-            <span className="text-5xl font-serif italic text-gray-200">02</span>
-            <h2 className="text-4xl font-bold tracking-tight">Services B2B</h2>
+            <span className="text-5xl font-serif italic text-gray-200">{t.report.section2.num}</span>
+            <h2 className="text-4xl font-bold tracking-tight">{t.report.section2.title}</h2>
           </div>
 
           <div className="space-y-12">
@@ -355,16 +368,16 @@ export default function App() {
                 <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center">
                   <MessageSquare className="text-green-600" size={28} />
                 </div>
-                <h3 className="text-2xl font-bold leading-tight">Chatbot WhatsApp Hôtels & Boutiques</h3>
+                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service1.title}</h3>
               </div>
               <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Problème</p>
-                  <p className="text-sm text-gray-600">Appels répétitifs et messages non répondus la nuit.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service1.probLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service1.prob}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Solution</p>
-                  <p className="text-sm text-gray-600">Assistant 24h/24, photos, prix et réservations automatiques.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service1.solLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service1.sol}</p>
                 </div>
               </div>
             </div>
@@ -375,16 +388,16 @@ export default function App() {
                 <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center">
                   <Cpu className="text-blue-600" size={28} />
                 </div>
-                <h3 className="text-2xl font-bold leading-tight">Assistant IA Interne pour Agents</h3>
+                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service2.title}</h3>
               </div>
               <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Problème</p>
-                  <p className="text-sm text-gray-600">Perte de temps dans les PDF et contrats complexes.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service2.probLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service2.prob}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Solution</p>
-                  <p className="text-sm text-gray-600">IA connectée aux docs pour réponses instantanées en français.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service2.solLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service2.sol}</p>
                 </div>
               </div>
             </div>
@@ -395,16 +408,16 @@ export default function App() {
                 <div className="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center">
                   <ShieldCheck className="text-orange-600" size={28} />
                 </div>
-                <h3 className="text-2xl font-bold leading-tight">Reconnaissance & Contrôle d'Accès</h3>
+                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service3.title}</h3>
               </div>
               <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Problème</p>
-                  <p className="text-sm text-gray-600">Badges perdus et pointage truqué peu fiable.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service3.probLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service3.prob}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Solution</p>
-                  <p className="text-sm text-gray-600">Biométrie faciale/vocale et alertes d'intrusion.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service3.solLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service3.sol}</p>
                 </div>
               </div>
             </div>
@@ -415,16 +428,16 @@ export default function App() {
                 <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center">
                   <Smartphone className="text-purple-600" size={28} />
                 </div>
-                <h3 className="text-2xl font-bold leading-tight">Communication Digitale Low-Cost</h3>
+                <h3 className="text-2xl font-bold leading-tight">{t.report.section2.service4.title}</h3>
               </div>
               <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Objectif</p>
-                  <p className="text-sm text-gray-600">Visibilité pro pour restaurants et boutiques.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service4.probLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service4.prob}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Offre</p>
-                  <p className="text-sm text-gray-600">Sites web simples, flyers et vidéos publicitaires IA.</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">{t.report.section2.service4.solLabel}</p>
+                  <p className="text-sm text-gray-600">{t.report.section2.service4.sol}</p>
                 </div>
               </div>
             </div>
@@ -437,29 +450,29 @@ export default function App() {
           
           <div className="relative z-10">
             <div className="flex items-center gap-6 mb-16">
-              <span className="text-5xl font-serif italic text-gray-200">03</span>
-              <h2 className="text-4xl font-bold tracking-tight">AI Start 237</h2>
+              <span className="text-5xl font-serif italic text-gray-200">{t.report.section3.num}</span>
+              <h2 className="text-4xl font-bold tracking-tight">{t.report.section3.title}</h2>
             </div>
 
             <div className="grid grid-cols-[1.5fr_1fr] gap-16">
               <div className="space-y-10">
                 <div className="space-y-4">
-                  <h3 className="text-3xl font-bold text-blue-600">Démocratiser l'IA via WhatsApp</h3>
+                  <h3 className="text-3xl font-bold text-blue-600">{t.report.section3.subtitle}</h3>
                   <p className="text-xl text-gray-600 leading-relaxed">
-                    Une plateforme de formation accessible aux jeunes camerounais, sans besoin d'ordinateur puissant, à un coût dérisoire.
+                    {t.report.section3.desc}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-8">
                   <div className="p-6 bg-gray-50 rounded-2xl">
                     <TrendingUp className="text-blue-600 mb-4" size={24} />
-                    <h4 className="font-bold mb-2">Modèle Éco</h4>
-                    <p className="text-xs text-gray-500">Abonnement hebdomadaire via Mobile Money (prix d'une sucrerie).</p>
+                    <h4 className="font-bold mb-2">{t.report.section3.ecoTitle}</h4>
+                    <p className="text-xs text-gray-500">{t.report.section3.ecoDesc}</p>
                   </div>
                   <div className="p-6 bg-gray-50 rounded-2xl">
                     <Award className="text-blue-600 mb-4" size={24} />
-                    <h4 className="font-bold mb-2">Impact</h4>
-                    <p className="text-xs text-gray-500">Micro-learning de 5-10 min/jour pour construire des compétences réelles.</p>
+                    <h4 className="font-bold mb-2">{t.report.section3.impactTitle}</h4>
+                    <p className="text-xs text-gray-500">{t.report.section3.impactDesc}</p>
                   </div>
                 </div>
               </div>
@@ -467,16 +480,10 @@ export default function App() {
               <div className="bg-[#1a1a1a] text-white p-10 rounded-[2.5rem] space-y-8">
                 <div className="flex items-center gap-3">
                   <BookOpen className="text-blue-400" size={20} />
-                  <span className="text-xs uppercase tracking-widest font-bold">Contenus WhatsApp</span>
+                  <span className="text-xs uppercase tracking-widest font-bold">{t.report.section3.contentTitle}</span>
                 </div>
                 <ul className="space-y-4">
-                  {[
-                    "Leçons quotidiennes (Audio/Vidéo)",
-                    "Assistant pédagogique IA",
-                    "Défis pratiques hebdomadaires",
-                    "Système de badges & niveaux",
-                    "Communauté d'entraide"
-                  ].map((item, i) => (
+                  {t.report.section3.contentPoints.map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm font-medium">
                       <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
                       {item}
@@ -484,8 +491,8 @@ export default function App() {
                   ))}
                 </ul>
                 <div className="pt-6 border-t border-white/10">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-2">Objectif Final</p>
-                  <p className="text-xs italic text-blue-300">Identifier les futurs talents pour PowerAi.</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-2">{t.report.section3.finalGoal}</p>
+                  <p className="text-xs italic text-blue-300">{t.report.section3.finalGoalDesc}</p>
                 </div>
               </div>
             </div>
@@ -495,13 +502,13 @@ export default function App() {
         {/* Section 4: Intention Rendez-vous */}
         <section className="p-24 bg-[#0a0a0a] text-white">
           <div className="flex items-center gap-6 mb-16">
-            <span className="text-5xl font-serif italic text-white/10">04</span>
-            <h2 className="text-4xl font-bold tracking-tight">Intention Stratégique</h2>
+            <span className="text-5xl font-serif italic text-white/10">{t.report.section4.num}</span>
+            <h2 className="text-4xl font-bold tracking-tight">{t.report.section4.title}</h2>
           </div>
 
           <div className="max-w-2xl space-y-12">
             <p className="text-2xl font-light leading-relaxed text-gray-300">
-              Notre approche lors des rendez-vous ne consiste pas à "chercher de l'argent", mais à <span className="text-white font-medium italic">comprendre les besoins réels</span>.
+              {t.report.section4.mainText}
             </p>
 
             <div className="grid grid-cols-2 gap-12">
@@ -509,15 +516,15 @@ export default function App() {
                 <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
                   <Handshake className="text-blue-400" size={24} />
                 </div>
-                <h4 className="text-lg font-bold">Confiance</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">Construire une relation stable avant de parler collaboration.</p>
+                <h4 className="text-lg font-bold">{t.report.section4.trustTitle}</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">{t.report.section4.trustDesc}</p>
               </div>
               <div className="space-y-4">
                 <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
                   <Layers className="text-orange-400" size={24} />
                 </div>
-                <h4 className="text-lg font-bold">Potentiel</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">Montrer notre sérieux et la scalabilité de nos solutions.</p>
+                <h4 className="text-lg font-bold">{t.report.section4.potentialTitle}</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">{t.report.section4.potentialDesc}</p>
               </div>
             </div>
 
@@ -528,7 +535,7 @@ export default function App() {
                 </div>
                 <span className="text-sm font-bold tracking-tighter">PowerAi 2026</span>
               </div>
-              <span className="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold">Document de Base Stratégique</span>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold">{t.report.section4.footerTag}</span>
             </div>
           </div>
         </section>
