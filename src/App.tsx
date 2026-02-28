@@ -5,7 +5,6 @@
 
 import React, { useRef, useState } from 'react';
 import { 
-  Download, 
   Cpu, 
   MessageSquare, 
   ShieldCheck, 
@@ -18,7 +17,6 @@ import {
   Target,
   CheckCircle2,
   X,
-  Printer,
   Smartphone,
   TrendingUp,
   Award,
@@ -29,14 +27,11 @@ import {
   Phone,
   MapPin,
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { cn } from './lib/utils';
 import { translations } from './translations';
 
 export default function App() {
   const documentRef = useRef<HTMLDivElement>(null);
-  const [exportStatus, setExportStatus] = useState<'idle' | 'exporting' | 'error'>('idle');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [lang, setLang] = useState<'fr' | 'en'>('fr');
@@ -103,65 +98,6 @@ export default function App() {
     }
   };
 
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-
-  const exportToPDF = async () => {
-    if (!documentRef.current) return;
-    setExportStatus('exporting');
-    setPdfUrl(null);
-    
-    try {
-      const element = documentRef.current;
-      const sections = element.querySelectorAll('section');
-      
-      // Initialiser le PDF
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: 'a4'
-      });
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
-      for (let i = 0; i < sections.length; i++) {
-        const section = sections[i] as HTMLElement;
-        
-        const canvas = await html2canvas(section, {
-          scale: 1.5,
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff',
-          width: section.offsetWidth,
-          height: section.offsetHeight
-        });
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.7);
-        
-        if (i > 0) pdf.addPage();
-        
-        // Ajuster l'image à la page A4
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      }
-      
-      const blob = pdf.output('blob');
-      const url = URL.createObjectURL(blob);
-      setPdfUrl(url);
-      setExportStatus('idle');
-      
-      // Tentative de téléchargement automatique
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `PowerAi_Rapport_${new Date().toISOString().split('T')[0]}.pdf`;
-      link.click();
-      
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      setExportStatus('error');
-      setTimeout(() => setExportStatus('idle'), 3000);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#f8f7f4] py-6 px-4 sm:px-6 lg:px-8 font-sans selection:bg-blue-100">
       {/* Header for clarity */}
@@ -171,19 +107,6 @@ export default function App() {
           <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">{t.header.title}</span>
         </div>
         <div className="flex items-center gap-4">
-          <button 
-            onClick={() => {
-              try {
-                window.print();
-              } catch (e) {
-                alert(lang === 'fr' ? "L'impression n'est pas supportée sur ce navigateur." : "Printing is not supported on this browser.");
-              }
-            }}
-            className="text-[10px] uppercase tracking-widest font-bold text-gray-500 hover:text-black transition-colors flex items-center gap-1 border-r border-gray-200 pr-4"
-          >
-            <Printer size={12} />
-            {t.report.printFallback}
-          </button>
           <button 
             onClick={() => setIsChatOpen(!isChatOpen)}
             className="text-[10px] uppercase tracking-widest font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
@@ -239,41 +162,6 @@ export default function App() {
             </div>
           </div>
         )}
-
-        {/* Action Buttons Container */}
-        <div className="flex flex-col items-end gap-3">
-          {pdfUrl && (
-            <div className="flex flex-col items-end gap-2 animate-in fade-in slide-in-from-right-4">
-              <span className="bg-green-600 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest shadow-lg">
-                {t.export.ready}
-              </span>
-              <a 
-                href={pdfUrl} 
-                download={`PowerAi_Rapport_${new Date().toISOString().split('T')[0]}.pdf`}
-                className="bg-green-600 text-white text-sm font-bold px-8 py-5 rounded-2xl shadow-2xl hover:bg-green-700 flex items-center gap-3 transform hover:scale-105 transition-all active:scale-95 border-4 border-white"
-              >
-                <Download size={20} />
-                {t.export.save}
-              </a>
-            </div>
-          )}
-
-          <button
-            onClick={exportToPDF}
-            disabled={exportStatus === 'exporting'}
-            className={cn(
-              "flex items-center gap-2 bg-[#1a1a1a] text-white px-8 py-4 rounded-full shadow-2xl hover:scale-105 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed group",
-              exportStatus === 'exporting' && "animate-pulse"
-            )}
-          >
-            <Download size={20} className={cn("transition-transform", exportStatus === 'exporting' && "animate-spin")} />
-            <span className="font-semibold tracking-tight">
-              {exportStatus === 'idle' && (pdfUrl ? t.export.again : t.export.prepare)}
-              {exportStatus === 'exporting' && t.export.preparing}
-              {exportStatus === 'error' && t.export.error}
-            </span>
-          </button>
-        </div>
       </div>
 
       {/* Document Container */}

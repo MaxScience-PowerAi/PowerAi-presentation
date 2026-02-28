@@ -12,14 +12,6 @@ export const translations = {
       error: "Une erreur est survenue lors de la connexion à l'IA.",
       systemInstruction: "Tu es l'assistant expert de PowerAi. Tu aides les fondateurs à présenter leur projet et à répondre aux questions des partenaires. Réponds en français."
     },
-    export: {
-      prepare: "Télécharger le Rapport PDF",
-      preparing: "Création en cours...",
-      ready: "Fichier Prêt !",
-      save: "ENREGISTRER LE PDF MAINTENANT",
-      error: "Erreur (Réessayer)",
-      again: "Générer à nouveau"
-    },
     report: {
       cover: {
         tag: "Rapport de Travail Interne",
@@ -29,7 +21,6 @@ export const translations = {
         founders: "Fondateurs",
         dateLabel: "Date d'édition"
       },
-      printFallback: "Utiliser l'impression système (Secours)",
       section1: {
         num: "01",
         title: "Qui nous sommes & Équipe",
@@ -71,12 +62,6 @@ export const translations = {
             { date: "1 An", title: "Partenariats", desc: "Accords avec des institutions éducatives et expansion nationale." },
             { date: "3 Ans", title: "Référence", desc: "Leader de l'IA appliquée en Afrique Centrale (50k+ apprenants)." }
           ]
-        },
-        impact: {
-          title: "Indicateurs d'Impact (Projetés)",
-          timeSaving: { label: "Gain de temps B2B", value: "-65%" },
-          accessibility: { label: "Accessibilité Mobile", value: "100%" },
-          costReduction: { label: "Coût de formation", value: "-90%" }
         },
         contact: {
           title: "Prêt à construire l'avenir ?",
@@ -174,14 +159,6 @@ export const translations = {
       error: "An error occurred while connecting to the AI.",
       systemInstruction: "You are the expert assistant of PowerAi. You help the founders present their project and answer questions from partners. Respond in English."
     },
-    export: {
-      prepare: "Download PDF Report",
-      preparing: "Creating...",
-      ready: "File Ready!",
-      save: "SAVE PDF NOW",
-      error: "Error (Retry)",
-      again: "Generate again"
-    },
     report: {
       cover: {
         tag: "Internal Working Report",
@@ -191,7 +168,6 @@ export const translations = {
         founders: "Founders",
         dateLabel: "Edition Date"
       },
-      printFallback: "Use System Print (Fallback)",
       section1: {
         num: "01",
         title: "Who We Are & Team",
@@ -233,12 +209,6 @@ export const translations = {
             { date: "1 Year", title: "Partnerships", desc: "Agreements with educational institutions and national expansion." },
             { date: "3 Years", title: "Reference", desc: "Leader of applied AI in Central Africa (50k+ learners)." }
           ]
-        },
-        impact: {
-          title: "Impact Indicators (Projected)",
-          timeSaving: { label: "B2B Time Saving", value: "-65%" },
-          accessibility: { label: "Mobile Accessibility", value: "100%" },
-          costReduction: { label: "Training Cost", value: "-90%" }
         },
         contact: {
           title: "Ready to build the future?",
