@@ -23,6 +23,12 @@ export const translations = {
       },
       constat: {
         title: "L'IA arrive en Afrique. Qui la rendra accessible ?",
+        stats: [
+          { label: "Croissance Marché", value: "+40%", desc: "Annuelle en Afrique" },
+          { label: "Pénétration WhatsApp", value: "90%", desc: "Au Cameroun" },
+          { label: "Cible Jeunesse", value: "1M+", desc: "Potentiel AI Start" },
+          { label: "Objectif Clients", value: "50+", desc: "D'ici 12 mois" }
+        ],
         global: {
           title: "Le constat global",
           market: { label: "Marché de l'IA en Afrique", value: "+40%/an", desc: "Croissance explosive du secteur technologique" },
@@ -166,6 +172,12 @@ export const translations = {
       },
       constat: {
         title: "AI is coming to Africa. Who will make it accessible?",
+        stats: [
+          { label: "Market Growth", value: "+40%", desc: "Annual in Africa" },
+          { label: "WhatsApp Penetration", value: "90%", desc: "In Cameroon" },
+          { label: "Youth Target", value: "1M+", desc: "AI Start Potential" },
+          { label: "Client Goal", value: "50+", desc: "Within 12 months" }
+        ],
         global: {
           title: "Global Observation",
           market: { label: "AI Market in Africa", value: "+40%/year", desc: "Explosive growth of the tech sector" },

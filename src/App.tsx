@@ -40,7 +40,18 @@ export default function App() {
   const [lang, setLang] = useState<'fr' | 'en'>('fr');
   const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+      setScrollProgress((currentScroll / totalScroll) * 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -112,9 +123,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-200 font-sans selection:bg-cyan-500/30 relative">
-      {/* Background Texture */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-10" 
-           style={{ backgroundImage: 'radial-gradient(#27272a 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      {/* Scroll Progress Bar */}
+      <div 
+        className="fixed top-0 left-0 h-1 bg-cyan-500 z-[100] transition-all duration-150 ease-out"
+        style={{ width: `${scrollProgress}%` }}
+      />
+
+      {/* Animated Background Grid */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div 
+          className="absolute inset-0 opacity-[0.1]"
+          style={{
+            backgroundImage: `linear-gradient(to right, #22d3ee 1px, transparent 1px), linear-gradient(to bottom, #22d3ee 1px, transparent 1px)`,
+            backgroundSize: '80px 80px',
+            maskImage: 'radial-gradient(circle at 50% 50%, black, transparent 90%)'
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+      </div>
       
       {/* Navigation / Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-zinc-800/50">
@@ -145,17 +171,36 @@ export default function App() {
       </nav>
 
       {/* Floating Chat Button */}
-      <button 
-        onClick={() => setIsChatOpen(!isChatOpen)}
-        className={cn(
-          "fixed bottom-8 right-8 z-[60] w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl group",
-          isChatOpen 
-            ? "bg-zinc-800 text-white rotate-90 scale-90" 
-            : "bg-cyan-500 text-zinc-950 hover:scale-110 hover:shadow-cyan-500/40"
-        )}
-      >
-        {isChatOpen ? <X size={24} /> : <Bot size={24} className="group-hover:animate-bounce" />}
-      </button>
+      <div className="fixed bottom-8 right-8 z-[60] flex flex-col gap-4">
+        <AnimatePresence>
+          {scrollProgress > 20 && (
+            <motion.button 
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="w-14 h-14 rounded-full bg-zinc-900 text-zinc-400 border border-zinc-800 flex items-center justify-center hover:text-white hover:border-zinc-700 transition-all shadow-2xl relative group"
+            >
+              <ArrowRight size={24} className="-rotate-90" />
+              <div className="absolute -left-12 top-1/2 -translate-y-1/2 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded text-[10px] font-bold text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                {Math.round(scrollProgress)}%
+              </div>
+            </motion.button>
+          )}
+        </AnimatePresence>
+        
+        <button 
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          className={cn(
+            "w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl group",
+            isChatOpen 
+              ? "bg-zinc-800 text-white rotate-90 scale-90" 
+              : "bg-cyan-500 text-zinc-950 hover:scale-110 hover:shadow-cyan-500/40"
+          )}
+        >
+          {isChatOpen ? <X size={24} /> : <Bot size={24} className="group-hover:animate-bounce" />}
+        </button>
+      </div>
 
       {/* AI Chat Window */}
       <AnimatePresence>
@@ -245,7 +290,12 @@ export default function App() {
 
       <main className="pt-16">
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden">
+        <motion.section 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden"
+        >
           <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-cyan-500/5 rounded-full blur-[80px] md:blur-[120px] animate-pulse" />
           <div className="absolute bottom-1/4 right-1/4 w-64 h-64 md:w-96 md:h-96 bg-orange-500/5 rounded-full blur-[80px] md:blur-[120px] animate-pulse" />
           
@@ -278,10 +328,15 @@ export default function App() {
               </div>
             </div>
           </motion.div>
-        </section>
+        </motion.section>
 
         {/* Constat Section */}
-        <section className="py-24 px-4 bg-zinc-900/50">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4 bg-zinc-900/50"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-center gap-12 mb-20">
               <div className="flex-1">
@@ -358,10 +413,42 @@ export default function App() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
+
+        {/* Strategic Impact Stats */}
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="py-12 px-4 relative z-10"
+        >
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+              {t.report.constat.stats.map((stat, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-8 bg-zinc-900/50 backdrop-blur-sm rounded-3xl border border-zinc-800/50 text-center group hover:border-cyan-500/30 transition-all"
+                >
+                  <p className="text-3xl md:text-5xl font-bold text-cyan-400 mb-2 tracking-tighter group-hover:scale-110 transition-transform">{stat.value}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-white mb-1">{stat.label}</p>
+                  <p className="text-[9px] text-zinc-500 uppercase tracking-widest">{stat.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
 
         {/* Solution Section */}
-        <section className="py-24 px-4">
+        <motion.section 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-2xl flex items-center justify-center mx-auto mb-8 rotate-3 shadow-xl shadow-cyan-500/20">
@@ -457,10 +544,15 @@ export default function App() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Founders Section */}
-        <section className="py-24 px-4 bg-zinc-900/30">
+        <motion.section 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4 bg-zinc-900/30"
+        >
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.founders.title}</h2>
             
@@ -568,10 +660,15 @@ export default function App() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Mission Section */}
-        <section className="py-24 px-4">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">{t.report.mission.title}</h2>
@@ -583,7 +680,11 @@ export default function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
               {t.report.mission.blocks.map((block, i) => (
-                <div key={i} className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800">
+                <motion.div 
+                  key={i} 
+                  whileHover={{ y: -10 }}
+                  className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800 hover:border-cyan-500/30 transition-all"
+                >
                   <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                     {i === 0 ? <Briefcase className="text-cyan-400" /> : i === 1 ? <GraduationCap className="text-orange-400" /> : <Globe className="text-cyan-400" />}
                     {block.title}
@@ -598,7 +699,7 @@ export default function App() {
                       <p className="text-sm text-cyan-400 font-medium">{block.impact}</p>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
             
@@ -606,15 +707,21 @@ export default function App() {
               "{t.report.mission.quote}"
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Vision & Values */}
-        <section className="py-24 px-4 bg-zinc-900/50">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4 bg-zinc-900/50"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">{t.report.vision.title}</h2>
-                <div className="p-10 bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-[3rem] border border-zinc-700 relative overflow-hidden">
+                <div className="p-10 bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-[3rem] border border-zinc-700 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[80px] group-hover:bg-cyan-500/10 transition-all" />
                   <div className="absolute top-4 right-4 px-3 py-1 bg-cyan-500/20 text-cyan-400 text-[10px] font-bold rounded-full border border-cyan-500/30">{t.report.vision.time}</div>
                   <p className="text-2xl font-bold text-white mb-8 leading-tight">{t.report.vision.main}</p>
                   <p className="text-zinc-400 italic mb-10 leading-relaxed">"{t.report.vision.quote}"</p>
@@ -630,127 +737,138 @@ export default function App() {
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">{t.report.values.title}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {t.report.values.list.map((val, i) => (
-                    <div key={i} className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800">
+                    <motion.div 
+                      key={i} 
+                      whileHover={{ scale: 1.02 }}
+                      className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-cyan-500/30 transition-all"
+                    >
                       <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full" />
                         {val.title}
                       </h4>
                       <p className="text-[11px] text-zinc-500 leading-relaxed">{val.desc}</p>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Roadmap */}
-        <section className="py-24 px-4">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4"
+        >
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.roadmap.title}</h2>
             <div className="relative space-y-12">
               <div className="absolute left-8 top-0 bottom-0 w-px bg-zinc-800" />
               {t.report.roadmap.steps.map((step, i) => (
-                <div key={i} className="relative flex gap-12 items-start">
-                  <div className="w-16 h-16 bg-zinc-900 rounded-2xl border border-cyan-500/50 flex items-center justify-center z-10 flex-shrink-0 shadow-lg shadow-cyan-500/10">
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="relative flex gap-12 items-start group"
+                >
+                  <div className="w-16 h-16 bg-zinc-900 rounded-2xl border border-cyan-500/50 flex items-center justify-center z-10 flex-shrink-0 shadow-lg shadow-cyan-500/10 group-hover:scale-110 transition-transform">
                     <span className="text-[10px] font-bold text-cyan-400 uppercase text-center leading-tight">{step.period}</span>
                   </div>
                   <div className="pt-2">
-                    <h4 className="text-xl font-bold text-white mb-2">{step.title}</h4>
+                    <h4 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">{step.title}</h4>
                     <p className="text-zinc-400 text-sm leading-relaxed">{step.desc}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Needs Section */}
-        <section className="py-24 px-4 bg-zinc-900/30">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4 bg-zinc-900/30"
+        >
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.needs.title}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               {t.report.needs.list.map((need, i) => (
-                <div key={i} className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800 hover:border-cyan-500/30 transition-all">
+                <motion.div 
+                  key={i} 
+                  whileHover={{ y: -5 }}
+                  className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800 hover:border-cyan-500/30 transition-all"
+                >
                   <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center mb-6">
                     {i === 0 ? <DollarSign className="text-cyan-400" /> : i === 1 ? <Handshake className="text-orange-400" /> : i === 2 ? <Users className="text-cyan-400" /> : <Globe className="text-red-400" />}
                   </div>
                   <h4 className="text-lg font-bold text-white mb-4">{need.title}</h4>
                   <p className="text-xs text-zinc-500 leading-relaxed">{need.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
             <div className="p-8 bg-white/5 rounded-3xl border border-white/10 text-center italic text-lg text-zinc-300 font-light">
               "{t.report.needs.quote}"
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Risks Section */}
-        <section className="py-24 px-4 bg-zinc-900/50">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4 bg-zinc-900/50"
+        >
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">Risques & Mitigation</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800">
-                <div className="flex justify-between items-start mb-6">
-                  <h4 className="text-lg font-bold text-white">Difficulté technique WhatsApp API</h4>
-                  <span className="px-2 py-0.5 bg-orange-500/10 text-orange-400 text-[10px] font-bold rounded-full border border-orange-500/20">Moyenne</span>
-                </div>
-                <div className="flex gap-3 text-xs text-zinc-400">
-                  <ShieldAlert className="text-orange-500 flex-shrink-0" size={16} />
-                  <div>
-                    <p className="font-bold text-zinc-300 mb-1">Mitigation</p>
-                    <p>Tests early, alternatives (Twilio, 2Chat)</p>
+              {[
+                { title: "Difficulté technique WhatsApp API", level: "Moyenne", color: "orange", mitigation: "Tests early, alternatives (Twilio, 2Chat)" },
+                { title: "Adoption lente des entreprises", level: "Moyenne", color: "orange", mitigation: "Prix cassés early adopters, preuve ROI rapide" },
+                { title: "Concurrence étrangère", level: "Faible", color: "cyan", mitigation: "Différenciation \"local first\", support en français/langues locales" },
+                { title: "Manque de talents formés", level: "Faible", color: "cyan", mitigation: "AI Start 237 crée notre propre vivier de talents" }
+              ].map((risk, i) => (
+                <motion.div 
+                  key={i} 
+                  whileHover={{ scale: 1.01 }}
+                  className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800"
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <h4 className="text-lg font-bold text-white">{risk.title}</h4>
+                    <span className={cn(
+                      "px-2 py-0.5 text-[10px] font-bold rounded-full border",
+                      risk.color === 'orange' ? "bg-orange-500/10 text-orange-400 border-orange-500/20" : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+                    )}>{risk.level}</span>
                   </div>
-                </div>
-              </div>
-              <div className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800">
-                <div className="flex justify-between items-start mb-6">
-                  <h4 className="text-lg font-bold text-white">Adoption lente des entreprises</h4>
-                  <span className="px-2 py-0.5 bg-orange-500/10 text-orange-400 text-[10px] font-bold rounded-full border border-orange-500/20">Moyenne</span>
-                </div>
-                <div className="flex gap-3 text-xs text-zinc-400">
-                  <ShieldAlert className="text-orange-500 flex-shrink-0" size={16} />
-                  <div>
-                    <p className="font-bold text-zinc-300 mb-1">Mitigation</p>
-                    <p>Prix cassés early adopters, preuve ROI rapide</p>
+                  <div className="flex gap-3 text-xs text-zinc-400">
+                    <ShieldAlert className={risk.color === 'orange' ? "text-orange-500" : "text-cyan-500"} size={16} />
+                    <div>
+                      <p className="font-bold text-zinc-300 mb-1">Mitigation</p>
+                      <p>{risk.mitigation}</p>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800">
-                <div className="flex justify-between items-start mb-6">
-                  <h4 className="text-lg font-bold text-white">Concurrence étrangère</h4>
-                  <span className="px-2 py-0.5 bg-cyan-500/10 text-cyan-400 text-[10px] font-bold rounded-full border border-cyan-500/20">Faible</span>
-                </div>
-                <div className="flex gap-3 text-xs text-zinc-400">
-                  <ShieldAlert className="text-cyan-500 flex-shrink-0" size={16} />
-                  <div>
-                    <p className="font-bold text-zinc-300 mb-1">Mitigation</p>
-                    <p>Différenciation "local first", support en français/langues locales</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800">
-                <div className="flex justify-between items-start mb-6">
-                  <h4 className="text-lg font-bold text-white">Manque de talents formés</h4>
-                  <span className="px-2 py-0.5 bg-cyan-500/10 text-cyan-400 text-[10px] font-bold rounded-full border border-cyan-500/20">Faible</span>
-                </div>
-                <div className="flex gap-3 text-xs text-zinc-400">
-                  <ShieldAlert className="text-cyan-500 flex-shrink-0" size={16} />
-                  <div>
-                    <p className="font-bold text-zinc-300 mb-1">Mitigation</p>
-                    <p>AI Start 237 crée notre propre vivier de talents</p>
-                  </div>
-                </div>
-              </div>
+                </motion.div>
+              ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Recap Section */}
-        <section className="py-24 px-4">
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="py-24 px-4"
+        >
           <div className="max-w-5xl mx-auto">
-            <div className="p-12 bg-zinc-900 rounded-[3rem] border border-zinc-800">
+            <div className="p-12 bg-zinc-900 rounded-[3rem] border border-zinc-800 relative group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[100px] group-hover:bg-cyan-500/10 transition-all" />
               <h2 className="text-3xl font-bold text-white mb-12 flex items-center gap-4">
                 <Info className="text-cyan-400" />
                 {t.report.recap.title}
@@ -765,10 +883,15 @@ export default function App() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Call to Action */}
-        <section className="py-24 px-4 bg-gradient-to-b from-zinc-900 to-black">
+        <motion.section 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="py-24 px-4 bg-gradient-to-b from-zinc-900 to-black"
+        >
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
@@ -794,10 +917,16 @@ export default function App() {
             </div>
 
             <div className="flex flex-col md:flex-row justify-between items-center gap-12 pt-12 border-t border-zinc-800">
-              <div className="flex items-center gap-8">
-                <div className="flex items-center gap-2">
-                  <Phone size={16} className="text-cyan-500" />
-                  <span className="text-xs text-zinc-400">+237 678 831 868</span>
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <Phone size={14} className="text-cyan-500" />
+                    <span className="text-xs text-zinc-400">Christ: +237 678 831 868</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone size={14} className="text-cyan-500" />
+                    <span className="text-xs text-zinc-400">Wilfred: +237 688 605 807</span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail size={16} className="text-cyan-500" />
@@ -809,7 +938,7 @@ export default function App() {
               </p>
             </div>
           </div>
-        </section>
+        </motion.section>
       </main>
 
       {/* Footer */}
