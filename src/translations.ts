@@ -10,7 +10,7 @@ export const translations = {
       placeholder: "Posez une question...",
       thinking: "L'IA réfléchit...",
       error: "Une erreur est survenue lors de la connexion à l'IA.",
-      systemInstruction: "Tu es l'assistant expert de PowerAi. Tu aides les fondateurs à présenter leur projet et à répondre aux questions des partenaires. Réponds en français."
+      systemInstruction: "Tu es l'assistant exécutif virtuel de PowerAi. Ton rôle est de représenter l'entreprise avec le plus haut niveau de professionnalisme. Tu es un expert en intelligence artificielle, en stratégie d'entreprise et en développement technologique en Afrique. Tu réponds de manière concise, structurée et élégante. Utilise un ton assuré mais humble, reflétant l'ambition de Wilfred Kouam et Christ Lowe. Si on te pose des questions sur le projet, appuie-toi sur les données de la présentation stratégique. Réponds en français."
     },
     report: {
       cover: {
@@ -48,8 +48,8 @@ export const translations = {
       },
       founders: {
         title: "L'équipe : Deux mathématiciens, une équation gagnante",
-        wilfried: {
-          name: "Wilfried Kouam Tchamou",
+        wilfred: {
+          name: "Wilfred Kouam Tchamou",
           role: "CEO & Chief Vision Officer",
           age: "21 ans",
           tag: "Le cerveau stratégique du binôme",
@@ -66,7 +66,7 @@ export const translations = {
         },
         duo: {
           title: "Pourquoi nous deux ?",
-          wilfried: { label: "Wilfried", role: "Chief Vision Officer", points: ["Marché, business, relations", "Parle au DG, comprend les enjeux", "La boussole"] },
+          wilfred: { label: "Wilfred", role: "Chief Vision Officer", points: ["Marché, business, relations", "Parle au DG, comprend les enjeux", "La boussole"] },
           christ: { label: "Christ", role: "Chief Engine Officer", points: ["Technique, exécution, produit", "Déploie la solution qui marche", "Le moteur"] },
           quote: "Une boussole sans moteur ne bouge pas. Un moteur sans boussole tourne en rond. Nous avons les deux."
         }
@@ -92,7 +92,7 @@ export const translations = {
       values: {
         title: "Nos 4 Valeurs Fondamentales",
         list: [
-          { title: "Complémentarité", desc: "Wilfried (Vision) + Christ (Engine) = équation gagnante. Chacun sa spécialité, ensemble l'excellence." },
+          { title: "Complémentarité", desc: "Wilfred (Vision) + Christ (Engine) = équation gagnante. Chacun sa spécialité, ensemble l'excellence." },
           { title: "Apprentissage continu", desc: "Théorie + terrain, tous les jours. On apprend en construisant. Chaque projet est une opportunité." },
           { title: "Impact local", desc: "Une solution n'est validée que si elle résout un vrai problème quotidien camerounais." },
           { title: "Ambition collective", desc: "On ne construit pas une \"boîte\". On bâtit un écosystème où d'autres jeunes apprennent." }
@@ -153,7 +153,7 @@ export const translations = {
       placeholder: "Ask a question...",
       thinking: "AI is thinking...",
       error: "An error occurred while connecting to the AI.",
-      systemInstruction: "You are the expert assistant of PowerAi. You help the founders present their project and answer questions from partners. Respond in English."
+      systemInstruction: "You are the virtual executive assistant of PowerAi. Your role is to represent the company with the highest level of professionalism. You are an expert in artificial intelligence, business strategy, and technological development in Africa. Respond concisely, structurally, and elegantly. Use a confident yet humble tone, reflecting the ambition of Wilfred Kouam and Christ Lowe. If asked about the project, rely on the data from the strategic presentation. Respond in English."
     },
     report: {
       cover: {
@@ -191,8 +191,8 @@ export const translations = {
       },
       founders: {
         title: "The Team: Two mathematicians, a winning equation",
-        wilfried: {
-          name: "Wilfried Kouam Tchamou",
+        wilfred: {
+          name: "Wilfred Kouam Tchamou",
           role: "CEO & Chief Vision Officer",
           age: "21 years old",
           tag: "The strategic brain of the duo",
@@ -209,7 +209,7 @@ export const translations = {
         },
         duo: {
           title: "Why us two?",
-          wilfried: { label: "Wilfried", role: "Chief Vision Officer", points: ["Market, business, relations", "Talks to CEO, understands stakes", "The compass"] },
+          wilfred: { label: "Wilfred", role: "Chief Vision Officer", points: ["Market, business, relations", "Talks to CEO, understands stakes", "The compass"] },
           christ: { label: "Christ", role: "Chief Engine Officer", points: ["Tech, execution, product", "Deploys the solution that works", "The engine"] },
           quote: "A compass without an engine doesn't move. An engine without a compass goes in circles. We have both."
         }
@@ -235,7 +235,7 @@ export const translations = {
       values: {
         title: "Our 4 Fundamental Values",
         list: [
-          { title: "Complementarity", desc: "Wilfried (Vision) + Christ (Engine) = winning equation. Each their specialty, together excellence." },
+          { title: "Complementarity", desc: "Wilfred (Vision) + Christ (Engine) = winning equation. Each their specialty, together excellence." },
           { title: "Continuous Learning", desc: "Theory + field, every day. We learn by building. Every project is an opportunity." },
           { title: "Local Impact", desc: "A solution is only validated if it solves a real daily Cameroonian problem." },
           { title: "Collective Ambition", desc: "We are not building a \"box\". We are building an ecosystem where other youth learn." }
