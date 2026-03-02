@@ -13,6 +13,12 @@ import {
   Legend
 } from 'recharts';
 import { 
+  Volume2,
+  Trash2,
+  Copy,
+  Check,
+  Mic,
+  Sparkles,
   Cpu, 
   MessageSquare, 
   Handshake,
@@ -43,7 +49,6 @@ import {
   LogOut,
   Bot,
   Star,
-  Sparkles,
   ShieldCheck,
   BarChart3,
   LayoutDashboard,
@@ -222,11 +227,12 @@ export default function App() {
 
   const t = translations[lang];
 
-  const handleSendMessage = async () => {
-    if (!chatInput.trim()) return;
+  const handleSendMessage = async (textOverride?: string) => {
+    const messageToSend = textOverride || chatInput;
+    if (!messageToSend.trim()) return;
     
-    const userMessage = chatInput;
-    setChatInput('');
+    const userMessage = messageToSend;
+    if (!textOverride) setChatInput('');
     setChatMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setIsTyping(true);
 
@@ -271,6 +277,62 @@ export default function App() {
     } finally {
       setIsTyping(false);
     }
+  };
+
+  const handleQuickAction = (text: string) => {
+    handleSendMessage(text);
+  };
+
+  const clearChat = () => {
+    setChatMessages([]);
+  };
+
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const copyToClipboard = (text: string, id: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const [isListening, setIsListening] = useState(false);
+
+  const toggleVoiceInput = () => {
+    if (!('webkitSpeechRecognition' in window) && !('speechRecognition' in window)) {
+      alert(lang === 'fr' ? "La reconnaissance vocale n'est pas supportée par votre navigateur." : "Speech recognition is not supported by your browser.");
+      return;
+    }
+
+    if (isListening) {
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = lang === 'fr' ? 'fr-FR' : 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    recognition.onerror = () => setIsListening(false);
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setChatInput(transcript);
+    };
+
+    recognition.start();
+  };
+
+  const readAloud = (text: string) => {
+    if (!('speechSynthesis' in window)) {
+      alert(lang === 'fr' ? "La synthèse vocale n'est pas supportée par votre navigateur." : "Speech synthesis is not supported by your browser.");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang === 'fr' ? 'fr-FR' : 'en-US';
+    window.speechSynthesis.speak(utterance);
   };
 
   const [logoClicks, setLogoClicks] = useState(0);
@@ -403,81 +465,171 @@ export default function App() {
       <AnimatePresence>
         {isChatOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed inset-x-4 bottom-4 top-20 md:top-auto md:inset-x-auto md:bottom-24 md:right-8 z-50 md:w-96 md:h-[550px] bg-zinc-950 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl border border-zinc-800 flex flex-col overflow-hidden"
+            initial={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
+            className="fixed inset-x-4 bottom-4 top-20 md:top-auto md:inset-x-auto md:bottom-24 md:right-8 z-50 md:w-[420px] md:h-[650px] bg-zinc-950/90 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_0_80px_-20px_rgba(34,211,238,0.3)] border border-white/10 flex flex-col overflow-hidden"
           >
+            {/* Animated Glow Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+              <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-cyan-500/20 blur-[100px] animate-pulse" />
+              <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-blue-500/20 blur-[100px] animate-pulse [animation-delay:2s]" />
+            </div>
+
             {/* Chat Header */}
-            <div className="bg-zinc-900/50 backdrop-blur-md p-4 md:p-6 flex justify-between items-center border-b border-zinc-800">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center border border-cyan-500/20">
-                  <Bot size={18} className="text-cyan-400 md:size-20" />
+            <div className="relative bg-zinc-900/40 backdrop-blur-md p-5 md:p-6 flex justify-between items-center border-b border-white/5">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-cyan-500/20 to-cyan-700/20 rounded-2xl flex items-center justify-center border border-cyan-500/30">
+                    <Bot size={22} className="text-cyan-400 md:size-24" />
+                  </div>
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-zinc-950 animate-pulse" />
                 </div>
                 <div>
-                  <p className="text-xs md:text-sm font-bold text-white tracking-tight">PowerAi Intelligence</p>
+                  <p className="text-sm md:text-base font-bold text-white tracking-tight">POWER <span className="text-[10px] text-cyan-500 ml-1 font-black uppercase tracking-widest">v2.0</span></p>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                    <span className="text-[9px] md:text-[10px] text-zinc-500 font-medium uppercase tracking-widest">{t.chat.status}</span>
+                    <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.15em]">{t.chat.status}</span>
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsChatOpen(false)} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
-                <X size={14} className="md:size-16" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={clearChat}
+                  title="Clear chat"
+                  className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-zinc-800/50 flex items-center justify-center text-zinc-500 hover:text-red-400 transition-all hover:bg-red-400/10"
+                >
+                  <Trash2 size={14} />
+                </button>
+                <button onClick={() => setIsChatOpen(false)} className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-zinc-800/50 flex items-center justify-center text-zinc-400 hover:text-white transition-all hover:bg-zinc-800">
+                  <X size={16} />
+                </button>
+              </div>
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-6 scrollbar-hide">
+              {chatMessages.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center text-center p-4">
+                  <div className="w-16 h-16 bg-cyan-500/10 rounded-3xl flex items-center justify-center mb-6 border border-cyan-500/20">
+                    <Sparkles className="text-cyan-400" size={32} />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Bonjour, je suis POWER</h3>
+                  <p className="text-xs text-zinc-500 max-w-[200px] leading-relaxed">
+                    Comment puis-je vous aider à propulser votre vision avec PowerAi aujourd'hui ?
+                  </p>
+                </div>
+              )}
               {chatMessages.map((msg, i) => (
-                <div key={i} className={cn("flex flex-col", msg.role === 'user' ? "items-end" : "items-start")}>
+                <div key={i} className={cn("flex flex-col group", msg.role === 'user' ? "items-end" : "items-start")}>
                   <div className={cn(
-                    "max-w-[90%] md:max-w-[85%] p-3 md:p-4 rounded-2xl text-sm leading-relaxed", 
+                    "max-w-[90%] md:max-w-[85%] p-4 md:p-5 rounded-[1.5rem] text-sm leading-relaxed shadow-xl relative", 
                     msg.role === 'user' 
-                      ? "bg-cyan-500/10 text-cyan-50 ml-auto rounded-tr-none border border-cyan-500/20" 
-                      : "bg-zinc-900 text-zinc-300 mr-auto rounded-tl-none border border-zinc-800"
+                      ? "bg-gradient-to-br from-cyan-600 to-cyan-700 text-white ml-auto rounded-tr-none" 
+                      : "bg-zinc-900/80 text-zinc-300 mr-auto rounded-tl-none border border-zinc-800"
                   )}>
                     <div className="markdown-body prose prose-invert prose-sm max-w-none">
                       <ReactMarkdown>{msg.text}</ReactMarkdown>
                     </div>
+                    {msg.role === 'model' && (
+                      <div className="absolute -right-2 -bottom-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                        <button 
+                          onClick={() => readAloud(msg.text)}
+                          className="w-7 h-7 bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-500 hover:text-white border border-zinc-700"
+                          title="Read aloud"
+                        >
+                          <Volume2 size={12} />
+                        </button>
+                        <button 
+                          onClick={() => copyToClipboard(msg.text, i)}
+                          className="w-7 h-7 bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-500 hover:text-white border border-zinc-700"
+                          title="Copy"
+                        >
+                          {copiedId === i ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <span className="text-[8px] md:text-[9px] text-zinc-600 mt-1 uppercase tracking-widest font-bold">
+                  <span className="text-[9px] text-zinc-600 mt-2 uppercase tracking-widest font-black">
                     {msg.role === 'user' ? t.chat.user : t.chat.bot}
                   </span>
                 </div>
               ))}
               {isTyping && (
                 <div className="flex flex-col items-start">
-                  <div className="bg-zinc-900 text-zinc-500 p-3 md:p-4 rounded-2xl rounded-tl-none border border-zinc-800 flex items-center gap-1.5">
-                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-zinc-600 rounded-full animate-bounce" />
+                  <div className="bg-zinc-900/50 backdrop-blur-md text-zinc-500 p-4 rounded-[1.5rem] rounded-tl-none border border-white/5 flex items-center gap-3">
+                    <div className="relative w-5 h-5">
+                      <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-full" />
+                      <div className="absolute inset-0 border-2 border-cyan-500 rounded-full border-t-transparent animate-spin" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/80 animate-pulse">
+                      POWER analyse...
+                    </span>
                   </div>
                 </div>
               )}
               <div ref={chatEndRef} />
             </div>
 
-            {/* Chat Input */}
-            <div className="p-4 md:p-6 bg-zinc-950 border-t border-zinc-900">
-              <div className="relative flex items-center">
-                <input 
-                  type="text" 
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder={t.chat.placeholder}
-                  className="w-full text-xs md:text-sm bg-zinc-900 border border-zinc-800 rounded-2xl pl-4 pr-12 md:pl-5 md:pr-14 py-3 md:py-3.5 focus:ring-2 focus:ring-cyan-500/50 outline-none text-white transition-all placeholder:text-zinc-600"
-                />
-                <button 
-                  onClick={handleSendMessage}
-                  disabled={!chatInput.trim() || isTyping}
-                  className="absolute right-1.5 p-2 md:right-2 md:p-2.5 bg-cyan-500 text-zinc-950 rounded-xl hover:bg-cyan-400 disabled:opacity-50 disabled:hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-500/20"
-                >
-                  <ArrowRight size={16} className="md:size-18" />
-                </button>
+            {/* Quick Actions */}
+            {chatMessages.length < 3 && (
+              <div className="px-5 md:px-6 pb-2 flex gap-2 overflow-x-auto scrollbar-hide">
+                {[
+                  lang === 'fr' ? "Nos services ?" : "Our services?",
+                  lang === 'fr' ? "Qui sont les fondateurs ?" : "Who are the founders?",
+                  lang === 'fr' ? "C'est quoi AI Start 237 ?" : "What is AI Start 237?"
+                ].map((action, i) => (
+                  <button 
+                    key={i}
+                    onClick={() => handleQuickAction(action)}
+                    className="whitespace-nowrap px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-400 hover:text-cyan-400 hover:border-cyan-500/50 transition-all"
+                  >
+                    {action}
+                  </button>
+                ))}
               </div>
-              <p className="text-[8px] md:text-[9px] text-zinc-600 text-center mt-3 md:mt-4 uppercase tracking-[0.2em] font-medium">
+            )}
+
+            {/* Chat Input */}
+            <div className="relative p-5 md:p-6 bg-zinc-950/50 border-t border-white/5 backdrop-blur-xl">
+              <div className="relative flex items-center gap-2">
+                <button 
+                  onClick={toggleVoiceInput}
+                  className={cn(
+                    "p-3 rounded-2xl transition-all border",
+                    isListening 
+                      ? "bg-red-500/20 text-red-400 border-red-500/50 animate-pulse" 
+                      : "bg-zinc-900/50 text-zinc-400 border-white/5 hover:text-cyan-400 hover:bg-cyan-500/10"
+                  )}
+                  title="Voice input"
+                >
+                  <Mic size={18} />
+                </button>
+                <button 
+                  onClick={() => handleSendMessage(lang === 'fr' ? "Propose-moi une vision futuriste et une idée de produit révolutionnaire que PowerAi pourrait lancer pour transformer l'économie du Cameroun grâce à l'IA." : "Propose a futuristic vision and a revolutionary product idea that PowerAi could launch to transform Cameroon's economy through AI.")}
+                  className="p-3 bg-zinc-900/50 text-zinc-400 rounded-2xl hover:text-orange-400 hover:bg-orange-500/10 transition-all border border-white/5"
+                  title="Magic Action"
+                >
+                  <Sparkles size={18} />
+                </button>
+                <div className="relative flex-1">
+                  <input 
+                    type="text" 
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder={t.chat.placeholder}
+                    className="w-full text-sm bg-zinc-900/50 border border-white/5 rounded-2xl pl-5 pr-14 py-3.5 focus:ring-2 focus:ring-cyan-500/30 outline-none text-white transition-all placeholder:text-zinc-600"
+                  />
+                  <button 
+                    onClick={() => handleSendMessage()}
+                    disabled={!chatInput.trim() || isTyping}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-cyan-500 text-zinc-950 rounded-xl hover:bg-cyan-400 disabled:opacity-50 disabled:hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-500/20 group"
+                  >
+                    <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+                </div>
+              </div>
+              <p className="text-[9px] text-zinc-600 text-center mt-4 uppercase tracking-[0.3em] font-black opacity-50">
                 {t.chat.poweredBy}
               </p>
             </div>
@@ -1243,27 +1395,44 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
 
   const validateWithAI = async (question: string, answer: string) => {
     try {
-      const { GoogleGenAI } = await import("@google/genai");
+      const { GoogleGenAI, Type } = await import("@google/genai");
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
       
-      const prompt = `Tu es POWER, l'assistante de PowerAi. Un utilisateur répond à la question suivante : "${question}".
+      const prompt = `Tu es POWER, l'assistante intelligente de PowerAi. Un utilisateur répond à la question suivante : "${question}".
       Sa réponse est : "${answer}".
       
-      Analyse si la réponse est cohérente, sérieuse et pertinente par rapport au projet PowerAi (démocratisation de l'IA au Cameroun via WhatsApp).
-      Si la réponse est bizarre, trop courte, hors sujet ou semble être du n'importe quoi, réponds par un avertissement poli mais ferme (max 20 mots).
-      Si la réponse est bonne et sérieuse, réponds par un encouragement court (max 15 mots).
+      Analyse si la réponse est cohérente, sérieuse et pertinente par rapport au projet PowerAi (démocratisation de l'IA au Cameroun).
       
-      Réponds uniquement avec le message de feedback, rien d'autre. Réponds en ${lang === 'fr' ? 'français' : 'anglais'}.`;
+      Format de réponse JSON :
+      {
+        "isValid": boolean,
+        "feedback": "encouragement court (max 15 mots) si valide",
+        "error": "message d'erreur poli mais ferme (max 20 mots) si invalide"
+      }
+      
+      Réponds en ${lang === 'fr' ? 'français' : 'anglais'}.`;
 
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: [{ role: "user", parts: [{ text: prompt }] }]
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              isValid: { type: Type.BOOLEAN },
+              feedback: { type: Type.STRING },
+              error: { type: Type.STRING }
+            },
+            required: ["isValid"]
+          }
+        }
       });
 
-      return response.text?.trim() || null;
+      return JSON.parse(response.text || '{}');
     } catch (e) {
       console.error("AI Validation error", e);
-      return null;
+      return { isValid: true, feedback: lang === 'fr' ? "C'est noté !" : "Noted!" };
     }
   };
 
@@ -1307,6 +1476,14 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
       
       if (response.ok) {
         setStep(13);
+        import('canvas-confetti').then(confetti => {
+          confetti.default({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#22d3ee', '#0ea5e9', '#ffffff']
+          });
+        });
       } else {
         setError("Erreur lors de l'enregistrement. Veuillez réessayer.");
       }
@@ -1356,14 +1533,24 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
       }
     }
 
+    // Contact Validation (Step 12)
+    if (step === 12) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\+?[0-9]{8,15}$/;
+      if (!emailRegex.test(input) && !phoneRegex.test(input)) {
+        setError(lang === 'fr' ? "Veuillez entrer un email ou un numéro de téléphone valide." : "Please enter a valid email or phone number.");
+        return;
+      }
+    }
+
     setIsTyping(true);
     let nextStep = step + 1;
-    let aiFeedback = null;
+    let aiResult: { isValid?: boolean, feedback?: string, error?: string } | null = null;
 
     // Understanding Check (Step 4)
     if (step === 4) {
       setAnswers({ ...answers, understanding: input });
-      aiFeedback = await validateWithAI(t.report.communityPortal.onboarding.understandingQ, input);
+      aiResult = await validateWithAI(t.report.communityPortal.onboarding.understandingQ, input);
     }
 
     if (step === 5) setAnswers({ ...answers, name: input });
@@ -1388,7 +1575,7 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
     
     if (step === 11) {
       setAnswers({ ...answers, contribution: input });
-      aiFeedback = await validateWithAI(t.report.communityPortal.onboarding.q3, input);
+      aiResult = await validateWithAI(t.report.communityPortal.onboarding.q3, input);
     }
     
     if (step === 12) {
@@ -1397,15 +1584,20 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
       return;
     }
 
-    if (aiFeedback) {
-      setFeedback(aiFeedback);
+    if (aiResult) {
+      if (aiResult.isValid === false) {
+        setError(aiResult.error || (lang === 'fr' ? "Réponse invalide." : "Invalid answer."));
+        setIsTyping(false);
+        return;
+      }
+      setFeedback(aiResult.feedback || null);
     }
 
     setTimeout(() => {
       setStep(nextStep);
       setCurrentInput('');
       setIsTyping(false);
-    }, aiFeedback ? 2000 : 800);
+    }, aiResult?.feedback ? 2000 : 800);
   };
 
   const handleEmailSubmit = () => {
