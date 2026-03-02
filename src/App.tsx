@@ -378,7 +378,7 @@ export default function App() {
             <span className="text-xl font-bold tracking-tighter text-white">PowerAi</span>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
               className="text-[10px] font-bold uppercase tracking-widest px-2 md:px-3 py-1 rounded-full border border-zinc-700 hover:border-cyan-500 transition-colors"
@@ -395,16 +395,16 @@ export default function App() {
             {view === 'landing' && (
               <button 
                 onClick={() => setView('members')}
-                className="hidden sm:flex bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-white px-3 md:px-4 py-1.5 rounded-full text-xs font-bold transition-all border border-zinc-700"
+                className="flex bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-white px-2 md:px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold transition-all border border-zinc-700"
               >
-                <Users size={14} className="mr-2" />
-                {t.report.communityPortal.foundersPortal.members.title}
+                <Users size={14} className="sm:mr-2" />
+                <span className="hidden sm:inline">{t.report.communityPortal.foundersPortal.members.title}</span>
               </button>
             )}
             {view === 'landing' && (
               <button 
                 onClick={() => setView('community')}
-                className="bg-white/10 hover:bg-white/20 text-white px-3 md:px-4 py-1.5 rounded-full text-xs font-bold transition-all border border-white/20"
+                className="bg-white/10 hover:bg-white/20 text-white px-2 md:px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold transition-all border border-white/20"
               >
                 {t.report.solution.community.title}
               </button>
@@ -468,7 +468,7 @@ export default function App() {
             initial={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
             animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
-            className="fixed inset-x-4 bottom-4 top-20 md:top-auto md:inset-x-auto md:bottom-24 md:right-8 z-50 md:w-[420px] md:h-[650px] bg-zinc-950/90 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_0_80px_-20px_rgba(34,211,238,0.3)] border border-white/10 flex flex-col overflow-hidden"
+            className="fixed inset-x-2 bottom-2 top-16 md:top-auto md:inset-x-auto md:bottom-24 md:right-8 z-50 md:w-[380px] md:h-[600px] bg-zinc-950/90 backdrop-blur-3xl rounded-[2rem] md:rounded-[2.5rem] shadow-[0_0_80px_-20px_rgba(34,211,238,0.3)] border border-white/10 flex flex-col overflow-hidden"
           >
             {/* Animated Glow Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
