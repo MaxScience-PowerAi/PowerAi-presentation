@@ -3,13 +3,21 @@ export const translations = {
     header: {
       title: "PowerAi : L'IA pour le Cameroun",
       aiAssistant: "Assistant IA",
-      scrollInfo: "Faites défiler pour découvrir le projet"
+      scrollInfo: "Faites défiler pour découvrir le projet",
+      location: "Lieu",
+      city: "Douala, Cameroun",
+      presentation: "Présentation Stratégique Interactive"
     },
     chat: {
       welcome: "Bonjour ! Je suis l'assistant IA de PowerAi. Comment puis-je vous aider à découvrir notre vision aujourd'hui ?",
       placeholder: "Posez une question...",
       thinking: "L'IA réfléchit...",
       error: "Une erreur est survenue lors de la connexion à l'IA.",
+      fallback: "Désolé, je n'ai pas pu générer de réponse.",
+      status: "En ligne",
+      user: "Vous",
+      bot: "PowerAi",
+      poweredBy: "Propulsé par PowerAi Core Engine",
       systemInstruction: "Tu es l'assistant exécutif virtuel de PowerAi. Ton rôle est de représenter l'entreprise avec le plus haut niveau de professionnalisme. Tu es un expert en intelligence artificielle, en stratégie d'entreprise et en développement technologique en Afrique. Tu réponds de manière concise, structurée et élégante. Utilise un ton assuré mais humble, reflétant l'ambition de Wilfred Kouam et Christ Lowe. Si on te pose des questions sur le projet, appuie-toi sur les données de la présentation stratégique. Réponds en français."
     },
     report: {
@@ -50,7 +58,16 @@ export const translations = {
         b2b: { title: "Services B2B", pilier: "Pilier 1", target: "Entreprises locales, PME, hôtels, boutiques", prop: "Chatbots, assistants IA, contrôle d'accès, digitalisation sur mesure", model: "Abonnement mensuel accessible, ROI visible" },
         aistart: { title: "AI Start 237", pilier: "Pilier 2", target: "Jeunes 18–30 ans, passionnés tech, chômeurs qualifiés", prop: "Formation de masse à l'IA via WhatsApp, accessible à tous", model: "Abonnement hebdomadaire = prix d'une sucrerie" },
         community: { title: "Communauté", pilier: "Pilier 3", target: "Talents tech, développeurs, experts IA locaux", prop: "Écosystème de partage, opportunités, collaboration", model: "Vivier de talents pour projets clients et recrutement" },
-        diff: { title: "Différenciation : \"Cameroon-First\"", desc: "Conçu ici, pour ici, par des locaux. WhatsApp first, Mobile Money, offline-first, formation accessible." }
+        diff: { title: "Différenciation : \"Cameroon-First\"", desc: "Conçu ici, pour ici, par des locaux. WhatsApp first, Mobile Money, offline-first, formation accessible." },
+        labels: {
+          target: "Cible",
+          prop: "Proposition",
+          model: "Modèle",
+          how: "Comment ?",
+          impact: "Impact visé",
+          mitigation: "Mitigation",
+          contactUs: "Contactez-nous"
+        }
       },
       founders: {
         title: "L'équipe : Deux mathématiciens, une équation gagnante",
@@ -124,6 +141,15 @@ export const translations = {
         ],
         quote: "Nous cherchons des partenaires de lancement, pas seulement des financeurs."
       },
+      risks: {
+        title: "Risques & Mitigation",
+        list: [
+          { title: "Difficulté technique WhatsApp API", level: "Moyenne", color: "orange", mitigation: "Tests précoces, alternatives (Twilio, 2Chat)" },
+          { title: "Adoption lente des entreprises", level: "Moyenne", color: "orange", mitigation: "Prix attractifs pour les 'early adopters', preuve de ROI rapide" },
+          { title: "Concurrence étrangère", level: "Faible", color: "cyan", mitigation: "Différenciation 'local first', support en français/langues locales" },
+          { title: "Manque de talents formés", level: "Faible", color: "cyan", mitigation: "AI Start 237 crée notre propre vivier de talents" }
+        ]
+      },
       recap: {
         title: "PowerAi en 30 secondes",
         questions: [
@@ -152,13 +178,21 @@ export const translations = {
     header: {
       title: "PowerAi: AI for Cameroon",
       aiAssistant: "AI Assistant",
-      scrollInfo: "Scroll down to discover the project"
+      scrollInfo: "Scroll down to discover the project",
+      location: "Location",
+      city: "Douala, Cameroon",
+      presentation: "Interactive Strategic Presentation"
     },
     chat: {
       welcome: "Hello! I am the PowerAi AI assistant. How can I help you discover our vision today?",
       placeholder: "Ask a question...",
       thinking: "AI is thinking...",
       error: "An error occurred while connecting to the AI.",
+      fallback: "Sorry, I couldn't generate a response.",
+      status: "Online",
+      user: "You",
+      bot: "PowerAi",
+      poweredBy: "Powered by PowerAi Core Engine",
       systemInstruction: "You are the virtual executive assistant of PowerAi. Your role is to represent the company with the highest level of professionalism. You are an expert in artificial intelligence, business strategy, and technological development in Africa. Respond concisely, structurally, and elegantly. Use a confident yet humble tone, reflecting the ambition of Wilfred Kouam and Christ Lowe. If asked about the project, rely on the data from the strategic presentation. Respond in English."
     },
     report: {
@@ -199,7 +233,16 @@ export const translations = {
         b2b: { title: "B2B Services", pilier: "Pillar 1", target: "Local companies, SMEs, hotels, shops", prop: "Chatbots, AI assistants, access control, custom digitalization", model: "Accessible monthly subscription, visible ROI" },
         aistart: { title: "AI Start 237", pilier: "Pillar 2", target: "Youth 18–30, tech enthusiasts, qualified unemployed", prop: "Mass AI training via WhatsApp, accessible to all", model: "Weekly subscription = price of a candy" },
         community: { title: "Community", pilier: "Pillar 3", target: "Tech talents, developers, local AI experts", prop: "Sharing ecosystem, opportunities, collaboration", model: "Talent pool for client projects and recruitment" },
-        diff: { title: "Differentiation: \"Cameroon-First\"", desc: "Designed here, for here, by locals. WhatsApp first, Mobile Money, offline-first, accessible training." }
+        diff: { title: "Differentiation: \"Cameroon-First\"", desc: "Designed here, for here, by locals. WhatsApp first, Mobile Money, offline-first, accessible training." },
+        labels: {
+          target: "Target",
+          prop: "Proposition",
+          model: "Model",
+          how: "How?",
+          impact: "Target Impact",
+          mitigation: "Mitigation",
+          contactUs: "Contact Us"
+        }
       },
       founders: {
         title: "The Team: Two mathematicians, a winning equation",
@@ -272,6 +315,15 @@ export const translations = {
           { title: "Infrastructure", desc: "Cloud credits access (AWS/Google). Host solutions at reduced cost." }
         ],
         quote: "We are looking for launch partners, not just funders."
+      },
+      risks: {
+        title: "Risks & Mitigation",
+        list: [
+          { title: "WhatsApp API Technical Difficulty", level: "Medium", color: "orange", mitigation: "Early testing, alternatives (Twilio, 2Chat)" },
+          { title: "Slow Business Adoption", level: "Medium", color: "orange", mitigation: "Attractive pricing for early adopters, quick ROI proof" },
+          { title: "Foreign Competition", level: "Low", color: "cyan", mitigation: "Local-first differentiation, support in French/local languages" },
+          { title: "Lack of Trained Talent", level: "Low", color: "cyan", mitigation: "AI Start 237 creates our own talent pool" }
+        ]
       },
       recap: {
         title: "PowerAi in 30 seconds",

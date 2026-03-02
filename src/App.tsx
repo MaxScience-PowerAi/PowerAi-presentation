@@ -111,7 +111,7 @@ export default function App() {
         }
       });
 
-      const aiText = response.text || (lang === 'fr' ? "Désolé, je n'ai pas pu générer de réponse." : "Sorry, I couldn't generate a response.");
+      const aiText = response.text || t.chat.fallback;
       setChatMessages(prev => [...prev, { role: 'model', text: aiText }]);
     } catch (error) {
       console.error('Chat error:', error);
@@ -221,7 +221,7 @@ export default function App() {
                   <p className="text-xs md:text-sm font-bold text-white tracking-tight">PowerAi Intelligence</p>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                    <span className="text-[9px] md:text-[10px] text-zinc-500 font-medium uppercase tracking-widest">Online</span>
+                    <span className="text-[9px] md:text-[10px] text-zinc-500 font-medium uppercase tracking-widest">{t.chat.status}</span>
                   </div>
                 </div>
               </div>
@@ -245,7 +245,7 @@ export default function App() {
                     </div>
                   </div>
                   <span className="text-[8px] md:text-[9px] text-zinc-600 mt-1 uppercase tracking-widest font-bold">
-                    {msg.role === 'user' ? 'You' : 'PowerAi'}
+                    {msg.role === 'user' ? t.chat.user : t.chat.bot}
                   </span>
                 </div>
               ))}
@@ -281,7 +281,7 @@ export default function App() {
                 </button>
               </div>
               <p className="text-[8px] md:text-[9px] text-zinc-600 text-center mt-3 md:mt-4 uppercase tracking-[0.2em] font-medium">
-                Powered by PowerAi Core Engine
+                {t.chat.poweredBy}
               </p>
             </div>
           </motion.div>
@@ -323,8 +323,8 @@ export default function App() {
                 <p className="text-lg font-bold text-white">Wilfred Kouam & Christ Lowe</p>
               </div>
               <div className="text-left">
-                <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2">Location</p>
-                <p className="text-lg font-bold text-white">Douala, Cameroun</p>
+                <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2">{t.header.location}</p>
+                <p className="text-lg font-bold text-white">{t.header.city}</p>
               </div>
             </div>
           </motion.div>
@@ -469,15 +469,15 @@ export default function App() {
                 <h3 className="text-2xl font-bold text-white mb-4">{t.report.solution.b2b.title}</h3>
                 <div className="space-y-6">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">Cible</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.target}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.b2b.target}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">Proposition</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.prop}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.b2b.prop}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">Modèle</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.model}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.b2b.model}</p>
                   </div>
                 </div>
@@ -494,15 +494,15 @@ export default function App() {
                 <h3 className="text-2xl font-bold text-white mb-4">{t.report.solution.aistart.title}</h3>
                 <div className="space-y-6">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">Cible</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">{t.report.solution.labels.target}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.aistart.target}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">Proposition</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">{t.report.solution.labels.prop}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.aistart.prop}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">Modèle</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">{t.report.solution.labels.model}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.aistart.model}</p>
                   </div>
                 </div>
@@ -519,15 +519,15 @@ export default function App() {
                 <h3 className="text-2xl font-bold text-white mb-4">{t.report.solution.community.title}</h3>
                 <div className="space-y-6">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">Cible</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.target}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.community.target}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">Proposition</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.prop}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.community.prop}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">Modèle</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.model}</p>
                     <p className="text-sm text-zinc-400">{t.report.solution.community.model}</p>
                   </div>
                 </div>
@@ -691,11 +691,11 @@ export default function App() {
                   </h4>
                   <div className="space-y-6">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">Comment ?</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.solution.labels.how}</p>
                       <p className="text-sm text-zinc-300">{block.comment}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">Impact visé</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.solution.labels.impact}</p>
                       <p className="text-sm text-cyan-400 font-medium">{block.impact}</p>
                     </div>
                   </div>
@@ -826,31 +826,26 @@ export default function App() {
           className="py-24 px-4 bg-zinc-900/50"
         >
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">Risques & Mitigation</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                { title: "Difficulté technique WhatsApp API", level: "Moyenne", color: "orange", mitigation: "Tests early, alternatives (Twilio, 2Chat)" },
-                { title: "Adoption lente des entreprises", level: "Moyenne", color: "orange", mitigation: "Prix cassés early adopters, preuve ROI rapide" },
-                { title: "Concurrence étrangère", level: "Faible", color: "cyan", mitigation: "Différenciation \"local first\", support en français/langues locales" },
-                { title: "Manque de talents formés", level: "Faible", color: "cyan", mitigation: "AI Start 237 crée notre propre vivier de talents" }
-              ].map((risk, i) => (
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.risks.title}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {t.report.risks.list.map((risk, i) => (
                 <motion.div 
                   key={i} 
                   whileHover={{ scale: 1.01 }}
-                  className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800"
+                  className="p-6 md:p-8 bg-zinc-900 rounded-[1.5rem] md:rounded-3xl border border-zinc-800"
                 >
                   <div className="flex justify-between items-start mb-6">
-                    <h4 className="text-lg font-bold text-white">{risk.title}</h4>
+                    <h4 className="text-base md:text-lg font-bold text-white pr-4">{risk.title}</h4>
                     <span className={cn(
-                      "px-2 py-0.5 text-[10px] font-bold rounded-full border",
+                      "px-2 py-0.5 text-[9px] md:text-[10px] font-bold rounded-full border whitespace-nowrap",
                       risk.color === 'orange' ? "bg-orange-500/10 text-orange-400 border-orange-500/20" : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
                     )}>{risk.level}</span>
                   </div>
                   <div className="flex gap-3 text-xs text-zinc-400">
                     <ShieldAlert className={risk.color === 'orange' ? "text-orange-500" : "text-cyan-500"} size={16} />
                     <div>
-                      <p className="font-bold text-zinc-300 mb-1">Mitigation</p>
-                      <p>{risk.mitigation}</p>
+                      <p className="font-bold text-zinc-300 mb-1 uppercase tracking-widest text-[10px]">Mitigation</p>
+                      <p className="leading-relaxed">{risk.mitigation}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -867,9 +862,9 @@ export default function App() {
           className="py-24 px-4"
         >
           <div className="max-w-5xl mx-auto">
-            <div className="p-12 bg-zinc-900 rounded-[3rem] border border-zinc-800 relative group">
+            <div className="p-8 md:p-12 bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-zinc-800 relative group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[100px] group-hover:bg-cyan-500/10 transition-all" />
-              <h2 className="text-3xl font-bold text-white mb-12 flex items-center gap-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-12 flex items-center gap-4">
                 <Info className="text-cyan-400" />
                 {t.report.recap.title}
               </h2>
@@ -877,7 +872,7 @@ export default function App() {
                 {t.report.recap.questions.map((item, i) => (
                   <div key={i} className="space-y-2">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">{item.q}</p>
-                    <p className="text-sm text-zinc-300 font-medium">{item.a}</p>
+                    <p className="text-xs md:text-sm text-zinc-300 font-medium leading-relaxed">{item.a}</p>
                   </div>
                 ))}
               </div>
@@ -901,39 +896,45 @@ export default function App() {
               <p className="text-zinc-400 text-lg">{t.report.cta.sub}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-20">
               {t.report.cta.profiles.map((profile, i) => (
-                <div key={i} className="p-10 bg-zinc-900 rounded-[2.5rem] border border-zinc-800 group hover:bg-zinc-800/50 transition-all">
-                  <h4 className="text-xl font-bold text-white mb-4 flex items-center justify-between">
+                <div key={i} className="p-8 md:p-10 bg-zinc-900 rounded-[1.5rem] md:rounded-[2.5rem] border border-zinc-800 group hover:bg-zinc-800/50 transition-all">
+                  <h4 className="text-lg md:text-xl font-bold text-white mb-4 flex items-center justify-between">
                     {profile.title}
                     <ChevronRight className="text-zinc-700 group-hover:text-cyan-400 transition-colors" />
                   </h4>
-                  <p className="text-sm text-zinc-400 leading-relaxed mb-8">{profile.desc}</p>
-                  <button className="text-xs font-bold uppercase tracking-widest text-cyan-400 flex items-center gap-2 group-hover:gap-4 transition-all">
-                    Contactez-nous <ArrowRight size={14} />
+                  <p className="text-xs md:text-sm text-zinc-400 leading-relaxed mb-8">{profile.desc}</p>
+                  <button className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-cyan-400 flex items-center gap-2 group-hover:gap-4 transition-all">
+                    {t.report.solution.labels.contactUs} <ArrowRight size={14} />
                   </button>
                 </div>
               ))}
             </div>
 
             <div className="flex flex-col md:flex-row justify-between items-center gap-12 pt-12 border-t border-zinc-800">
-              <div className="flex flex-col md:flex-row items-center gap-8">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Phone size={14} className="text-cyan-500" />
-                    <span className="text-xs text-zinc-400">Christ: +237 678 831 868</span>
+              <div className="flex flex-col sm:flex-row items-center gap-8">
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center">
+                      <Phone size={14} className="text-cyan-500" />
+                    </div>
+                    <span className="text-xs text-zinc-400 font-medium">Christ: +237 678 831 868</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Phone size={14} className="text-cyan-500" />
-                    <span className="text-xs text-zinc-400">Wilfred: +237 688 605 807</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center">
+                      <Phone size={14} className="text-cyan-500" />
+                    </div>
+                    <span className="text-xs text-zinc-400 font-medium">Wilfred: +237 688 605 807</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Mail size={16} className="text-cyan-500" />
-                  <span className="text-xs text-zinc-400">contact@powerai.cm</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center">
+                    <Mail size={16} className="text-cyan-500" />
+                  </div>
+                  <span className="text-xs text-zinc-400 font-medium">contact@powerai.cm</span>
                 </div>
               </div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-500/50 italic">
+              <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-500/50 italic text-center md:text-right">
                 {t.report.cta.footer}
               </p>
             </div>
@@ -949,7 +950,7 @@ export default function App() {
           </div>
           <span className="text-sm font-bold tracking-tighter text-white">PowerAi 2026</span>
         </div>
-        <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Interactive Strategic Presentation</p>
+        <p className="text-[10px] text-zinc-600 uppercase tracking-widest">{t.header.presentation}</p>
       </footer>
     </div>
   );
