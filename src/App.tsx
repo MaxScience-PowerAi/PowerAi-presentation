@@ -1,5 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from 'recharts';
+import { 
   Cpu, 
   MessageSquare, 
   Handshake,
@@ -31,12 +44,130 @@ import {
   Bot,
   Star,
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  BarChart3,
+  LayoutDashboard,
+  RefreshCw
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import { cn } from './lib/utils';
 import { translations } from './translations';
+
+const GROWTH_DATA = [
+  { year: '2024', value: 120 },
+  { year: '2025', value: 168 },
+  { year: '2026', value: 235 },
+  { year: '2027', value: 329 },
+  { year: '2028', value: 460 },
+  { year: '2029', value: 644 },
+];
+
+function GrowthChart({ t }: { t: any }) {
+  return (
+    <div className="h-[300px] w-full mt-8 bg-zinc-950/50 p-4 rounded-3xl border border-zinc-800/50">
+      <h4 className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-4">{t.report.constat.chart.title}</h4>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={GROWTH_DATA}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#18181b" vertical={false} />
+          <XAxis 
+            dataKey="year" 
+            stroke="#52525b" 
+            fontSize={10} 
+            tickLine={false} 
+            axisLine={false}
+          />
+          <YAxis 
+            stroke="#52525b" 
+            fontSize={10} 
+            tickLine={false} 
+            axisLine={false}
+            tickFormatter={(value) => `$${value}M`}
+          />
+          <Tooltip 
+            contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '12px' }}
+            itemStyle={{ color: '#22d3ee', fontSize: '12px' }}
+            labelStyle={{ color: '#71717a', fontSize: '10px', marginBottom: '4px' }}
+          />
+          <Line 
+            type="monotone" 
+            dataKey="value" 
+            stroke="#22d3ee" 
+            strokeWidth={3} 
+            dot={{ fill: '#22d3ee', strokeWidth: 2, r: 4 }}
+            activeDot={{ r: 6, strokeWidth: 0 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function StrategicDashboard({ t, lang, applications, members }: { t: any, lang: 'fr' | 'en', applications: any[], members: any[] }) {
+  const pendingCount = applications.filter(a => a.moderation_status === 'pending').length;
+  const workerCount = members.filter(m => m.role?.toLowerCase().includes('travail') || m.role?.toLowerCase().includes('work')).length;
+  const studentCount = members.length - workerCount;
+  
+  const pieData = [
+    { name: t.report.communityPortal.foundersPortal.analytics.studentRatio, value: studentCount },
+    { name: t.report.communityPortal.foundersPortal.analytics.workerRatio, value: workerCount },
+  ];
+  
+  const COLORS = ['#22d3ee', '#f97316'];
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+      <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.communityPortal.foundersPortal.analytics.totalMembers}</p>
+          <p className="text-4xl font-bold text-white">{members.length}</p>
+        </div>
+        <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.communityPortal.foundersPortal.analytics.pendingApps}</p>
+          <p className="text-4xl font-bold text-cyan-400">{pendingCount}</p>
+        </div>
+        <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">Growth</p>
+          <p className="text-4xl font-bold text-emerald-400">+12%</p>
+        </div>
+        <div className="sm:col-span-3 p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl h-[250px]">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-4">{t.report.communityPortal.foundersPortal.analytics.distribution}</p>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip 
+                contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '12px' }}
+                itemStyle={{ fontSize: '12px' }}
+              />
+              <Legend verticalAlign="bottom" height={36}/>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      <div className="p-8 bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 rounded-[2.5rem] flex flex-col justify-center">
+        <LayoutDashboard className="text-cyan-400 mb-6" size={40} />
+        <h3 className="text-2xl font-bold text-white mb-4">{t.report.communityPortal.foundersPortal.analytics.title}</h3>
+        <p className="text-sm text-zinc-400 leading-relaxed">
+          {lang === 'fr' 
+            ? "Suivez l'évolution de votre écosystème en temps réel. Prenez des décisions basées sur la donnée pour maximiser l'impact de PowerAi."
+            : "Track your ecosystem's evolution in real-time. Make data-driven decisions to maximize PowerAi's impact."}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [view, setView] = useState<'landing' | 'community' | 'founders' | 'members'>('landing');
@@ -414,69 +545,24 @@ export default function App() {
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
                   {t.report.constat.title}
                 </h2>
+                <GrowthChart t={t} />
               </div>
-              <div className="flex-1 p-8 bg-zinc-800/50 rounded-[2rem] border border-zinc-700 italic text-xl text-zinc-300 font-light leading-relaxed">
-                "{t.report.constat.quote}"
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Global */}
-              <div className="p-8 md:p-12 bg-zinc-800/30 rounded-[2.5rem] border border-zinc-700/50 hover:bg-zinc-800/50 transition-all">
-                <div className="flex items-center gap-3 mb-10">
-                  <TrendingUp className="text-cyan-400" size={20} />
-                  <h3 className="text-xl font-bold text-white uppercase tracking-widest">{t.report.constat.global.title}</h3>
+              <div className="flex-1 space-y-8">
+                <div className="p-8 bg-zinc-800/50 rounded-[2rem] border border-zinc-700 italic text-xl text-zinc-300 font-light leading-relaxed">
+                  "{t.report.constat.quote}"
                 </div>
-                <div className="space-y-8">
-                  <div className="flex items-start gap-4">
-                    <div className="text-3xl font-bold text-cyan-400">{t.report.constat.global.market.value}</div>
-                    <div>
-                      <p className="text-sm font-bold text-white">{t.report.constat.global.market.label}</p>
-                      <p className="text-xs text-zinc-500">{t.report.constat.global.market.desc}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[t.report.constat.global.market, t.report.constat.global.whatsapp].map((item, i) => (
+                    <div key={i} className="flex items-center gap-4 p-4 bg-zinc-900/50 rounded-2xl border border-zinc-800">
+                      <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+                        <TrendingUp size={20} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white">{item.label}</p>
+                        <p className="text-[10px] text-zinc-500">{item.desc}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="text-3xl font-bold text-cyan-400">{t.report.constat.global.whatsapp.value}</div>
-                    <div>
-                      <p className="text-sm font-bold text-white">{t.report.constat.global.whatsapp.label}</p>
-                      <p className="text-xs text-zinc-500">{t.report.constat.global.whatsapp.desc}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-                      <Users size={18} className="text-cyan-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-white">{t.report.constat.global.youth.label}</p>
-                      <p className="text-xs text-zinc-500">{t.report.constat.global.youth.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Local */}
-              <div className="p-8 md:p-12 bg-orange-500/5 rounded-[2.5rem] border border-orange-500/20 hover:bg-orange-500/10 transition-all">
-                <div className="flex items-center gap-3 mb-10">
-                  <Lightbulb className="text-orange-400" size={20} />
-                  <h3 className="text-xl font-bold text-white uppercase tracking-widest">{t.report.constat.local.title}</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  <div>
-                    <p className="text-sm font-bold text-orange-400 mb-1">{t.report.constat.local.gap.label}</p>
-                    <p className="text-xs text-zinc-400 leading-relaxed">{t.report.constat.local.gap.desc}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-orange-400 mb-1">{t.report.constat.local.unadapted.label}</p>
-                    <p className="text-xs text-zinc-400 leading-relaxed">{t.report.constat.local.unadapted.desc}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-orange-400 mb-1">{t.report.constat.local.inaccessible.label}</p>
-                    <p className="text-xs text-zinc-400 leading-relaxed">{t.report.constat.local.inaccessible.desc}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-orange-400 mb-1">{t.report.constat.local.simplicity.label}</p>
-                    <p className="text-xs text-zinc-400 leading-relaxed">{t.report.constat.local.simplicity.desc}</p>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -830,35 +916,65 @@ export default function App() {
           </div>
         </motion.section>
 
-        {/* Roadmap */}
+        {/* Roadmap Section */}
         <motion.section 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="py-24 px-4 bg-zinc-950"
         >
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.roadmap.title}</h2>
-            <div className="relative space-y-12">
-              <div className="absolute left-8 top-0 bottom-0 w-px bg-zinc-800" />
-              {t.report.roadmap.steps.map((step, i) => (
-                <motion.div 
-                  key={i} 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="relative flex gap-12 items-start group"
-                >
-                  <div className="w-16 h-16 bg-zinc-900 rounded-2xl border border-cyan-500/50 flex items-center justify-center z-10 flex-shrink-0 shadow-lg shadow-cyan-500/10 group-hover:scale-110 transition-transform">
-                    <span className="text-[10px] font-bold text-cyan-400 uppercase text-center leading-tight">{step.period}</span>
-                  </div>
-                  <div className="pt-2">
-                    <h4 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">{step.title}</h4>
-                    <p className="text-zinc-400 text-sm leading-relaxed">{step.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
+                  <Calendar className="text-cyan-400" size={16} />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Timeline</span>
+                </div>
+                <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight">{t.report.roadmap.title}</h2>
+              </div>
+              <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-cyan-500" /> {t.report.roadmap.interactive.current}</span>
+                <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-zinc-800" /> {t.report.roadmap.interactive.next}</span>
+              </div>
+            </div>
+
+            <div className="relative">
+              {/* Horizontal Line */}
+              <div className="absolute top-1/2 left-0 w-full h-px bg-zinc-800 -translate-y-1/2 hidden lg:block" />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 relative z-10">
+                {t.report.roadmap.steps.map((step, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="relative group"
+                  >
+                    <div className={cn(
+                      "p-8 rounded-[2rem] border transition-all duration-500 h-full flex flex-col",
+                      i === 0 
+                        ? "bg-cyan-500/10 border-cyan-500/30 shadow-2xl shadow-cyan-500/10" 
+                        : "bg-zinc-900 border-zinc-800 hover:border-zinc-700"
+                    )}>
+                      <div className={cn(
+                        "w-12 h-12 rounded-2xl flex items-center justify-center mb-6 transition-all",
+                        i === 0 ? "bg-cyan-500 text-zinc-950" : "bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700"
+                      )}>
+                        <span className="text-sm font-black">{step.period}</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-white mb-3 leading-tight">{step.title}</h4>
+                      <p className="text-xs text-zinc-400 leading-relaxed mt-auto">{step.desc}</p>
+                    </div>
+                    
+                    {/* Connector Dot */}
+                    <div className={cn(
+                      "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-zinc-950 z-20 hidden lg:block",
+                      i === 0 ? "bg-cyan-500" : "bg-zinc-800"
+                    )} />
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </motion.section>
@@ -1045,7 +1161,7 @@ export default function App() {
     </div>
   )}
   {view === 'founders' && (
-    <FoundersPortal t={t} onBack={() => setView('landing')} />
+    <FoundersPortal t={t} lang={lang} onBack={() => setView('landing')} />
   )}
 </main>
 </div>
@@ -1054,6 +1170,7 @@ export default function App() {
 
 function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBack: () => void }) {
   const [step, setStep] = useState(0); 
+  const [humanQuestion, setHumanQuestion] = useState<{ q: string, a: string } | null>(null);
   const [answers, setAnswers] = useState({ 
     name: '', 
     situation: '', 
@@ -1069,6 +1186,60 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
   const [isTyping, setIsTyping] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    generateHumanQuestion();
+  }, [lang]);
+
+  const generateHumanQuestion = async () => {
+    setIsTyping(true);
+    try {
+      const { GoogleGenAI, Type } = await import("@google/genai");
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+      
+      const prompt = `Génère une question de vérification humaine simple (niveau école primaire/collège) en ${lang === 'fr' ? 'français' : 'anglais'}.
+      La question doit être variée : mathématiques simples, culture générale, logique ou géographie du Cameroun.
+      La réponse doit être courte (un mot ou un chiffre).
+      
+      Exemples :
+      - "Combien font 10 + 5 ?" -> "15"
+      - "Quelle est la capitale du Cameroun ?" -> "Yaoundé"
+      - "Combien de pattes a un chat ?" -> "4"
+      
+      Génère une question UNIQUE et différente à chaque fois.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              q: { type: Type.STRING, description: "La question" },
+              a: { type: Type.STRING, description: "La réponse courte" }
+            },
+            required: ["q", "a"]
+          }
+        }
+      });
+
+      const data = JSON.parse(response.text || '{}');
+      if (data.q && data.a) {
+        setHumanQuestion(data);
+      } else {
+        throw new Error("Invalid response format");
+      }
+    } catch (e) {
+      console.error("Error generating human question", e);
+      // Fallback to static list
+      const questions = t.report.communityPortal.onboarding.humanQuestions;
+      const randomQ = questions[Math.floor(Math.random() * questions.length)];
+      setHumanQuestion(randomQ);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
   const validateWithAI = async (question: string, answer: string) => {
     try {
@@ -1156,7 +1327,12 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
 
     // Human Check
     if (step === 1) {
-      if (input !== '8') {
+      const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const normalizedAnswer = (humanQuestion?.a || '8').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      
+      const isCorrect = normalizedInput.includes(normalizedAnswer);
+      
+      if (!isCorrect) {
         setError(t.report.communityPortal.onboarding.humanError);
         return;
       }
@@ -1396,7 +1572,16 @@ return (
                 {step === 1 && (
                   <div className="space-y-6">
                     <p className="text-cyan-400 font-bold italic text-base md:text-xl">"{t.report.communityPortal.onboarding.aiIntro}"</p>
-                    <p className="text-zinc-300">{t.report.communityPortal.onboarding.humanCheck}</p>
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="text-zinc-300">{humanQuestion?.q || "Génération de la question..."}</p>
+                      <button 
+                        onClick={generateHumanQuestion}
+                        className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-500 hover:text-cyan-400"
+                        title="Changer de question"
+                      >
+                        <RefreshCw size={16} className={isTyping ? "animate-spin" : ""} />
+                      </button>
+                    </div>
                   </div>
                 )}
                 {step === 2 && t.report.communityPortal.onboarding.cameroonCheck}
@@ -1418,7 +1603,7 @@ return (
                     <p className="text-xl font-bold text-white">{t.report.communityPortal.onboarding.success}</p>
                     <div className="flex items-center justify-center gap-2 text-amber-400 font-bold uppercase tracking-widest text-xs">
                       <Star size={16} fill="currentColor" />
-                      <span>{lang === 'fr' ? 'Étoile de mérite PowerAi accordée' : 'PowerAi merit star granted'}</span>
+                      <span>{t.report.communityPortal.onboarding.meritStar}</span>
                     </div>
                   </div>
                 )}
@@ -1443,7 +1628,7 @@ return (
               value={currentInput}
               onChange={(e) => setCurrentInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && currentInput.trim() && handleNext()}
-              placeholder={lang === 'fr' ? 'Tapez votre réponse ici...' : 'Type your answer here...'}
+              placeholder={t.report.communityPortal.onboarding.placeholder}
               className="w-full bg-zinc-950/80 border border-zinc-800 rounded-2xl px-6 py-5 focus:ring-4 focus:ring-cyan-500/20 outline-none text-white transition-all text-lg placeholder:text-zinc-700"
             />
             <button 
@@ -1505,7 +1690,7 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
             {t.report.communityPortal.foundersPortal.members.title}
           </h2>
           <p className="text-zinc-500 max-w-2xl mx-auto text-sm md:text-base font-light">
-            Découvrez les esprits brillants qui façonnent l'avenir de l'IA avec PowerAi.
+            {t.report.communityPortal.foundersPortal.members.membersDesc}
           </p>
         </div>
 
@@ -1569,7 +1754,7 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
   );
 }
 
-function FoundersPortal({ t, onBack }: { t: any, onBack: () => void }) {
+function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack: () => void }) {
   const [password, setPassword] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -1756,7 +1941,7 @@ function FoundersPortal({ t, onBack }: { t: any, onBack: () => void }) {
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-cyan-500/10 rounded-2xl flex items-center justify-center border border-cyan-500/20">
-            <Users className="text-cyan-400" size={24} />
+            <BarChart3 className="text-cyan-400" size={24} />
           </div>
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">{t.report.communityPortal.foundersPortal.title}</h1>
@@ -1768,7 +1953,7 @@ function FoundersPortal({ t, onBack }: { t: any, onBack: () => void }) {
                   activeTab === 'applications' ? "text-cyan-400" : "text-zinc-500 hover:text-zinc-300"
                 )}
               >
-                {applications.length} Candidatures
+                {applications.length} {lang === 'fr' ? 'Candidatures' : 'Applications'}
               </button>
               <button 
                 onClick={() => setActiveTab('members')}
@@ -1777,7 +1962,7 @@ function FoundersPortal({ t, onBack }: { t: any, onBack: () => void }) {
                   activeTab === 'members' ? "text-cyan-400" : "text-zinc-500 hover:text-zinc-300"
                 )}
               >
-                {members.length} Membres
+                {members.length} {lang === 'fr' ? 'Membres' : 'Members'}
               </button>
             </div>
           </div>
@@ -1790,6 +1975,8 @@ function FoundersPortal({ t, onBack }: { t: any, onBack: () => void }) {
           {t.report.communityPortal.foundersPortal.logout}
         </button>
       </div>
+
+      <StrategicDashboard t={t} lang={lang} applications={applications} members={members} />
 
       {activeTab === 'applications' ? (
         <div className="space-y-6">

@@ -51,7 +51,13 @@ export const translations = {
           inaccessible: { label: "Formation inaccessible", desc: "Prix prohibitifs, équipement coûteux, lieux éloignés" },
           simplicity: { label: "Besoin de simplicité", desc: "Solutions simples et adaptées, pas des outils enterprise-grade complexes" }
         },
-        quote: "Nous ne créons pas une entreprise. Nous saisissons une opportunité que personne ne voit encore."
+        quote: "Nous ne créons pas une entreprise. Nous saisissons une opportunité que personne ne voit encore.",
+        chart: {
+          title: "Projection de Croissance IA (Afrique)",
+          xAxis: "Année",
+          yAxis: "Marché (M$)",
+          legend: "Croissance estimée"
+        }
       },
       solution: {
         title: "PowerAi : L'IA conçue pour le Cameroun",
@@ -123,6 +129,11 @@ export const translations = {
       },
       roadmap: {
         title: "Roadmap 12 prochains mois",
+        interactive: {
+          viewAll: "Voir toute la timeline",
+          current: "Étape actuelle",
+          next: "À venir"
+        },
         steps: [
           { period: "M1-2", title: "Finaliser MVP chatbot", desc: "3 hôtels pilotes actifs" },
           { period: "M3-4", title: "Lancer AI Start 237 (beta)", desc: "50 apprenants inscrits" },
@@ -208,6 +219,20 @@ export const translations = {
           q3: "Que pouvez-vous apporter concrètement au projet PowerAi ?",
           q4: "Comment pouvons-nous vous contacter ? (Numéro WhatsApp et Email)",
           success: "Félicitations ! Vos informations ont été enregistrées dans le système sécurisé des fondateurs. POWER vous remercie pour votre sérieux et votre éthique.",
+          meritStar: "Étoile de mérite PowerAi accordée",
+          humanQuestions: [
+            { q: "Combien font 5 + 3 ?", a: "8" },
+            { q: "Combien de côtés a un triangle ?", a: "3" },
+            { q: "Si un cours de 2h commence à 8h, à quelle heure finit-il ? (Chiffre uniquement)", a: "10" },
+            { q: "Quelle est la capitale du Cameroun ?", a: "yaoundé" },
+            { q: "Combien de voyelles y a-t-il dans le mot 'IA' ?", a: "2" },
+            { q: "Quel est le résultat de 6 x 2 ?", a: "12" },
+            { q: "Quelle est la couleur du ciel par beau temps ?", a: "bleu" },
+            { q: "Combien de pattes a une araignée ?", a: "8" },
+            { q: "Quel est l'opposé du mot 'Noir' ?", a: "blanc" },
+            { q: "Combien de jours y a-t-il dans une semaine ?", a: "7" }
+          ],
+          placeholder: "Tapez votre réponse ici...",
           submitEmail: "Soumettre ma candidature aux fondateurs",
           back: "Retour au site principal"
         },
@@ -242,9 +267,18 @@ export const translations = {
             title: "Membres de PowerAi",
             founders: "Fondateurs",
             adherents: "Adhérents",
-            joined: "A rejoint le"
+            joined: "A rejoint le",
+            membersDesc: "Découvrez les esprits brillants qui façonnent l'avenir de l'IA avec PowerAi."
           },
-          logout: "Fermer la session"
+          logout: "Fermer la session",
+          analytics: {
+            title: "Tableau de Bord Stratégique",
+            totalMembers: "Total Membres",
+            pendingApps: "En attente",
+            studentRatio: "Ratio Étudiants",
+            workerRatio: "Ratio Travailleurs",
+            distribution: "Répartition des Talents"
+          }
         }
       }
     }
@@ -301,7 +335,13 @@ export const translations = {
           inaccessible: { label: "Inaccessible Training", desc: "Prohibitive prices, expensive equipment, remote locations" },
           simplicity: { label: "Need for Simplicity", desc: "Simple and adapted solutions, not complex enterprise-grade tools" }
         },
-        quote: "We are not creating a company. We are seizing an opportunity that no one sees yet."
+        quote: "We are not creating a company. We are seizing an opportunity that no one sees yet.",
+        chart: {
+          title: "AI Growth Projection (Africa)",
+          xAxis: "Year",
+          yAxis: "Market (M$)",
+          legend: "Estimated Growth"
+        }
       },
       solution: {
         title: "PowerAi: AI designed for Cameroon",
@@ -373,6 +413,11 @@ export const translations = {
       },
       roadmap: {
         title: "Next 12 months Roadmap",
+        interactive: {
+          viewAll: "View full timeline",
+          current: "Current stage",
+          next: "Upcoming"
+        },
         steps: [
           { period: "M1-2", title: "Finalize chatbot MVP", desc: "3 active pilot hotels" },
           { period: "M3-4", title: "Launch AI Start 237 (beta)", desc: "50 enrolled learners" },
@@ -458,6 +503,20 @@ export const translations = {
           q3: "What can you concretely bring to the PowerAi project?",
           q4: "How can we contact you? (WhatsApp number and Email)",
           success: "Congratulations! Your information has been saved in the founders' secure system. POWER thanks you for your seriousness and ethics.",
+          meritStar: "PowerAi merit star granted",
+          humanQuestions: [
+            { q: "What is 5 + 3?", a: "8" },
+            { q: "How many sides does a triangle have?", a: "3" },
+            { q: "If a 2h class starts at 8am, what time does it end? (Number only)", a: "10" },
+            { q: "What is the capital of Cameroon?", a: "yaounde" },
+            { q: "How many vowels are in the word 'AI'?", a: "2" },
+            { q: "What is 6 x 2?", a: "12" },
+            { q: "What is the color of the sky on a clear day?", a: "blue" },
+            { q: "How many legs does a spider have?", a: "8" },
+            { q: "What is the opposite of the word 'Black'?", a: "white" },
+            { q: "How many days are in a week?", a: "7" }
+          ],
+          placeholder: "Type your answer here...",
           submitEmail: "Submit my application to founders",
           back: "Back to main site"
         },
@@ -492,9 +551,18 @@ export const translations = {
             title: "PowerAi Members",
             founders: "Founders",
             adherents: "Members",
-            joined: "Joined on"
+            joined: "Joined on",
+            membersDesc: "Discover the brilliant minds shaping the future of AI with PowerAi."
           },
-          logout: "Logout"
+          logout: "Logout",
+          analytics: {
+            title: "Strategic Dashboard",
+            totalMembers: "Total Members",
+            pendingApps: "Pending",
+            studentRatio: "Student Ratio",
+            workerRatio: "Worker Ratio",
+            distribution: "Talent Distribution"
+          }
         }
       }
     }
