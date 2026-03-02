@@ -980,29 +980,148 @@ export default function App() {
 }
 
 function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBack: () => void }) {
-  const [step, setStep] = useState(0); // 0: Intro, 1: Q1, 2: Q2, 3: Q3, 4: Q4, 5: Success
-  const [answers, setAnswers] = useState({ name: '', expertise: '', understanding: '', reason: '' });
+  const [step, setStep] = useState(0); 
+  const [answers, setAnswers] = useState({ 
+    name: '', 
+    situation: '', 
+    school: '', 
+    major: '', 
+    level: '', 
+    profession: '', 
+    contribution: '', 
+    contact: '',
+    understanding: ''
+  });
   const [currentInput, setCurrentInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleNext = () => {
-    if (step === 1) setAnswers({ ...answers, name: currentInput });
-    if (step === 2) setAnswers({ ...answers, expertise: currentInput });
-    if (step === 3) setAnswers({ ...answers, understanding: currentInput });
-    if (step === 4) setAnswers({ ...answers, reason: currentInput });
+  const validateWithAI = async (question: string, answer: string) => {
+    try {
+      const { GoogleGenAI } = await import("@google/genai");
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+      
+      const prompt = `Tu es POWER, l'assistante de PowerAi. Un utilisateur répond à la question suivante : "${question}".
+      Sa réponse est : "${answer}".
+      
+      Analyse si la réponse est cohérente, sérieuse et pertinente par rapport au projet PowerAi (démocratisation de l'IA au Cameroun via WhatsApp).
+      Si la réponse est bizarre, trop courte, hors sujet ou semble être du n'importe quoi, réponds par un avertissement poli mais ferme (max 20 mots).
+      Si la réponse est bonne et sérieuse, réponds par un encouragement court (max 15 mots).
+      
+      Réponds uniquement avec le message de feedback, rien d'autre. Réponds en ${lang === 'fr' ? 'français' : 'anglais'}.`;
 
-    setCurrentInput('');
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [{ role: "user", parts: [{ text: prompt }] }]
+      });
+
+      return response.text?.trim() || null;
+    } catch (e) {
+      console.error("AI Validation error", e);
+      return null;
+    }
+  };
+
+  const handleNext = async () => {
+    const input = currentInput.trim();
+    if (!input) return;
+
+    setError(null);
+    setFeedback(null);
+
+    // Human Check
+    if (step === 1) {
+      if (input !== '8') {
+        setError(t.report.communityPortal.onboarding.humanError);
+        return;
+      }
+    }
+
+    // Cameroon Check
+    if (step === 2) {
+      const isCam = input.toLowerCase().includes('oui') || input.toLowerCase().includes('yes');
+      if (!isCam) {
+        setError(t.report.communityPortal.onboarding.cameroonOnly);
+        return;
+      }
+    }
+
+    // Browse Check
+    if (step === 3) {
+      const hasBrowsed = input.toLowerCase().includes('oui') || input.toLowerCase().includes('yes');
+      if (!hasBrowsed) {
+        setStep(-1); // Special state for "Go back"
+        return;
+      }
+    }
+
     setIsTyping(true);
+    let nextStep = step + 1;
+    let aiFeedback = null;
+
+    // Understanding Check (Step 4)
+    if (step === 4) {
+      setAnswers({ ...answers, understanding: input });
+      aiFeedback = await validateWithAI(t.report.communityPortal.onboarding.understandingQ, input);
+    }
+
+    if (step === 5) setAnswers({ ...answers, name: input });
+    
+    if (step === 6) {
+      setAnswers({ ...answers, situation: input });
+      const isStudent = input.toLowerCase().includes('etud') || input.toLowerCase().includes('stud');
+      nextStep = isStudent ? 7 : 10;
+    }
+    
+    if (step === 7) setAnswers({ ...answers, school: input });
+    if (step === 8) setAnswers({ ...answers, major: input });
+    if (step === 9) {
+      setAnswers({ ...answers, level: input });
+      nextStep = 11;
+    }
+    
+    if (step === 10) {
+      setAnswers({ ...answers, profession: input });
+      nextStep = 11;
+    }
+    
+    if (step === 11) {
+      setAnswers({ ...answers, contribution: input });
+      aiFeedback = await validateWithAI(t.report.communityPortal.onboarding.q3, input);
+    }
+    
+    if (step === 12) {
+      setAnswers({ ...answers, contact: input });
+      nextStep = 13;
+    }
+
+    if (aiFeedback) {
+      setFeedback(aiFeedback);
+      // If it's a warning (bizarre), we might want to stay on the same step?
+      // But the user said "avertir et lui dire quil repond bien", so we can show feedback and move on or let them retry.
+      // Let's move on but show the feedback.
+    }
+
     setTimeout(() => {
-      setStep(step + 1);
+      setStep(nextStep);
+      setCurrentInput('');
       setIsTyping(false);
-    }, 1000);
+    }, aiFeedback ? 2000 : 800);
   };
 
   const handleEmailSubmit = () => {
     const subject = `Candidature PowerAi - ${answers.name}`;
-    const body = `Nom: ${answers.name}\nExpertise: ${answers.expertise}\nCompréhension: ${answers.understanding}\nMotivation: ${answers.reason}`;
-    window.location.href = `mailto:christlowe6@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    let details = `Nom: ${answers.name}\nSituation: ${answers.situation}\n`;
+    details += `Compréhension: ${answers.understanding}\n`;
+    if (answers.school) {
+      details += `École: ${answers.school}\nFilière: ${answers.major}\nNiveau: ${answers.level}\n`;
+    } else {
+      details += `Profession: ${answers.profession}\n`;
+    }
+    details += `Apport: ${answers.contribution}\nContact: ${answers.contact}`;
+    
+    window.location.href = `mailto:christlowe6@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(details)}`;
   };
 
 return (
@@ -1053,7 +1172,7 @@ return (
           <Bot className="text-cyan-400" size={24} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">{t.report.communityPortal.onboarding.title}</h2>
+          <h2 className="text-xl font-bold text-white tracking-tight">{t.report.communityPortal.onboarding.aiName}</h2>
           <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t.chat.status}</p>
         </div>
       </div>
@@ -1067,12 +1186,57 @@ return (
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
+            {feedback && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-2xl text-cyan-400 text-xs italic"
+              >
+                "{feedback}"
+              </motion.div>
+            )}
+
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl text-red-400 text-xs"
+              >
+                {error}
+              </motion.div>
+            )}
+
             <div className="bg-zinc-800/50 p-6 rounded-2xl rounded-tl-none border border-zinc-700 text-zinc-200">
-              {step === 1 && t.report.communityPortal.onboarding.q1}
-              {step === 2 && t.report.communityPortal.onboarding.q2}
-              {step === 3 && t.report.communityPortal.onboarding.q3}
-              {step === 4 && t.report.communityPortal.onboarding.q4}
-              {step === 5 && t.report.communityPortal.onboarding.success}
+              {step === -1 && (
+                <div className="space-y-4">
+                  <p>{t.report.communityPortal.onboarding.browseNo}</p>
+                  <button 
+                    onClick={onBack}
+                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-bold uppercase tracking-widest text-[10px]"
+                  >
+                    <ArrowRight className="rotate-180" size={14} />
+                    {t.report.communityPortal.onboarding.browseBack}
+                  </button>
+                </div>
+              )}
+              {step === 1 && (
+                <div className="space-y-4">
+                  <p className="text-cyan-400 font-medium italic">{t.report.communityPortal.onboarding.aiIntro}</p>
+                  <p>{t.report.communityPortal.onboarding.humanCheck}</p>
+                </div>
+              )}
+              {step === 2 && t.report.communityPortal.onboarding.cameroonCheck}
+              {step === 3 && t.report.communityPortal.onboarding.browseCheck}
+              {step === 4 && t.report.communityPortal.onboarding.understandingQ}
+              {step === 5 && t.report.communityPortal.onboarding.q1}
+              {step === 6 && t.report.communityPortal.onboarding.q2}
+              {step === 7 && t.report.communityPortal.onboarding.q2_student_school}
+              {step === 8 && t.report.communityPortal.onboarding.q2_student_major}
+              {step === 9 && t.report.communityPortal.onboarding.q2_student_level}
+              {step === 10 && t.report.communityPortal.onboarding.q2_worker_job}
+              {step === 11 && t.report.communityPortal.onboarding.q3}
+              {step === 12 && t.report.communityPortal.onboarding.q4}
+              {step === 13 && t.report.communityPortal.onboarding.success}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -1086,7 +1250,7 @@ return (
         )}
       </div>
 
-      {step < 5 && (
+      {step > 0 && step < 13 && (
         <div className="relative">
           <input 
             autoFocus
@@ -1107,7 +1271,7 @@ return (
         </div>
       )}
 
-      {step === 5 && (
+      {step === 13 && (
         <div className="space-y-4">
           <button 
             onClick={handleEmailSubmit}
