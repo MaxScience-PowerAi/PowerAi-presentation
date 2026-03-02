@@ -27,6 +27,7 @@ import {
   DollarSign,
   Info,
   ChevronRight,
+  LogOut,
   Bot
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -35,14 +36,30 @@ import { cn } from './lib/utils';
 import { translations } from './translations';
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'community'>('landing');
+  const [view, setView] = useState<'landing' | 'community' | 'founders'>('landing');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [lang, setLang] = useState<'fr' | 'en'>('fr');
   const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [members, setMembers] = useState<any[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch('/api/members');
+        if (response.ok) {
+          const data = await response.json();
+          setMembers(data);
+        }
+      } catch (err) {
+        console.error("Fetch members error", err);
+      }
+    };
+    fetchMembers();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -122,6 +139,18 @@ export default function App() {
     }
   };
 
+  const [logoClicks, setLogoClicks] = useState(0);
+
+  const handleLogoClick = () => {
+    setLogoClicks(prev => {
+      if (prev + 1 >= 5) {
+        setView('founders');
+        return 0;
+      }
+      return prev + 1;
+    });
+  };
+
   return (
     <div className="min-h-screen bg-black text-zinc-200 font-sans selection:bg-cyan-500/30 relative">
       {/* Scroll Progress Bar */}
@@ -146,7 +175,7 @@ export default function App() {
       {/* Navigation / Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-zinc-800/50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 cursor-pointer select-none" onClick={handleLogoClick}>
             <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/20">
               <Zap className="text-white" size={18} fill="currentColor" />
             </div>
@@ -167,6 +196,18 @@ export default function App() {
               <MessageSquare size={14} />
               <span className="hidden sm:inline">{t.header.aiAssistant}</span>
             </button>
+            {view === 'landing' && (
+              <button 
+                onClick={() => {
+                  const el = document.getElementById('members-section');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="hidden md:flex bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-white px-3 md:px-4 py-1.5 rounded-full text-xs font-bold transition-all border border-zinc-700"
+              >
+                <Users size={14} className="mr-2" />
+                {t.report.communityPortal.foundersPortal.members.title}
+              </button>
+            )}
             {view === 'landing' && (
               <button 
                 onClick={() => setView('community')}
@@ -306,15 +347,15 @@ export default function App() {
       </AnimatePresence>
 
       <main className="pt-16">
-        {view === 'landing' ? (
+        {view === 'landing' && (
           <>
             {/* Hero Section */}
-        <motion.section 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden"
-        >
+            <motion.section 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+              className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden"
+            >
           <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-cyan-500/5 rounded-full blur-[80px] md:blur-[120px] animate-pulse" />
           <div className="absolute bottom-1/4 right-1/4 w-64 h-64 md:w-96 md:h-96 bg-orange-500/5 rounded-full blur-[80px] md:blur-[120px] animate-pulse" />
           
@@ -873,6 +914,9 @@ export default function App() {
           </div>
         </motion.section>
 
+        {/* Members Section */}
+        <MembersSection t={t} members={members} />
+
         {/* Recap Section */}
         <motion.section 
           initial={{ opacity: 0, y: 40 }}
@@ -971,8 +1015,12 @@ export default function App() {
         <p className="text-[10px] text-zinc-600 uppercase tracking-widest">{t.header.presentation}</p>
       </footer>
     </>
-  ) : (
+  )}
+  {view === 'community' && (
     <CommunityPortal lang={lang} t={t} onBack={() => setView('landing')} />
+  )}
+  {view === 'founders' && (
+    <FoundersPortal t={t} onBack={() => setView('landing')} />
   )}
 </main>
 </div>
@@ -1020,6 +1068,57 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
     } catch (e) {
       console.error("AI Validation error", e);
       return null;
+    }
+  };
+
+  const handleSubmit = async (finalContact?: string) => {
+    setIsTyping(true);
+    try {
+      // Generate final AI assessment
+      const { GoogleGenAI } = await import("@google/genai");
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+      
+      const summaryPrompt = `Tu es POWER, l'assistante de PowerAi. Voici les réponses d'un candidat :
+      Nom : ${answers.name}
+      Situation : ${answers.situation}
+      Compréhension du projet : ${answers.understanding}
+      Apport au projet : ${answers.contribution}
+      
+      Analyse son profil en 2-3 phrases. Dis s'il semble sérieux, dynamique et pertinent. 
+      Indique s'il a bien compris la mission de PowerAi.
+      Sois juste et professionnelle. Réponds en ${lang === 'fr' ? 'français' : 'anglais'}.`;
+
+      const aiResponse = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [{ role: "user", parts: [{ text: summaryPrompt }] }]
+      });
+
+      const assessment = aiResponse.text?.trim() || "Analyse non disponible.";
+
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: answers.name,
+          email: finalContact || answers.contact,
+          role: answers.situation,
+          status: answers.profession || `${answers.school} - ${answers.major} (${answers.level})`,
+          understanding: answers.understanding,
+          contribution: answers.contribution,
+          ai_assessment: assessment
+        })
+      });
+      
+      if (response.ok) {
+        setStep(13);
+      } else {
+        setError("Erreur lors de l'enregistrement. Veuillez réessayer.");
+      }
+    } catch (err) {
+      console.error("Submission error", err);
+      setError("Erreur réseau. Vérifiez votre connexion.");
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -1093,14 +1192,12 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
     
     if (step === 12) {
       setAnswers({ ...answers, contact: input });
-      nextStep = 13;
+      handleSubmit(input);
+      return;
     }
 
     if (aiFeedback) {
       setFeedback(aiFeedback);
-      // If it's a warning (bizarre), we might want to stay on the same step?
-      // But the user said "avertir et lui dire quil repond bien", so we can show feedback and move on or let them retry.
-      // Let's move on but show the feedback.
     }
 
     setTimeout(() => {
@@ -1274,16 +1371,10 @@ return (
       {step === 13 && (
         <div className="space-y-4">
           <button 
-            onClick={handleEmailSubmit}
+            onClick={onBack}
             className="w-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-cyan-500/20 flex items-center justify-center gap-3"
           >
-            <Mail size={20} />
-            {t.report.communityPortal.onboarding.submitEmail}
-          </button>
-          <button 
-            onClick={onBack}
-            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-4 rounded-2xl font-bold transition-all border border-zinc-700"
-          >
+            <CheckCircle2 size={20} />
             {t.report.communityPortal.onboarding.back}
           </button>
         </div>
@@ -1293,4 +1384,401 @@ return (
 </motion.div>
 </div>
 );
+}
+
+function MembersSection({ t, members }: { t: any, members: any[] }) {
+  if (members.length === 0) return null;
+
+  return (
+    <motion.section 
+      id="members-section"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-24 px-4"
+    >
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
+            <Users className="text-cyan-400" size={16} />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">{t.report.communityPortal.foundersPortal.members.title}</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">{t.report.communityPortal.foundersPortal.members.title}</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {members.map((member) => (
+            <motion.div 
+              key={member.id}
+              whileHover={{ y: -10 }}
+              className="bg-zinc-900/50 border border-zinc-800 rounded-[2.5rem] p-8 relative overflow-hidden group"
+            >
+              {member.is_founder === 1 && (
+                <div className="absolute top-6 right-6 px-3 py-1 bg-cyan-500 text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full">
+                  {t.report.communityPortal.foundersPortal.members.founders}
+                </div>
+              )}
+              <div className="flex items-center gap-5 mb-8">
+                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-zinc-700 shadow-2xl">
+                  <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
+                  <p className="text-sm text-cyan-400 font-medium">{member.role}</p>
+                </div>
+              </div>
+              <p className="text-zinc-400 text-sm leading-relaxed mb-8 font-light italic">
+                "{member.bio}"
+              </p>
+              <div className="pt-6 border-t border-zinc-800/50 flex items-center justify-between">
+                <span className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
+                  {t.report.communityPortal.foundersPortal.members.joined} {new Date(member.joined_at).toLocaleDateString()}
+                </span>
+                <div className="w-2 h-2 rounded-full bg-emerald-500/50" />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.section>
+  );
+}
+
+function FoundersPortal({ t, onBack }: { t: any, onBack: () => void }) {
+  const [password, setPassword] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [applications, setApplications] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'applications' | 'members'>('applications');
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const fetchApplications = async () => {
+    try {
+      const response = await fetch('/api/applications', {
+        headers: { 'x-founders-password': password }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setApplications(data);
+        
+        const pendingCount = data.filter((a: any) => a.moderation_status === 'pending').length;
+        if (pendingCount > 0) {
+          setNotification(t.report.communityPortal.foundersPortal.notifications.newApplications.replace('{count}', pendingCount));
+        }
+      }
+    } catch (err) {
+      console.error("Fetch apps error", err);
+    }
+  };
+
+  const fetchMembers = async () => {
+    try {
+      const response = await fetch('/api/members');
+      if (response.ok) {
+        const data = await response.json();
+        setMembers(data);
+      }
+    } catch (err) {
+      console.error("Fetch members error", err);
+    }
+  };
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/applications', {
+        headers: { 'x-founders-password': password }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setApplications(data);
+        setIsAuthorized(true);
+        
+        const pendingCount = data.filter((a: any) => a.moderation_status === 'pending').length;
+        if (pendingCount > 0) {
+          setNotification(t.report.communityPortal.foundersPortal.notifications.newApplications.replace('{count}', pendingCount));
+        }
+        
+        fetchMembers();
+      } else {
+        setError(t.report.communityPortal.foundersPortal.error);
+      }
+    } catch (err) {
+      setError("Erreur de connexion au serveur.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleModeration = async (id: number, status: 'accepted' | 'rejected') => {
+    try {
+      const response = await fetch(`/api/applications/${id}`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-founders-password': password 
+        },
+        body: JSON.stringify({ moderation_status: status })
+      });
+      if (response.ok) {
+        fetchApplications();
+        fetchMembers();
+      }
+    } catch (err) {
+      console.error("Moderation error", err);
+    }
+  };
+
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center px-4 bg-black">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md w-full bg-zinc-900 border border-zinc-800 p-8 rounded-[2.5rem] shadow-2xl shadow-cyan-500/5 relative overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50" />
+          
+          <div className="flex flex-col items-center text-center mb-8">
+            <div className="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center border border-cyan-500/20 mb-6">
+              <ShieldAlert className="text-cyan-400" size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">{t.report.communityPortal.foundersPortal.login}</h2>
+            <p className="text-zinc-500 text-sm">{t.report.communityPortal.foundersPortal.password}</p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-2">
+                {t.report.communityPortal.foundersPortal.password}
+              </label>
+              <input 
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-cyan-500/50 outline-none text-white transition-all text-center tracking-widest text-lg"
+                placeholder="••••••••"
+                autoFocus
+              />
+            </div>
+            
+            {error && (
+              <motion.p 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-red-400 text-xs text-center font-medium bg-red-400/10 py-2 rounded-lg border border-red-400/20"
+              >
+                {error}
+              </motion.p>
+            )}
+
+            <button 
+              onClick={handleLogin}
+              disabled={loading}
+              className="w-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-cyan-500/20 active:scale-95 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <span className="w-5 h-5 border-2 border-zinc-950/30 border-t-zinc-950 rounded-full animate-spin" />
+              ) : (
+                <>
+                  <Zap size={18} fill="currentColor" />
+                  {t.report.communityPortal.foundersPortal.enter}
+                </>
+              )}
+            </button>
+
+            <div className="pt-4 border-t border-zinc-800/50">
+              <button 
+                onClick={onBack}
+                className="w-full py-3 text-zinc-400 text-xs font-bold uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
+              >
+                <ArrowRight className="rotate-180" size={14} />
+                {t.report.communityPortal.onboarding.back}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-12">
+      {/* Notification */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-8 bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-2xl flex items-center justify-between gap-4"
+          >
+            <div className="flex items-center gap-3">
+              <Bot className="text-cyan-400" size={20} />
+              <p className="text-cyan-400 text-sm font-medium">{notification}</p>
+            </div>
+            <button onClick={() => setNotification(null)} className="text-cyan-400/50 hover:text-cyan-400">
+              <X size={16} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-cyan-500/10 rounded-2xl flex items-center justify-center border border-cyan-500/20">
+            <Users className="text-cyan-400" size={24} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white tracking-tight">{t.report.communityPortal.foundersPortal.title}</h1>
+            <div className="flex gap-4 mt-2">
+              <button 
+                onClick={() => setActiveTab('applications')}
+                className={cn(
+                  "text-[10px] uppercase tracking-widest font-bold transition-all",
+                  activeTab === 'applications' ? "text-cyan-400" : "text-zinc-500 hover:text-zinc-300"
+                )}
+              >
+                {applications.length} Candidatures
+              </button>
+              <button 
+                onClick={() => setActiveTab('members')}
+                className={cn(
+                  "text-[10px] uppercase tracking-widest font-bold transition-all",
+                  activeTab === 'members' ? "text-cyan-400" : "text-zinc-500 hover:text-zinc-300"
+                )}
+              >
+                {members.length} Membres
+              </button>
+            </div>
+          </div>
+        </div>
+        <button 
+          onClick={onBack}
+          className="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full text-xs font-bold border border-zinc-700 transition-all flex items-center gap-2"
+        >
+          <LogOut size={14} />
+          {t.report.communityPortal.foundersPortal.logout}
+        </button>
+      </div>
+
+      {activeTab === 'applications' ? (
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-[2rem] overflow-hidden shadow-2xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-zinc-950 border-b border-zinc-800">
+                  <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.name}</th>
+                  <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.email}</th>
+                  <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.role}</th>
+                  <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.aiAssessment}</th>
+                  <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.actions}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-800">
+                {applications.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-12 text-center text-zinc-500 italic">
+                      {t.report.communityPortal.foundersPortal.noApplications}
+                    </td>
+                  </tr>
+                ) : (
+                  applications.map((app) => (
+                    <tr key={app.id} className="hover:bg-zinc-800/30 transition-colors group">
+                      <td className="p-6">
+                        <p className="text-sm font-bold text-white">{app.name}</p>
+                        <p className="text-[10px] text-zinc-600 font-mono mt-1">
+                          {new Date(app.submitted_at).toLocaleDateString()}
+                        </p>
+                      </td>
+                      <td className="p-6">
+                        <p className="text-xs text-cyan-400 font-mono">{app.email}</p>
+                      </td>
+                      <td className="p-6">
+                        <p className="text-xs text-zinc-300">{app.role}</p>
+                        <p className="text-[10px] text-zinc-500 mt-1">{app.status}</p>
+                      </td>
+                      <td className="p-6 max-w-xs">
+                        <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-xl">
+                          <p className="text-[11px] text-cyan-200/80 italic leading-relaxed">
+                            {app.ai_assessment || "En attente d'analyse..."}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="p-6">
+                        {app.moderation_status === 'pending' ? (
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => handleModeration(app.id, 'accepted')}
+                              className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-zinc-950 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-emerald-500/20 transition-all"
+                            >
+                              {t.report.communityPortal.foundersPortal.actions.accept}
+                            </button>
+                            <button 
+                              onClick={() => handleModeration(app.id, 'rejected')}
+                              className="px-4 py-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-zinc-950 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-red-500/20 transition-all"
+                            >
+                              {t.report.communityPortal.foundersPortal.actions.reject}
+                            </button>
+                          </div>
+                        ) : (
+                          <span className={cn(
+                            "text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border",
+                            app.moderation_status === 'accepted' ? "text-emerald-400 border-emerald-500/20 bg-emerald-500/5" : "text-red-400 border-red-500/20 bg-red-500/5"
+                          )}>
+                            {app.moderation_status === 'accepted' ? t.report.communityPortal.foundersPortal.actions.accepted : t.report.communityPortal.foundersPortal.actions.rejected}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {members.map((member) => (
+            <motion.div 
+              key={member.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-zinc-900/50 border border-zinc-800 rounded-[2rem] p-6 relative overflow-hidden group"
+            >
+              {member.is_founder === 1 && (
+                <div className="absolute top-4 right-4 px-3 py-1 bg-cyan-500 text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full">
+                  {t.report.communityPortal.foundersPortal.members.founders}
+                </div>
+              )}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-2xl overflow-hidden border border-zinc-700">
+                  <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">{member.name}</h3>
+                  <p className="text-xs text-cyan-400 font-medium">{member.role}</p>
+                </div>
+              </div>
+              <p className="text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-4 group-hover:line-clamp-none transition-all">
+                {member.bio}
+              </p>
+              <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
+                <span className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
+                  {t.report.communityPortal.foundersPortal.members.joined} {new Date(member.joined_at).toLocaleDateString()}
+                </span>
+                <div className="flex gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }

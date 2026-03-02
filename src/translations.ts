@@ -207,9 +207,44 @@ export const translations = {
           q2_worker_job: "Quelle est votre profession ?",
           q3: "Que pouvez-vous apporter concrètement au projet PowerAi ?",
           q4: "Comment pouvons-nous vous contacter ? (Numéro WhatsApp et Email)",
-          success: "Félicitations ! Vos informations ont été transmises aux fondateurs. POWER vous remercie pour votre sérieux.",
-          submitEmail: "Envoyer ma candidature par Email",
+          success: "Félicitations ! Vos informations ont été enregistrées dans le système sécurisé des fondateurs. POWER vous remercie pour votre sérieux et votre éthique.",
+          submitEmail: "Soumettre ma candidature aux fondateurs",
           back: "Retour au site principal"
+        },
+        foundersPortal: {
+          title: "Portail des Fondateurs",
+          login: "Accès Sécurisé Fondateurs",
+          password: "Clé d'accès",
+          enter: "Déverrouiller",
+          error: "Clé d'accès invalide. Accès refusé.",
+          noApplications: "Le vivier de talents est actuellement vide.",
+          table: {
+            name: "Candidat",
+            email: "Contact / WhatsApp",
+            role: "Statut / Profession",
+            understanding: "Analyse du Projet",
+            contribution: "Valeur Ajoutée",
+            date: "Date de soumission",
+            aiAssessment: "Analyse de POWER",
+            actions: "Décision"
+          },
+          actions: {
+            accept: "Accepter",
+            reject: "Refuser",
+            accepted: "Accepté",
+            rejected: "Refusé",
+            pending: "En attente"
+          },
+          notifications: {
+            newApplications: "Vous avez {count} nouvelle(s) candidature(s) à examiner."
+          },
+          members: {
+            title: "Membres de PowerAi",
+            founders: "Fondateurs",
+            adherents: "Adhérents",
+            joined: "A rejoint le"
+          },
+          logout: "Fermer la session"
         }
       }
     }
@@ -422,9 +457,44 @@ export const translations = {
           q2_worker_job: "What is your profession?",
           q3: "What can you concretely bring to the PowerAi project?",
           q4: "How can we contact you? (WhatsApp number and Email)",
-          success: "Congratulations! Your information has been sent to the founders. POWER thanks you for your seriousness.",
-          submitEmail: "Send my application by Email",
+          success: "Congratulations! Your information has been saved in the founders' secure system. POWER thanks you for your seriousness and ethics.",
+          submitEmail: "Submit my application to founders",
           back: "Back to main site"
+        },
+        foundersPortal: {
+          title: "Founders Portal",
+          login: "Founders Secure Access",
+          password: "Access Key",
+          enter: "Unlock",
+          error: "Invalid access key. Access denied.",
+          noApplications: "The talent pool is currently empty.",
+          table: {
+            name: "Candidate",
+            email: "Contact / WhatsApp",
+            role: "Status / Profession",
+            understanding: "Project Analysis",
+            contribution: "Added Value",
+            date: "Submission Date",
+            aiAssessment: "POWER Analysis",
+            actions: "Decision"
+          },
+          actions: {
+            accept: "Accept",
+            reject: "Reject",
+            accepted: "Accepted",
+            rejected: "Rejected",
+            pending: "Pending"
+          },
+          notifications: {
+            newApplications: "You have {count} new application(s) to review."
+          },
+          members: {
+            title: "PowerAi Members",
+            founders: "Founders",
+            adherents: "Members",
+            joined: "Joined on"
+          },
+          logout: "Logout"
         }
       }
     }
