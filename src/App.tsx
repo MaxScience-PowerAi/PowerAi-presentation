@@ -155,34 +155,34 @@ export default function App() {
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
-              className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-zinc-700 hover:border-cyan-500 transition-colors"
+              className="text-[10px] font-bold uppercase tracking-widest px-2 md:px-3 py-1 rounded-full border border-zinc-700 hover:border-cyan-500 transition-colors"
             >
-              {lang === 'fr' ? 'English' : 'Français'}
+              {lang === 'fr' ? 'EN' : 'FR'}
             </button>
             <button 
               onClick={() => setIsChatOpen(!isChatOpen)}
-              className="bg-cyan-500 hover:bg-cyan-400 text-zinc-950 px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/20"
+              className="bg-cyan-500 hover:bg-cyan-400 text-zinc-950 px-3 md:px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/20"
             >
               <MessageSquare size={14} />
-              {t.header.aiAssistant}
+              <span className="hidden sm:inline">{t.header.aiAssistant}</span>
             </button>
           </div>
         </div>
       </nav>
 
       {/* Floating Chat Button */}
-      <div className="fixed bottom-8 right-8 z-[60] flex flex-col gap-4">
+      <div className="fixed bottom-6 right-4 md:bottom-8 md:right-8 z-[60] flex flex-col gap-4">
         <AnimatePresence>
-          {scrollProgress > 20 && (
+          {scrollProgress > 20 && !isChatOpen && (
             <motion.button 
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="w-14 h-14 rounded-full bg-zinc-900 text-zinc-400 border border-zinc-800 flex items-center justify-center hover:text-white hover:border-zinc-700 transition-all shadow-2xl relative group"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-zinc-900 text-zinc-400 border border-zinc-800 flex items-center justify-center hover:text-white hover:border-zinc-700 transition-all shadow-2xl relative group"
             >
-              <ArrowRight size={24} className="-rotate-90" />
-              <div className="absolute -left-12 top-1/2 -translate-y-1/2 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded text-[10px] font-bold text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
+              <ArrowRight className="-rotate-90 w-5 h-5 md:w-6 md:h-6" />
+              <div className="absolute -left-12 top-1/2 -translate-y-1/2 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded text-[10px] font-bold text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">
                 {Math.round(scrollProgress)}%
               </div>
             </motion.button>
@@ -192,13 +192,13 @@ export default function App() {
         <button 
           onClick={() => setIsChatOpen(!isChatOpen)}
           className={cn(
-            "w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl group",
+            "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl group",
             isChatOpen 
               ? "bg-zinc-800 text-white rotate-90 scale-90" 
               : "bg-cyan-500 text-zinc-950 hover:scale-110 hover:shadow-cyan-500/40"
           )}
         >
-          {isChatOpen ? <X size={24} /> : <Bot size={24} className="group-hover:animate-bounce" />}
+          {isChatOpen ? <X className="w-5 h-5 md:w-6 md:h-6" /> : <Bot className="w-5 h-5 md:w-6 md:h-6 group-hover:animate-bounce" />}
         </button>
       </div>
 
@@ -209,33 +209,33 @@ export default function App() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-8 z-50 w-96 h-[550px] bg-zinc-950 rounded-[2rem] shadow-2xl border border-zinc-800 flex flex-col overflow-hidden"
+            className="fixed inset-x-4 bottom-4 top-20 md:top-auto md:inset-x-auto md:bottom-24 md:right-8 z-50 md:w-96 md:h-[550px] bg-zinc-950 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl border border-zinc-800 flex flex-col overflow-hidden"
           >
             {/* Chat Header */}
-            <div className="bg-zinc-900/50 backdrop-blur-md p-6 flex justify-between items-center border-b border-zinc-800">
+            <div className="bg-zinc-900/50 backdrop-blur-md p-4 md:p-6 flex justify-between items-center border-b border-zinc-800">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center border border-cyan-500/20">
-                  <Bot size={20} className="text-cyan-400" />
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center border border-cyan-500/20">
+                  <Bot size={18} className="text-cyan-400 md:size-20" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white tracking-tight">PowerAi Intelligence</p>
+                  <p className="text-xs md:text-sm font-bold text-white tracking-tight">PowerAi Intelligence</p>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] text-zinc-500 font-medium uppercase tracking-widest">Online</span>
+                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                    <span className="text-[9px] md:text-[10px] text-zinc-500 font-medium uppercase tracking-widest">Online</span>
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsChatOpen(false)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
-                <X size={16} />
+              <button onClick={() => setIsChatOpen(false)} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
+                <X size={14} className="md:size-16" />
               </button>
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 scrollbar-hide">
               {chatMessages.map((msg, i) => (
                 <div key={i} className={cn("flex flex-col", msg.role === 'user' ? "items-end" : "items-start")}>
                   <div className={cn(
-                    "max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed", 
+                    "max-w-[90%] md:max-w-[85%] p-3 md:p-4 rounded-2xl text-sm leading-relaxed", 
                     msg.role === 'user' 
                       ? "bg-cyan-500/10 text-cyan-50 ml-auto rounded-tr-none border border-cyan-500/20" 
                       : "bg-zinc-900 text-zinc-300 mr-auto rounded-tl-none border border-zinc-800"
@@ -244,17 +244,17 @@ export default function App() {
                       <ReactMarkdown>{msg.text}</ReactMarkdown>
                     </div>
                   </div>
-                  <span className="text-[9px] text-zinc-600 mt-1 uppercase tracking-widest font-bold">
+                  <span className="text-[8px] md:text-[9px] text-zinc-600 mt-1 uppercase tracking-widest font-bold">
                     {msg.role === 'user' ? 'You' : 'PowerAi'}
                   </span>
                 </div>
               ))}
               {isTyping && (
                 <div className="flex flex-col items-start">
-                  <div className="bg-zinc-900 text-zinc-500 p-4 rounded-2xl rounded-tl-none border border-zinc-800 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce" />
+                  <div className="bg-zinc-900 text-zinc-500 p-3 md:p-4 rounded-2xl rounded-tl-none border border-zinc-800 flex items-center gap-1.5">
+                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-zinc-600 rounded-full animate-bounce" />
                   </div>
                 </div>
               )}
@@ -262,7 +262,7 @@ export default function App() {
             </div>
 
             {/* Chat Input */}
-            <div className="p-6 bg-zinc-950 border-t border-zinc-900">
+            <div className="p-4 md:p-6 bg-zinc-950 border-t border-zinc-900">
               <div className="relative flex items-center">
                 <input 
                   type="text" 
@@ -270,17 +270,17 @@ export default function App() {
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder={t.chat.placeholder}
-                  className="w-full text-sm bg-zinc-900 border border-zinc-800 rounded-2xl pl-5 pr-14 py-3.5 focus:ring-2 focus:ring-cyan-500/50 outline-none text-white transition-all placeholder:text-zinc-600"
+                  className="w-full text-xs md:text-sm bg-zinc-900 border border-zinc-800 rounded-2xl pl-4 pr-12 md:pl-5 md:pr-14 py-3 md:py-3.5 focus:ring-2 focus:ring-cyan-500/50 outline-none text-white transition-all placeholder:text-zinc-600"
                 />
                 <button 
                   onClick={handleSendMessage}
                   disabled={!chatInput.trim() || isTyping}
-                  className="absolute right-2 p-2.5 bg-cyan-500 text-zinc-950 rounded-xl hover:bg-cyan-400 disabled:opacity-50 disabled:hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-500/20"
+                  className="absolute right-1.5 p-2 md:right-2 md:p-2.5 bg-cyan-500 text-zinc-950 rounded-xl hover:bg-cyan-400 disabled:opacity-50 disabled:hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-500/20"
                 >
-                  <ArrowRight size={18} />
+                  <ArrowRight size={16} className="md:size-18" />
                 </button>
               </div>
-              <p className="text-[9px] text-zinc-600 text-center mt-4 uppercase tracking-[0.2em] font-medium">
+              <p className="text-[8px] md:text-[9px] text-zinc-600 text-center mt-3 md:mt-4 uppercase tracking-[0.2em] font-medium">
                 Powered by PowerAi Core Engine
               </p>
             </div>
@@ -309,11 +309,11 @@ export default function App() {
               <span className="w-2 h-2 bg-cyan-500 rounded-full animate-ping" />
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-400">{t.report.cover.tag}</span>
             </div>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-white mb-8 leading-[0.9]">
+            <h1 className="text-3xl sm:text-5xl md:text-8xl font-bold tracking-tighter text-white mb-8 leading-[0.9] break-words">
               <span className="bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">{t.report.cover.title1}</span><br />
               <span className="bg-gradient-to-r from-cyan-400 to-cyan-600 bg-clip-text text-transparent">{t.report.cover.title2}</span>
             </h1>
-            <p className="text-xl md:text-2xl text-zinc-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+            <p className="text-lg md:text-2xl text-zinc-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
               {t.report.cover.desc}
             </p>
             
@@ -423,7 +423,7 @@ export default function App() {
           className="py-12 px-4 relative z-10"
         >
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
               {t.report.constat.stats.map((stat, i) => (
                 <motion.div 
                   key={i}
@@ -559,19 +559,19 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
               {/* Wilfred */}
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                <div className="relative p-8 md:p-12 bg-zinc-900 rounded-[3rem] border border-zinc-800">
+                <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-[2rem] md:rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div className="relative p-6 md:p-12 bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-zinc-800">
                   <div className="flex items-center gap-6 mb-8">
-                    <div className="w-20 h-20 bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-zinc-700">
-                      <Users className="text-orange-500" size={40} />
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-zinc-700">
+                      <Users className="text-orange-500" size={32} />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-white">{t.report.founders.wilfred.name}</h3>
-                      <p className="text-orange-500 font-bold text-xs uppercase tracking-widest">{t.report.founders.wilfred.role}</p>
+                      <h3 className="text-xl md:text-2xl font-bold text-white">{t.report.founders.wilfred.name}</h3>
+                      <p className="text-orange-500 font-bold text-[10px] md:text-xs uppercase tracking-widest">{t.report.founders.wilfred.role}</p>
                       <span className="inline-block px-2 py-0.5 bg-orange-500/10 text-orange-400 text-[10px] rounded-full mt-2 font-bold">{t.report.founders.wilfred.age}</span>
                     </div>
                   </div>
-                  <p className="text-sm font-bold text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.wilfred.tag}</p>
+                  <p className="text-[10px] md:text-sm font-bold text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.wilfred.tag}</p>
                   <p className="text-zinc-400 leading-relaxed mb-8 text-sm">{t.report.founders.wilfred.bio}</p>
                   <div className="space-y-3">
                     {t.report.founders.wilfred.brings.map((item, i) => (
@@ -586,19 +586,19 @@ export default function App() {
 
               {/* Christ */}
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-cyan-700 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                <div className="relative p-8 md:p-12 bg-zinc-900 rounded-[3rem] border border-zinc-800">
+                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-cyan-700 rounded-[2rem] md:rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div className="relative p-6 md:p-12 bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-zinc-800">
                   <div className="flex items-center gap-6 mb-8">
-                    <div className="w-20 h-20 bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-zinc-700">
-                      <Settings className="text-cyan-500" size={40} />
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-zinc-700">
+                      <Settings className="text-cyan-500" size={32} />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-white">{t.report.founders.christ.name}</h3>
-                      <p className="text-cyan-500 font-bold text-xs uppercase tracking-widest">{t.report.founders.christ.role}</p>
+                      <h3 className="text-xl md:text-2xl font-bold text-white">{t.report.founders.christ.name}</h3>
+                      <p className="text-cyan-500 font-bold text-[10px] md:text-xs uppercase tracking-widest">{t.report.founders.christ.role}</p>
                       <span className="inline-block px-2 py-0.5 bg-cyan-500/10 text-cyan-400 text-[10px] rounded-full mt-2 font-bold">{t.report.founders.christ.age}</span>
                     </div>
                   </div>
-                  <p className="text-sm font-bold text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.christ.tag}</p>
+                  <p className="text-[10px] md:text-sm font-bold text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.christ.tag}</p>
                   <p className="text-zinc-400 leading-relaxed mb-8 text-sm">{t.report.founders.christ.bio}</p>
                   <div className="space-y-3">
                     {t.report.founders.christ.brings.map((item, i) => (
@@ -613,7 +613,7 @@ export default function App() {
             </div>
 
             {/* Duo Logic */}
-            <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 p-8 md:p-16 rounded-[3rem] border border-zinc-800 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] border border-zinc-800 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px]" />
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold text-white mb-12 flex items-center gap-4">
