@@ -67,8 +67,12 @@ async function startServer() {
   });
 
   app.patch("/api/applications/:id", (req, res) => {
-    const password = (req.headers["x-founders-password"] as string)?.trim();
+    const headerPassword = (req.headers["x-founders-password"] as string)?.trim();
+    const bodyPassword = req.body.password?.trim();
+    const password = bodyPassword || headerPassword;
+
     if (password !== "PowerAi_Founders_2026!") {
+      console.warn(`Unauthorized moderation attempt with password: ${password}`);
       return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -89,6 +93,24 @@ async function startServer() {
     } catch (error) {
       console.error("Error updating application:", error);
       res.status(500).json({ error: "Failed to update application" });
+    }
+  });
+
+  app.post("/api/founders/login", (req, res) => {
+    const { password } = req.body;
+    const trimmedPassword = password?.trim();
+    
+    if (trimmedPassword === "PowerAi_Founders_2026!") {
+      try {
+        const applications = db.prepare("SELECT * FROM applications ORDER BY submitted_at DESC").all();
+        res.json({ success: true, applications });
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+        res.status(500).json({ error: "Failed to fetch applications" });
+      }
+    } else {
+      console.warn(`Unauthorized login attempt with password: ${trimmedPassword}`);
+      res.status(401).json({ error: "Unauthorized" });
     }
   });
 

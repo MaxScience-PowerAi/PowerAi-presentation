@@ -52,7 +52,9 @@ import {
   ShieldCheck,
   BarChart3,
   LayoutDashboard,
-  RefreshCw
+  RefreshCw,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
@@ -1320,7 +1322,26 @@ export default function App() {
     </div>
   )}
   {view === 'founders' && (
-    <FoundersPortal t={t} lang={lang} onBack={() => setView('landing')} />
+    <FoundersPortal 
+      t={t} 
+      lang={lang} 
+      onBack={() => setView('landing')} 
+      members={members}
+      onRefreshMembers={() => {
+        const fetchMembers = async () => {
+          try {
+            const response = await fetch('/api/members');
+            if (response.ok) {
+              const data = await response.json();
+              setMembers(data);
+            }
+          } catch (err) {
+            console.error("Fetch members error", err);
+          }
+        };
+        fetchMembers();
+      }}
+    />
   )}
 </main>
 </div>
@@ -1543,13 +1564,15 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
     // Contact Validation (Step 12)
     if (step === 12) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      // Cameroon specific: +237 followed by 9 digits (can have spaces)
-      const cameroonPhoneRegex = /^\+237\s?[6][25789][0-9]{7}$|^\+237\s?[0-9]{9}$/;
+      const cleanInput = input.replace(/\s/g, '');
+      
+      // Cameroon specific: +237 or 237 followed by 9 digits, or just 9 digits
+      const cameroonPhoneRegex = /^(\+?237)?[26][0-9]{8}$/;
       const generalPhoneRegex = /^\+?[0-9]{8,15}$/;
       
       const isEmail = emailRegex.test(input);
-      const isCamPhone = cameroonPhoneRegex.test(input.replace(/\s/g, ''));
-      const isGeneralPhone = generalPhoneRegex.test(input.replace(/\s/g, ''));
+      const isCamPhone = cameroonPhoneRegex.test(cleanInput);
+      const isGeneralPhone = generalPhoneRegex.test(cleanInput);
 
       if (!isEmail && !isCamPhone && !isGeneralPhone) {
         setError(lang === 'fr' 
@@ -1557,6 +1580,19 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
           : "Please enter a valid email or phone number (e.g., +237 678831868).");
         return;
       }
+
+      // Prepend +237 if it's a 9-digit Cameroon number without prefix
+      let finalInput = input;
+      if (isCamPhone && !cleanInput.startsWith('+') && !cleanInput.startsWith('237')) {
+        finalInput = `+237 ${input.trim()}`;
+      } else if (isCamPhone && cleanInput.startsWith('237')) {
+        finalInput = `+${input.trim()}`;
+      }
+      
+      setIsTyping(true);
+      setAnswers({ ...answers, contact: finalInput });
+      handleSubmit(finalInput);
+      return;
     }
 
     setIsTyping(true);
@@ -1967,26 +2003,35 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
   );
 }
 
-function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack: () => void }) {
+function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: { 
+  t: any, 
+  lang: 'fr' | 'en', 
+  onBack: () => void,
+  members: any[],
+  onRefreshMembers: () => void
+}) {
   const [password, setPassword] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [applications, setApplications] = useState<any[]>([]);
-  const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'applications' | 'members'>('applications');
   const [notification, setNotification] = useState<string | null>(null);
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const fetchApplications = async () => {
     try {
-      const response = await fetch('/api/applications', {
-        headers: { 'x-founders-password': password.trim() }
+      const response = await fetch('/api/founders/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: password.trim() })
       });
       if (response.ok) {
         const data = await response.json();
-        setApplications(data);
+        setApplications(data.applications);
         
-        const pendingCount = data.filter((a: any) => a.moderation_status === 'pending').length;
+        const pendingCount = data.applications.filter((a: any) => a.moderation_status === 'pending').length;
         if (pendingCount > 0) {
           setNotification(t.report.communityPortal.foundersPortal.notifications.newApplications.replace('{count}', pendingCount));
         }
@@ -1996,36 +2041,26 @@ function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack
     }
   };
 
-  const fetchMembers = async () => {
-    try {
-      const response = await fetch('/api/members');
-      if (response.ok) {
-        const data = await response.json();
-        setMembers(data);
-      }
-    } catch (err) {
-      console.error("Fetch members error", err);
-    }
-  };
-
   const handleLogin = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/applications', {
-        headers: { 'x-founders-password': password.trim() }
+      const response = await fetch('/api/founders/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: password.trim() })
       });
       if (response.ok) {
         const data = await response.json();
-        setApplications(data);
+        setApplications(data.applications);
         setIsAuthorized(true);
         
-        const pendingCount = data.filter((a: any) => a.moderation_status === 'pending').length;
+        const pendingCount = data.applications.filter((a: any) => a.moderation_status === 'pending').length;
         if (pendingCount > 0) {
           setNotification(t.report.communityPortal.foundersPortal.notifications.newApplications.replace('{count}', pendingCount));
         }
         
-        fetchMembers();
+        onRefreshMembers();
       } else {
         setError(t.report.communityPortal.foundersPortal.error);
       }
@@ -2041,14 +2076,13 @@ function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack
       const response = await fetch(`/api/applications/${id}`, {
         method: 'PATCH',
         headers: { 
-          'Content-Type': 'application/json',
-          'x-founders-password': password.trim() 
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ moderation_status: status })
+        body: JSON.stringify({ moderation_status: status, password: password.trim() })
       });
       if (response.ok) {
         fetchApplications();
-        fetchMembers();
+        onRefreshMembers();
       }
     } catch (err) {
       console.error("Moderation error", err);
@@ -2078,15 +2112,25 @@ function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack
               <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-2">
                 {t.report.communityPortal.foundersPortal.password}
               </label>
-              <input 
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-cyan-500/50 outline-none text-white transition-all text-center tracking-widest text-lg"
-                placeholder="••••••••"
-                autoFocus
-              />
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-cyan-500/50 outline-none text-white transition-all text-center tracking-widest text-lg"
+                  placeholder="••••••••"
+                  autoFocus
+                  autoComplete="current-password"
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-cyan-400 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
             
             {error && (
