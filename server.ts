@@ -67,7 +67,7 @@ async function startServer() {
   });
 
   app.patch("/api/applications/:id", (req, res) => {
-    const password = req.headers["x-founders-password"];
+    const password = (req.headers["x-founders-password"] as string)?.trim();
     if (password !== "PowerAi_Founders_2026!") {
       return res.status(401).json({ error: "Unauthorized" });
     }
@@ -103,7 +103,7 @@ async function startServer() {
   });
 
   app.get("/api/applications", (req, res) => {
-    const password = req.headers["x-founders-password"];
+    const password = (req.headers["x-founders-password"] as string)?.trim();
     if (password !== "PowerAi_Founders_2026!") {
       return res.status(401).json({ error: "Unauthorized" });
     }

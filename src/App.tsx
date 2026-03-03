@@ -571,8 +571,15 @@ export default function App() {
             </div>
 
             {/* Quick Actions */}
-            {chatMessages.length < 3 && (
-              <div className="px-5 md:px-6 pb-2 flex gap-2 overflow-x-auto scrollbar-hide">
+            {chatMessages.length < 5 && (
+              <div 
+                onWheel={(e) => {
+                  if (e.deltaY !== 0) {
+                    e.currentTarget.scrollLeft += e.deltaY;
+                  }
+                }}
+                className="px-5 md:px-6 pb-2 flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent active:cursor-grabbing"
+              >
                 {[
                   lang === 'fr' ? "Nos services ?" : "Our services?",
                   lang === 'fr' ? "Qui sont les fondateurs ?" : "Who are the founders?",
@@ -1536,9 +1543,18 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
     // Contact Validation (Step 12)
     if (step === 12) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const phoneRegex = /^\+?[0-9]{8,15}$/;
-      if (!emailRegex.test(input) && !phoneRegex.test(input)) {
-        setError(lang === 'fr' ? "Veuillez entrer un email ou un numéro de téléphone valide." : "Please enter a valid email or phone number.");
+      // Cameroon specific: +237 followed by 9 digits (can have spaces)
+      const cameroonPhoneRegex = /^\+237\s?[6][25789][0-9]{7}$|^\+237\s?[0-9]{9}$/;
+      const generalPhoneRegex = /^\+?[0-9]{8,15}$/;
+      
+      const isEmail = emailRegex.test(input);
+      const isCamPhone = cameroonPhoneRegex.test(input.replace(/\s/g, ''));
+      const isGeneralPhone = generalPhoneRegex.test(input.replace(/\s/g, ''));
+
+      if (!isEmail && !isCamPhone && !isGeneralPhone) {
+        setError(lang === 'fr' 
+          ? "Veuillez entrer un email ou un numéro de téléphone valide (ex: +237 678831868)." 
+          : "Please enter a valid email or phone number (e.g., +237 678831868).");
         return;
       }
     }
@@ -1857,8 +1873,6 @@ return (
 }
 
 function MembersSection({ t, members }: { t: any, members: any[] }) {
-  if (members.length === 0) return null;
-
   return (
     <motion.section 
       initial={{ opacity: 0 }}
@@ -1886,8 +1900,14 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {members.map((member, i) => (
+        {members.length === 0 ? (
+          <div className="text-center py-20 bg-zinc-900/20 rounded-[3rem] border border-zinc-800/50">
+            <Users className="mx-auto text-zinc-700 mb-4" size={48} />
+            <p className="text-zinc-500 uppercase tracking-widest text-xs font-bold">Chargement des membres...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {members.map((member, i) => (
             <motion.div 
               key={member.id}
               initial={{ opacity: 0, y: 20 }}
@@ -1940,7 +1960,8 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
               </div>
             </motion.div>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </motion.section>
   );
@@ -1959,7 +1980,7 @@ function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack
   const fetchApplications = async () => {
     try {
       const response = await fetch('/api/applications', {
-        headers: { 'x-founders-password': password }
+        headers: { 'x-founders-password': password.trim() }
       });
       if (response.ok) {
         const data = await response.json();
@@ -1992,7 +2013,7 @@ function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack
     setError(null);
     try {
       const response = await fetch('/api/applications', {
-        headers: { 'x-founders-password': password }
+        headers: { 'x-founders-password': password.trim() }
       });
       if (response.ok) {
         const data = await response.json();
@@ -2021,7 +2042,7 @@ function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
-          'x-founders-password': password 
+          'x-founders-password': password.trim() 
         },
         body: JSON.stringify({ moderation_status: status })
       });
@@ -2321,43 +2342,50 @@ function FoundersPortal({ t, lang, onBack }: { t: any, lang: 'fr' | 'en', onBack
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {members.map((member) => (
-            <motion.div 
-              key={member.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-zinc-900/50 border border-zinc-800 rounded-[2rem] p-6 relative overflow-hidden group"
-            >
-              {member.is_founder === 1 && (
-                <div className="absolute top-4 right-4 px-3 py-1 bg-cyan-500 text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full">
-                  {t.report.communityPortal.foundersPortal.members.founders}
+        members.length === 0 ? (
+          <div className="text-center py-20 bg-zinc-900/20 rounded-[3rem] border border-zinc-800/50">
+            <Users className="mx-auto text-zinc-700 mb-4" size={48} />
+            <p className="text-zinc-500 uppercase tracking-widest text-xs font-bold">Aucun membre trouvé ou chargement...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {members.map((member) => (
+              <motion.div 
+                key={member.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-zinc-900/50 border border-zinc-800 rounded-[2rem] p-6 relative overflow-hidden group"
+              >
+                {member.is_founder === 1 && (
+                  <div className="absolute top-4 right-4 px-3 py-1 bg-cyan-500 text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full">
+                    {t.report.communityPortal.foundersPortal.members.founders}
+                  </div>
+                )}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-zinc-700">
+                    <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">{member.name}</h3>
+                    <p className="text-xs text-cyan-400 font-medium">{member.role}</p>
+                  </div>
                 </div>
-              )}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-2xl overflow-hidden border border-zinc-700">
-                  <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-4 group-hover:line-clamp-none transition-all">
+                  {member.bio}
+                </p>
+                <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
+                  <span className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
+                    {t.report.communityPortal.foundersPortal.members.joined} {new Date(member.joined_at).toLocaleDateString()}
+                  </span>
+                  <div className="flex gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    {member.has_star === 1 && <Star size={14} className="text-amber-400" fill="currentColor" />}
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white">{member.name}</h3>
-                  <p className="text-xs text-cyan-400 font-medium">{member.role}</p>
-                </div>
-              </div>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-4 group-hover:line-clamp-none transition-all">
-                {member.bio}
-              </p>
-              <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                <span className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
-                  {t.report.communityPortal.foundersPortal.members.joined} {new Date(member.joined_at).toLocaleDateString()}
-                </span>
-                <div className="flex gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  {member.has_star === 1 && <Star size={14} className="text-amber-400" fill="currentColor" />}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )
       )}
     </div>
   );
