@@ -125,20 +125,20 @@ function StrategicDashboard({ t, lang, applications, members }: { t: any, lang: 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
       <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.communityPortal.foundersPortal.analytics.totalMembers}</p>
-          <p className="text-4xl font-bold text-white">{members.length}</p>
+        <div className="p-6 bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-3xl shadow-sm dark:shadow-none">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-500 mb-2">{t.report.communityPortal.foundersPortal.analytics.totalMembers}</p>
+          <p className="text-4xl font-bold text-slate-900 dark:text-white">{members.length}</p>
         </div>
-        <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.communityPortal.foundersPortal.analytics.pendingApps}</p>
-          <p className="text-4xl font-bold text-cyan-400">{pendingCount}</p>
+        <div className="p-6 bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-3xl shadow-sm dark:shadow-none">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-500 mb-2">{t.report.communityPortal.foundersPortal.analytics.pendingApps}</p>
+          <p className="text-4xl font-bold text-cyan-500 dark:text-cyan-400">{pendingCount}</p>
         </div>
-        <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">Growth</p>
-          <p className="text-4xl font-bold text-emerald-400">+12%</p>
+        <div className="p-6 bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-3xl shadow-sm dark:shadow-none">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-500 mb-2">Growth</p>
+          <p className="text-4xl font-bold text-emerald-500 dark:text-emerald-400">+12%</p>
         </div>
-        <div className="sm:col-span-3 p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl h-[250px]">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-4">{t.report.communityPortal.foundersPortal.analytics.distribution}</p>
+        <div className="sm:col-span-3 p-6 bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-3xl h-[250px] shadow-sm dark:shadow-none">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-500 mb-4">{t.report.communityPortal.foundersPortal.analytics.distribution}</p>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -164,9 +164,9 @@ function StrategicDashboard({ t, lang, applications, members }: { t: any, lang: 
         </div>
       </div>
       <div className="p-8 bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 rounded-[2.5rem] flex flex-col justify-center">
-        <LayoutDashboard className="text-cyan-400 mb-6" size={40} />
-        <h3 className="text-2xl font-bold text-white mb-4">{t.report.communityPortal.foundersPortal.analytics.title}</h3>
-        <p className="text-sm text-zinc-400 leading-relaxed">
+        <LayoutDashboard className="text-cyan-500 dark:text-cyan-400 mb-6" size={40} />
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.report.communityPortal.foundersPortal.analytics.title}</h3>
+        <p className="text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
           {lang === 'fr' 
             ? "Suivez l'évolution de votre écosystème en temps réel. Prenez des décisions basées sur la donnée pour maximiser l'impact de PowerAi."
             : "Track your ecosystem's evolution in real-time. Make data-driven decisions to maximize PowerAi's impact."}
@@ -185,7 +185,20 @@ export default function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [members, setMembers] = useState<any[]>([]);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('powerai_theme');
+    return (saved as 'light' | 'dark') || 'dark';
+  });
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem('powerai_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -350,7 +363,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-zinc-200 font-sans selection:bg-cyan-500/30 relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-zinc-200 font-sans selection:bg-cyan-500/30 relative transition-colors duration-300">
       {/* Scroll Progress Bar */}
       <div 
         className="fixed top-0 left-0 h-1 bg-cyan-500 z-[100] transition-all duration-150 ease-out"
@@ -360,27 +373,34 @@ export default function App() {
       {/* Animated Background Grid */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div 
-          className="absolute inset-0 opacity-[0.1]"
+          className="absolute inset-0 opacity-[0.05] dark:opacity-[0.1]"
           style={{
             backgroundImage: `linear-gradient(to right, #22d3ee 1px, transparent 1px), linear-gradient(to bottom, #22d3ee 1px, transparent 1px)`,
             backgroundSize: '80px 80px',
             maskImage: 'radial-gradient(circle at 50% 50%, black, transparent 90%)'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-transparent to-slate-50 dark:from-black dark:via-transparent dark:to-black" />
       </div>
       
       {/* Navigation / Header */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-zinc-800/50">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800/50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer select-none" onClick={handleLogoClick}>
             <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/20">
               <Zap className="text-white" size={18} fill="currentColor" />
             </div>
-            <span className="text-xl font-bold tracking-tighter text-white">PowerAi</span>
+            <span className="text-xl font-bold tracking-tighter text-slate-900 dark:text-white">PowerAi</span>
           </div>
           
           <div className="flex items-center gap-2 md:gap-4">
+            <button 
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-zinc-700 hover:border-cyan-500 transition-colors flex items-center justify-center text-zinc-400 hover:text-cyan-400"
+              title={theme === 'light' ? t.header.theme.dark : t.header.theme.light}
+            >
+              {theme === 'light' ? <Zap size={14} /> : <Lightbulb size={14} />}
+            </button>
             <button 
               onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
               className="text-[10px] font-bold uppercase tracking-widest px-2 md:px-3 py-1 rounded-full border border-zinc-700 hover:border-cyan-500 transition-colors"
@@ -470,25 +490,25 @@ export default function App() {
             initial={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
             animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
-            className="fixed inset-x-2 bottom-2 top-16 md:top-auto md:inset-x-auto md:bottom-24 md:right-8 z-50 md:w-[380px] md:h-[600px] bg-zinc-950/90 backdrop-blur-3xl rounded-[2rem] md:rounded-[2.5rem] shadow-[0_0_80px_-20px_rgba(34,211,238,0.3)] border border-white/10 flex flex-col overflow-hidden"
+            className="fixed inset-x-2 bottom-2 top-16 md:top-auto md:inset-x-auto md:bottom-24 md:right-8 z-50 md:w-[380px] md:h-[600px] bg-white/95 dark:bg-zinc-950/90 backdrop-blur-3xl rounded-[2rem] md:rounded-[2.5rem] shadow-[0_0_80px_-20px_rgba(34,211,238,0.3)] border border-slate-200 dark:border-white/10 flex flex-col overflow-hidden transition-colors duration-300"
           >
             {/* Animated Glow Background */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10 dark:opacity-20">
               <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-cyan-500/20 blur-[100px] animate-pulse" />
               <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-blue-500/20 blur-[100px] animate-pulse [animation-delay:2s]" />
             </div>
 
             {/* Chat Header */}
-            <div className="relative bg-zinc-900/40 backdrop-blur-md p-5 md:p-6 flex justify-between items-center border-b border-white/5">
+            <div className="relative bg-slate-50/50 dark:bg-zinc-900/40 backdrop-blur-md p-5 md:p-6 flex justify-between items-center border-b border-slate-200 dark:border-white/5">
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-cyan-500/20 to-cyan-700/20 rounded-2xl flex items-center justify-center border border-cyan-500/30">
                     <Bot size={22} className="text-cyan-400 md:size-24" />
                   </div>
-                  <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-zinc-950 animate-pulse" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white dark:border-zinc-950 animate-pulse" />
                 </div>
                 <div>
-                  <p className="text-sm md:text-base font-bold text-white tracking-tight">POWER <span className="text-[10px] text-cyan-500 ml-1 font-black uppercase tracking-widest">v2.0</span></p>
+                  <p className="text-sm md:text-base font-bold text-slate-900 dark:text-white tracking-tight">POWER <span className="text-[10px] text-cyan-500 ml-1 font-black uppercase tracking-widest">v2.0</span></p>
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.15em]">{t.chat.status}</span>
                   </div>
@@ -498,11 +518,11 @@ export default function App() {
                 <button 
                   onClick={clearChat}
                   title="Clear chat"
-                  className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-zinc-800/50 flex items-center justify-center text-zinc-500 hover:text-red-400 transition-all hover:bg-red-400/10"
+                  className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-slate-200/50 dark:bg-zinc-800/50 flex items-center justify-center text-zinc-500 hover:text-red-400 transition-all hover:bg-red-400/10"
                 >
                   <Trash2 size={14} />
                 </button>
-                <button onClick={() => setIsChatOpen(false)} className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-zinc-800/50 flex items-center justify-center text-zinc-400 hover:text-white transition-all hover:bg-zinc-800">
+                <button onClick={() => setIsChatOpen(false)} className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-slate-200/50 dark:bg-zinc-800/50 flex items-center justify-center text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-all hover:bg-slate-300 dark:hover:bg-zinc-800">
                   <X size={16} />
                 </button>
               </div>
@@ -515,7 +535,7 @@ export default function App() {
                   <div className="w-16 h-16 bg-cyan-500/10 rounded-3xl flex items-center justify-center mb-6 border border-cyan-500/20">
                     <Sparkles className="text-cyan-400" size={32} />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">Bonjour, je suis POWER</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Bonjour, je suis POWER</h3>
                   <p className="text-xs text-zinc-500 max-w-[200px] leading-relaxed">
                     Comment puis-je vous aider à propulser votre vision avec PowerAi aujourd'hui ?
                   </p>
@@ -527,9 +547,9 @@ export default function App() {
                     "max-w-[90%] md:max-w-[85%] p-4 md:p-5 rounded-[1.5rem] text-sm leading-relaxed shadow-xl relative", 
                     msg.role === 'user' 
                       ? "bg-gradient-to-br from-cyan-600 to-cyan-700 text-white ml-auto rounded-tr-none" 
-                      : "bg-zinc-900/80 text-zinc-300 mr-auto rounded-tl-none border border-zinc-800"
+                      : "bg-slate-100 dark:bg-zinc-900/80 text-slate-800 dark:text-zinc-300 mr-auto rounded-tl-none border border-slate-200 dark:border-zinc-800"
                   )}>
-                    <div className="markdown-body prose prose-invert prose-sm max-w-none">
+                    <div className="markdown-body prose prose-slate dark:prose-invert prose-sm max-w-none">
                       <ReactMarkdown>{msg.text}</ReactMarkdown>
                     </div>
                     {msg.role === 'model' && (
@@ -599,7 +619,7 @@ export default function App() {
             )}
 
             {/* Chat Input */}
-            <div className="relative p-5 md:p-6 bg-zinc-950/50 border-t border-white/5 backdrop-blur-xl">
+            <div className="relative p-5 md:p-6 bg-slate-100/50 dark:bg-zinc-950/50 border-t border-slate-200 dark:border-white/5 backdrop-blur-xl">
               <div className="relative flex items-center gap-2">
                 <button 
                   onClick={toggleVoiceInput}
@@ -607,7 +627,7 @@ export default function App() {
                     "p-3 rounded-2xl transition-all border",
                     isListening 
                       ? "bg-red-500/20 text-red-400 border-red-500/50 animate-pulse" 
-                      : "bg-zinc-900/50 text-zinc-400 border-white/5 hover:text-cyan-400 hover:bg-cyan-500/10"
+                      : "bg-white dark:bg-zinc-900/50 text-zinc-400 border-slate-200 dark:border-white/5 hover:text-cyan-400 hover:bg-cyan-500/10"
                   )}
                   title="Voice input"
                 >
@@ -615,7 +635,7 @@ export default function App() {
                 </button>
                 <button 
                   onClick={() => handleSendMessage(lang === 'fr' ? "Propose-moi une vision futuriste et une idée de produit révolutionnaire que PowerAi pourrait lancer pour transformer l'économie du Cameroun grâce à l'IA." : "Propose a futuristic vision and a revolutionary product idea that PowerAi could launch to transform Cameroon's economy through AI.")}
-                  className="p-3 bg-zinc-900/50 text-zinc-400 rounded-2xl hover:text-orange-400 hover:bg-orange-500/10 transition-all border border-white/5"
+                  className="p-3 bg-white dark:bg-zinc-900/50 text-zinc-400 rounded-2xl hover:text-orange-400 hover:bg-orange-500/10 transition-all border border-slate-200 dark:border-white/5"
                   title="Magic Action"
                 >
                   <Sparkles size={18} />
@@ -627,7 +647,7 @@ export default function App() {
                     onChange={(e) => setChatInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder={t.chat.placeholder}
-                    className="w-full text-sm bg-zinc-900/50 border border-white/5 rounded-2xl pl-5 pr-14 py-3.5 focus:ring-2 focus:ring-cyan-500/30 outline-none text-white transition-all placeholder:text-zinc-600"
+                    className="w-full text-sm bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-white/5 rounded-2xl pl-5 pr-14 py-3.5 focus:ring-2 focus:ring-cyan-500/30 outline-none text-slate-900 dark:text-white transition-all placeholder:text-zinc-600"
                   />
                   <button 
                     onClick={() => handleSendMessage()}
@@ -677,14 +697,14 @@ export default function App() {
               {t.report.cover.desc}
             </p>
             
-            <div className="flex flex-wrap justify-center gap-12 pt-12 border-t border-zinc-800">
+            <div className="flex flex-wrap justify-center gap-12 pt-12 border-t border-slate-200 dark:border-zinc-800">
               <div className="text-left">
                 <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2">{t.report.cover.founders}</p>
-                <p className="text-lg font-bold text-white">Wilfred Kouam & Christ Lowe</p>
+                <p className="text-lg font-bold text-slate-900 dark:text-white">Wilfred Kouam & Christ Lowe</p>
               </div>
               <div className="text-left">
                 <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2">{t.header.location}</p>
-                <p className="text-lg font-bold text-white">{t.header.city}</p>
+                <p className="text-lg font-bold text-slate-900 dark:text-white">{t.header.city}</p>
               </div>
             </div>
           </motion.div>
@@ -695,7 +715,7 @@ export default function App() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4 bg-zinc-900/50"
+          className="py-24 px-4 bg-slate-100/50 dark:bg-zinc-900/50"
         >
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-center gap-12 mb-20">
@@ -703,23 +723,23 @@ export default function App() {
                 <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-6">
                   <Globe className="text-cyan-400" size={24} />
                 </div>
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
                   {t.report.constat.title}
                 </h2>
                 <GrowthChart t={t} />
               </div>
               <div className="flex-1 space-y-8">
-                <div className="p-8 bg-zinc-800/50 rounded-[2rem] border border-zinc-700 italic text-xl text-zinc-300 font-light leading-relaxed">
+                <div className="p-8 bg-white dark:bg-zinc-800/50 rounded-[2rem] border border-slate-200 dark:border-zinc-700 italic text-xl text-slate-700 dark:text-zinc-300 font-light leading-relaxed">
                   "{t.report.constat.quote}"
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[t.report.constat.global.market, t.report.constat.global.whatsapp].map((item, i) => (
-                    <div key={i} className="flex items-center gap-4 p-4 bg-zinc-900/50 rounded-2xl border border-zinc-800">
+                    <div key={i} className="flex items-center gap-4 p-4 bg-white dark:bg-zinc-900/50 rounded-2xl border border-slate-200 dark:border-zinc-800">
                       <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
                         <TrendingUp size={20} />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-white">{item.label}</p>
+                        <p className="text-xs font-bold text-slate-900 dark:text-white">{item.label}</p>
                         <p className="text-[10px] text-zinc-500">{item.desc}</p>
                       </div>
                     </div>
@@ -749,7 +769,7 @@ export default function App() {
                   className="p-8 bg-zinc-900/50 backdrop-blur-sm rounded-3xl border border-zinc-800/50 text-center group hover:border-cyan-500/30 transition-all"
                 >
                   <p className="text-3xl md:text-5xl font-bold text-cyan-400 mb-2 tracking-tighter group-hover:scale-110 transition-transform">{stat.value}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-white mb-1">{stat.label}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-900 dark:text-white mb-1">{stat.label}</p>
                   <p className="text-[9px] text-zinc-500 uppercase tracking-widest">{stat.desc}</p>
                 </motion.div>
               ))}
@@ -769,81 +789,81 @@ export default function App() {
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-2xl flex items-center justify-center mx-auto mb-8 rotate-3 shadow-xl shadow-cyan-500/20">
                 <Rocket className="text-white" size={32} />
               </div>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">{t.report.solution.title}</h2>
+              <h2 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">{t.report.solution.title}</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               {/* B2B */}
-              <div className="p-8 bg-zinc-900 rounded-[2.5rem] border border-zinc-800 group hover:border-cyan-500/50 transition-all">
+              <div className="p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-200 dark:border-zinc-800 group hover:border-cyan-500/50 transition-all shadow-sm dark:shadow-none">
                 <div className="flex justify-between items-start mb-8">
                   <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center group-hover:bg-cyan-500 transition-colors">
                     <Briefcase className="text-cyan-400 group-hover:text-zinc-950" size={24} />
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.solution.b2b.pilier}</span>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{t.report.solution.b2b.title}</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.report.solution.b2b.title}</h3>
                 <div className="space-y-6">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.target}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.b2b.target}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.b2b.target}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.prop}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.b2b.prop}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.b2b.prop}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.model}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.b2b.model}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.b2b.model}</p>
                   </div>
                 </div>
               </div>
 
               {/* AI Start 237 */}
-              <div className="p-8 bg-zinc-900 rounded-[2.5rem] border border-zinc-800 group hover:border-orange-500/50 transition-all">
+              <div className="p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-200 dark:border-zinc-800 group hover:border-orange-500/50 transition-all shadow-sm dark:shadow-none">
                 <div className="flex justify-between items-start mb-8">
                   <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center group-hover:bg-orange-500 transition-colors">
                     <GraduationCap className="text-orange-400 group-hover:text-zinc-950" size={24} />
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.solution.aistart.pilier}</span>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{t.report.solution.aistart.title}</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.report.solution.aistart.title}</h3>
                 <div className="space-y-6">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">{t.report.solution.labels.target}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.aistart.target}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.aistart.target}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">{t.report.solution.labels.prop}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.aistart.prop}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.aistart.prop}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400 mb-2">{t.report.solution.labels.model}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.aistart.model}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.aistart.model}</p>
                   </div>
                 </div>
               </div>
 
               {/* Community */}
-              <div className="p-8 bg-zinc-900 rounded-[2.5rem] border border-zinc-800 group hover:border-cyan-500/50 transition-all">
+              <div className="p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-200 dark:border-zinc-800 group hover:border-cyan-500/50 transition-all shadow-sm dark:shadow-none">
                 <div className="flex justify-between items-start mb-8">
                   <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center group-hover:bg-cyan-500 transition-colors">
                     <Users className="text-cyan-400 group-hover:text-zinc-950" size={24} />
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.solution.community.pilier}</span>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{t.report.solution.community.title}</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t.report.solution.community.title}</h3>
                 <div className="space-y-6">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.target}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.community.target}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.community.target}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.prop}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.community.prop}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.community.prop}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-2">{t.report.solution.labels.model}</p>
-                    <p className="text-sm text-zinc-400">{t.report.solution.community.model}</p>
+                    <p className="text-sm text-slate-600 dark:text-zinc-400">{t.report.solution.community.model}</p>
                   </div>
                   <button 
                     onClick={() => setView('members')}
@@ -873,31 +893,31 @@ export default function App() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4 bg-zinc-900/30"
+          className="py-24 px-4 bg-slate-100/30 dark:bg-zinc-900/30"
         >
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.founders.title}</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-20 text-center tracking-tight">{t.report.founders.title}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
               {/* Wilfred */}
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-[2rem] md:rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                <div className="relative p-6 md:p-12 bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-zinc-800">
+                <div className="relative p-6 md:p-12 bg-white dark:bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-slate-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
                   <div className="flex items-center gap-6 mb-8">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-zinc-700">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200 dark:border-zinc-700">
                       <Users className="text-orange-500" size={32} />
                     </div>
                     <div>
-                      <h3 className="text-xl md:text-2xl font-bold text-white">{t.report.founders.wilfred.name}</h3>
+                      <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">{t.report.founders.wilfred.name}</h3>
                       <p className="text-orange-500 font-bold text-[10px] md:text-xs uppercase tracking-widest">{t.report.founders.wilfred.role}</p>
                       <span className="inline-block px-2 py-0.5 bg-orange-500/10 text-orange-400 text-[10px] rounded-full mt-2 font-bold">{t.report.founders.wilfred.age}</span>
                     </div>
                   </div>
-                  <p className="text-[10px] md:text-sm font-bold text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.wilfred.tag}</p>
-                  <p className="text-zinc-400 leading-relaxed mb-8 text-sm">{t.report.founders.wilfred.bio}</p>
+                  <p className="text-[10px] md:text-sm font-bold text-slate-500 dark:text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.wilfred.tag}</p>
+                  <p className="text-slate-600 dark:text-zinc-400 leading-relaxed mb-8 text-sm">{t.report.founders.wilfred.bio}</p>
                   <div className="space-y-3">
                     {t.report.founders.wilfred.brings.map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 text-xs text-zinc-300">
+                      <div key={i} className="flex items-center gap-3 text-xs text-slate-700 dark:text-zinc-300">
                         <div className="w-6 h-6 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 font-bold">{i+1}</div>
                         {item}
                       </div>
@@ -909,22 +929,22 @@ export default function App() {
               {/* Christ */}
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-cyan-700 rounded-[2rem] md:rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                <div className="relative p-6 md:p-12 bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-zinc-800">
+                <div className="relative p-6 md:p-12 bg-white dark:bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-slate-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
                   <div className="flex items-center gap-6 mb-8">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-zinc-700">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200 dark:border-zinc-700">
                       <Settings className="text-cyan-500" size={32} />
                     </div>
                     <div>
-                      <h3 className="text-xl md:text-2xl font-bold text-white">{t.report.founders.christ.name}</h3>
+                      <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">{t.report.founders.christ.name}</h3>
                       <p className="text-cyan-500 font-bold text-[10px] md:text-xs uppercase tracking-widest">{t.report.founders.christ.role}</p>
                       <span className="inline-block px-2 py-0.5 bg-cyan-500/10 text-cyan-400 text-[10px] rounded-full mt-2 font-bold">{t.report.founders.christ.age}</span>
                     </div>
                   </div>
-                  <p className="text-[10px] md:text-sm font-bold text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.christ.tag}</p>
-                  <p className="text-zinc-400 leading-relaxed mb-8 text-sm">{t.report.founders.christ.bio}</p>
+                  <p className="text-[10px] md:text-sm font-bold text-slate-500 dark:text-white mb-4 uppercase tracking-widest opacity-50">{t.report.founders.christ.tag}</p>
+                  <p className="text-slate-600 dark:text-zinc-400 leading-relaxed mb-8 text-sm">{t.report.founders.christ.bio}</p>
                   <div className="space-y-3">
                     {t.report.founders.christ.brings.map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 text-xs text-zinc-300">
+                      <div key={i} className="flex items-center gap-3 text-xs text-slate-700 dark:text-zinc-300">
                         <div className="w-6 h-6 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-500 font-bold">{i+1}</div>
                         {item}
                       </div>
@@ -935,40 +955,40 @@ export default function App() {
             </div>
 
             {/* Duo Logic */}
-            <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] border border-zinc-800 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-zinc-900 dark:to-zinc-950 p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] border border-slate-200 dark:border-zinc-800 relative overflow-hidden shadow-xl dark:shadow-none">
               <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px]" />
               <div className="relative z-10">
-                <h3 className="text-2xl font-bold text-white mb-12 flex items-center gap-4">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-12 flex items-center gap-4">
                   <Compass className="text-cyan-400" />
                   {t.report.founders.duo.title}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                  <div className="p-8 bg-zinc-800/50 rounded-3xl border border-zinc-700">
+                  <div className="p-8 bg-white dark:bg-zinc-800/50 rounded-3xl border border-slate-200 dark:border-zinc-700 shadow-sm dark:shadow-none">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
                         <Compass size={20} className="text-orange-400" />
                       </div>
-                      <p className="font-bold text-white">{t.report.founders.duo.wilfred.label}</p>
+                      <p className="font-bold text-slate-900 dark:text-white">{t.report.founders.duo.wilfred.label}</p>
                     </div>
                     <ul className="space-y-3">
                       {t.report.founders.duo.wilfred.points.map((p, i) => (
-                        <li key={i} className="text-sm text-zinc-400 flex items-center gap-2">
+                        <li key={i} className="text-sm text-slate-600 dark:text-zinc-400 flex items-center gap-2">
                           <div className="w-1 h-1 bg-orange-500 rounded-full" />
                           {p}
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <div className="p-8 bg-zinc-800/50 rounded-3xl border border-zinc-700">
+                  <div className="p-8 bg-white dark:bg-zinc-800/50 rounded-3xl border border-slate-200 dark:border-zinc-700 shadow-sm dark:shadow-none">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
                         <Zap size={20} className="text-cyan-400" />
                       </div>
-                      <p className="font-bold text-white">{t.report.founders.duo.christ.label}</p>
+                      <p className="font-bold text-slate-900 dark:text-white">{t.report.founders.duo.christ.label}</p>
                     </div>
                     <ul className="space-y-3">
                       {t.report.founders.duo.christ.points.map((p, i) => (
-                        <li key={i} className="text-sm text-zinc-400 flex items-center gap-2">
+                        <li key={i} className="text-sm text-slate-600 dark:text-zinc-400 flex items-center gap-2">
                           <div className="w-1 h-1 bg-cyan-500 rounded-full" />
                           {p}
                         </li>
@@ -976,7 +996,7 @@ export default function App() {
                     </ul>
                   </div>
                 </div>
-                <div className="p-8 bg-white/5 rounded-2xl border border-white/10 text-center italic text-lg text-zinc-300 font-light">
+                <div className="p-8 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 text-center italic text-lg text-slate-700 dark:text-zinc-300 font-light">
                   "{t.report.founders.duo.quote}"
                 </div>
               </div>
@@ -989,15 +1009,15 @@ export default function App() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4"
+          className="py-24 px-4 bg-slate-50 dark:bg-transparent"
         >
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">{t.report.mission.title}</h2>
+              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">{t.report.mission.title}</h2>
               <div className="inline-block px-8 py-4 bg-cyan-500/10 rounded-full border border-cyan-500/20 mb-4">
                 <span className="text-2xl md:text-4xl font-bold text-cyan-400">{t.report.mission.main}</span>
               </div>
-              <p className="text-zinc-400 text-lg">{t.report.mission.sub}</p>
+              <p className="text-slate-600 dark:text-zinc-400 text-lg">{t.report.mission.sub}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -1005,16 +1025,16 @@ export default function App() {
                 <motion.div 
                   key={i} 
                   whileHover={{ y: -10 }}
-                  className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800 hover:border-cyan-500/30 transition-all"
+                  className="p-8 bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200 dark:border-zinc-800 hover:border-cyan-500/30 transition-all shadow-sm dark:shadow-none"
                 >
-                  <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                  <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                     {i === 0 ? <Briefcase className="text-cyan-400" /> : i === 1 ? <GraduationCap className="text-orange-400" /> : <Globe className="text-cyan-400" />}
                     {block.title}
                   </h4>
                   <div className="space-y-6">
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.solution.labels.how}</p>
-                      <p className="text-sm text-zinc-300">{block.comment}</p>
+                      <p className="text-sm text-slate-700 dark:text-zinc-300">{block.comment}</p>
                     </div>
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{t.report.solution.labels.impact}</p>
@@ -1025,7 +1045,7 @@ export default function App() {
               ))}
             </div>
             
-            <div className="text-center italic text-xl text-zinc-400 font-light">
+            <div className="text-center italic text-xl text-slate-500 dark:text-zinc-400 font-light">
               "{t.report.mission.quote}"
             </div>
           </div>
@@ -1036,39 +1056,39 @@ export default function App() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4 bg-zinc-900/50"
+          className="py-24 px-4 bg-slate-100/50 dark:bg-zinc-900/50"
         >
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">{t.report.vision.title}</h2>
-                <div className="p-10 bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-[3rem] border border-zinc-700 relative overflow-hidden group">
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-12">{t.report.vision.title}</h2>
+                <div className="p-10 bg-gradient-to-br from-white to-slate-50 dark:from-zinc-800 dark:to-zinc-900 rounded-[3rem] border border-slate-200 dark:border-zinc-700 relative overflow-hidden group shadow-xl dark:shadow-none">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[80px] group-hover:bg-cyan-500/10 transition-all" />
                   <div className="absolute top-4 right-4 px-3 py-1 bg-cyan-500/20 text-cyan-400 text-[10px] font-bold rounded-full border border-cyan-500/30">{t.report.vision.time}</div>
-                  <p className="text-2xl font-bold text-white mb-8 leading-tight">{t.report.vision.main}</p>
-                  <p className="text-zinc-400 italic mb-10 leading-relaxed">"{t.report.vision.quote}"</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mb-8 leading-tight">{t.report.vision.main}</p>
+                  <p className="text-slate-600 dark:text-zinc-400 italic mb-10 leading-relaxed">"{t.report.vision.quote}"</p>
                   <div className="flex flex-wrap gap-4">
                     {t.report.vision.pillars.map((p, i) => (
-                      <span key={i} className="px-4 py-2 bg-zinc-800 rounded-xl text-xs font-bold text-white border border-zinc-700">{p}</span>
+                      <span key={i} className="px-4 py-2 bg-slate-100 dark:bg-zinc-800 rounded-xl text-xs font-bold text-slate-700 dark:text-white border border-slate-200 dark:border-zinc-700">{p}</span>
                     ))}
                   </div>
                 </div>
               </div>
               
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">{t.report.values.title}</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-12">{t.report.values.title}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {t.report.values.list.map((val, i) => (
                     <motion.div 
                       key={i} 
                       whileHover={{ scale: 1.02 }}
-                      className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-cyan-500/30 transition-all"
+                      className="p-6 bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 hover:border-cyan-500/30 transition-all shadow-sm dark:shadow-none"
                     >
-                      <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full" />
                         {val.title}
                       </h4>
-                      <p className="text-[11px] text-zinc-500 leading-relaxed">{val.desc}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-500 leading-relaxed">{val.desc}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -1082,7 +1102,7 @@ export default function App() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="py-24 px-4 bg-zinc-950"
+          className="py-24 px-4 bg-slate-50 dark:bg-zinc-950"
         >
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
@@ -1091,17 +1111,17 @@ export default function App() {
                   <Calendar className="text-cyan-400" size={16} />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Timeline</span>
                 </div>
-                <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight">{t.report.roadmap.title}</h2>
+                <h2 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white tracking-tight">{t.report.roadmap.title}</h2>
               </div>
               <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-cyan-500" /> {t.report.roadmap.interactive.current}</span>
-                <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-zinc-800" /> {t.report.roadmap.interactive.next}</span>
+                <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-slate-200 dark:bg-zinc-800" /> {t.report.roadmap.interactive.next}</span>
               </div>
             </div>
 
             <div className="relative">
               {/* Horizontal Line */}
-              <div className="absolute top-1/2 left-0 w-full h-px bg-zinc-800 -translate-y-1/2 hidden lg:block" />
+              <div className="absolute top-1/2 left-0 w-full h-px bg-slate-200 dark:bg-zinc-800 -translate-y-1/2 hidden lg:block" />
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 relative z-10">
                 {t.report.roadmap.steps.map((step, i) => (
@@ -1116,16 +1136,16 @@ export default function App() {
                       "p-8 rounded-[2rem] border transition-all duration-500 h-full flex flex-col",
                       i === 0 
                         ? "bg-cyan-500/10 border-cyan-500/30 shadow-2xl shadow-cyan-500/10" 
-                        : "bg-zinc-900 border-zinc-800 hover:border-zinc-700"
+                        : "bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 hover:border-cyan-500/30 shadow-sm dark:shadow-none"
                     )}>
                       <div className={cn(
                         "w-12 h-12 rounded-2xl flex items-center justify-center mb-6 transition-all",
-                        i === 0 ? "bg-cyan-500 text-zinc-950" : "bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700"
+                        i === 0 ? "bg-cyan-500 text-white dark:text-zinc-950" : "bg-slate-100 dark:bg-zinc-800 text-zinc-400 group-hover:bg-slate-200 dark:group-hover:bg-zinc-700"
                       )}>
                         <span className="text-sm font-black">{step.period}</span>
                       </div>
-                      <h4 className="text-lg font-bold text-white mb-3 leading-tight">{step.title}</h4>
-                      <p className="text-xs text-zinc-400 leading-relaxed mt-auto">{step.desc}</p>
+                      <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3 leading-tight">{step.title}</h4>
+                      <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed mt-auto">{step.desc}</p>
                     </div>
                     
                     {/* Connector Dot */}
@@ -1145,26 +1165,26 @@ export default function App() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4 bg-zinc-900/30"
+          className="py-24 px-4 bg-slate-100/30 dark:bg-zinc-900/30"
         >
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.needs.title}</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-20 text-center tracking-tight">{t.report.needs.title}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               {t.report.needs.list.map((need, i) => (
                 <motion.div 
                   key={i} 
                   whileHover={{ y: -5 }}
-                  className="p-8 bg-zinc-900 rounded-3xl border border-zinc-800 hover:border-cyan-500/30 transition-all"
+                  className="p-8 bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200 dark:border-zinc-800 hover:border-cyan-500/30 transition-all shadow-sm dark:shadow-none"
                 >
-                  <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center mb-6">
-                    {i === 0 ? <DollarSign className="text-cyan-400" /> : i === 1 ? <Handshake className="text-orange-400" /> : i === 2 ? <Users className="text-cyan-400" /> : <Globe className="text-red-400" />}
+                  <div className="w-12 h-12 bg-slate-100 dark:bg-zinc-800 rounded-xl flex items-center justify-center mb-6">
+                    {i === 0 ? <DollarSign className="text-cyan-500 dark:text-cyan-400" /> : i === 1 ? <Handshake className="text-orange-500 dark:text-orange-400" /> : i === 2 ? <Users className="text-cyan-500 dark:text-cyan-400" /> : <Globe className="text-red-500 dark:text-red-400" />}
                   </div>
-                  <h4 className="text-lg font-bold text-white mb-4">{need.title}</h4>
-                  <p className="text-xs text-zinc-500 leading-relaxed">{need.desc}</p>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{need.title}</h4>
+                  <p className="text-xs text-slate-500 dark:text-zinc-500 leading-relaxed">{need.desc}</p>
                 </motion.div>
               ))}
             </div>
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/10 text-center italic text-lg text-zinc-300 font-light">
+            <div className="p-8 bg-slate-50 dark:bg-white/5 rounded-3xl border border-slate-200 dark:border-white/10 text-center italic text-lg text-slate-600 dark:text-zinc-300 font-light">
               "{t.report.needs.quote}"
             </div>
           </div>
@@ -1175,28 +1195,28 @@ export default function App() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4 bg-zinc-900/50"
+          className="py-24 px-4 bg-slate-50 dark:bg-zinc-900/50"
         >
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-20 text-center tracking-tight">{t.report.risks.title}</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-20 text-center tracking-tight">{t.report.risks.title}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {t.report.risks.list.map((risk, i) => (
                 <motion.div 
                   key={i} 
                   whileHover={{ scale: 1.01 }}
-                  className="p-6 md:p-8 bg-zinc-900 rounded-[1.5rem] md:rounded-3xl border border-zinc-800"
+                  className="p-6 md:p-8 bg-white dark:bg-zinc-900 rounded-[1.5rem] md:rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-sm dark:shadow-none"
                 >
                   <div className="flex justify-between items-start mb-6">
-                    <h4 className="text-base md:text-lg font-bold text-white pr-4">{risk.title}</h4>
+                    <h4 className="text-base md:text-lg font-bold text-slate-900 dark:text-white pr-4">{risk.title}</h4>
                     <span className={cn(
                       "px-2 py-0.5 text-[9px] md:text-[10px] font-bold rounded-full border whitespace-nowrap",
-                      risk.color === 'orange' ? "bg-orange-500/10 text-orange-400 border-orange-500/20" : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+                      risk.color === 'orange' ? "bg-orange-500/10 text-orange-500 dark:text-orange-400 border-orange-500/20" : "bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 border-cyan-500/20"
                     )}>{risk.level}</span>
                   </div>
-                  <div className="flex gap-3 text-xs text-zinc-400">
+                  <div className="flex gap-3 text-xs text-slate-500 dark:text-zinc-400">
                     <ShieldAlert className={risk.color === 'orange' ? "text-orange-500" : "text-cyan-500"} size={16} />
                     <div>
-                      <p className="font-bold text-zinc-300 mb-1 uppercase tracking-widest text-[10px]">Mitigation</p>
+                      <p className="font-bold text-slate-700 dark:text-zinc-300 mb-1 uppercase tracking-widest text-[10px]">Mitigation</p>
                       <p className="leading-relaxed">{risk.mitigation}</p>
                     </div>
                   </div>
@@ -1211,20 +1231,20 @@ export default function App() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="py-24 px-4"
+          className="py-24 px-4 bg-white dark:bg-transparent"
         >
           <div className="max-w-5xl mx-auto">
-            <div className="p-8 md:p-12 bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-zinc-800 relative group">
+            <div className="p-8 md:p-12 bg-slate-50 dark:bg-zinc-900 rounded-[2rem] md:rounded-[3rem] border border-slate-200 dark:border-zinc-800 relative group shadow-xl dark:shadow-none">
               <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[100px] group-hover:bg-cyan-500/10 transition-all" />
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-12 flex items-center gap-4">
-                <Info className="text-cyan-400" />
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-12 flex items-center gap-4">
+                <Info className="text-cyan-500 dark:text-cyan-400" />
                 {t.report.recap.title}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
                 {t.report.recap.questions.map((item, i) => (
                   <div key={i} className="space-y-2">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">{item.q}</p>
-                    <p className="text-xs md:text-sm text-zinc-300 font-medium leading-relaxed">{item.a}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-500 dark:text-cyan-400">{item.q}</p>
+                    <p className="text-xs md:text-sm text-slate-700 dark:text-zinc-300 font-medium leading-relaxed">{item.a}</p>
                   </div>
                 ))}
               </div>
@@ -1237,53 +1257,53 @@ export default function App() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="py-24 px-4 bg-gradient-to-b from-zinc-900 to-black"
+          className="py-24 px-4 bg-gradient-to-b from-slate-50 to-white dark:from-zinc-900 dark:to-black"
         >
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Call to Action</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-500 dark:text-cyan-400">Call to Action</span>
               </div>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">{t.report.cta.title}</h2>
-              <p className="text-zinc-400 text-lg">{t.report.cta.sub}</p>
+              <h2 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">{t.report.cta.title}</h2>
+              <p className="text-slate-600 dark:text-zinc-400 text-lg">{t.report.cta.sub}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-20">
               {t.report.cta.profiles.map((profile, i) => (
-                <div key={i} className="p-8 md:p-10 bg-zinc-900 rounded-[1.5rem] md:rounded-[2.5rem] border border-zinc-800 group hover:bg-zinc-800/50 transition-all">
-                  <h4 className="text-lg md:text-xl font-bold text-white mb-4 flex items-center justify-between">
+                <div key={i} className="p-8 md:p-10 bg-white dark:bg-zinc-900 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-200 dark:border-zinc-800 group hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-all shadow-sm dark:shadow-none">
+                  <h4 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-between">
                     {profile.title}
-                    <ChevronRight className="text-zinc-700 group-hover:text-cyan-400 transition-colors" />
+                    <ChevronRight className="text-slate-300 dark:text-zinc-700 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors" />
                   </h4>
-                  <p className="text-xs md:text-sm text-zinc-400 leading-relaxed mb-8">{profile.desc}</p>
-                  <button className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-cyan-400 flex items-center gap-2 group-hover:gap-4 transition-all">
+                  <p className="text-xs md:text-sm text-slate-500 dark:text-zinc-400 leading-relaxed mb-8">{profile.desc}</p>
+                  <button className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-cyan-500 dark:text-cyan-400 flex items-center gap-2 group-hover:gap-4 transition-all">
                     {t.report.solution.labels.contactUs} <ArrowRight size={14} />
                   </button>
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-center gap-12 pt-12 border-t border-zinc-800">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-12 pt-12 border-t border-slate-200 dark:border-zinc-800">
               <div className="flex flex-col sm:flex-row items-center gap-8">
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center">
                       <Phone size={14} className="text-cyan-500" />
                     </div>
-                    <span className="text-xs text-zinc-400 font-medium">Christ: +237 678 831 868</span>
+                    <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium">Christ: +237 678 831 868</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center">
                       <Phone size={14} className="text-cyan-500" />
                     </div>
-                    <span className="text-xs text-zinc-400 font-medium">Wilfred: +237 688 605 807</span>
+                    <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium">Wilfred: +237 688 605 807</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center">
                     <Mail size={16} className="text-cyan-500" />
                   </div>
-                  <span className="text-xs text-zinc-400 font-medium">contact@powerai.cm</span>
+                  <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium">contact@powerai.cm</span>
                 </div>
               </div>
               <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-500/50 italic text-center md:text-right">
@@ -1294,14 +1314,14 @@ export default function App() {
         </motion.section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-zinc-900 bg-black text-center">
+      <footer className="py-12 border-t border-slate-200 dark:border-zinc-900 bg-white dark:bg-black text-center transition-colors duration-300">
         <div className="flex items-center justify-center gap-3 mb-6">
           <div className="w-6 h-6 bg-cyan-500 rounded flex items-center justify-center">
-            <Zap className="text-zinc-950" size={14} fill="currentColor" />
+            <Zap className="text-white dark:text-zinc-950" size={14} fill="currentColor" />
           </div>
-          <span className="text-sm font-bold tracking-tighter text-white">PowerAi 2026</span>
+          <span className="text-sm font-bold tracking-tighter text-slate-900 dark:text-white">PowerAi 2026</span>
         </div>
-        <p className="text-[10px] text-zinc-600 uppercase tracking-widest">{t.header.presentation}</p>
+        <p className="text-[10px] text-slate-400 dark:text-zinc-600 uppercase tracking-widest">{t.header.presentation}</p>
       </footer>
     </>
   )}
@@ -1561,37 +1581,19 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
       }
     }
 
-    // Contact Validation (Step 12)
+    // Contact Validation (Step 12) - Relaxed as requested
     if (step === 12) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const cleanInput = input.replace(/\s/g, '');
-      
-      // Cameroon specific: +237 or 237 followed by 9 digits, or just 9 digits
-      const cameroonPhoneRegex = /^(\+?237)?[26][0-9]{8}$/;
-      const generalPhoneRegex = /^\+?[0-9]{8,15}$/;
-      
-      const isEmail = emailRegex.test(input);
-      const isCamPhone = cameroonPhoneRegex.test(cleanInput);
-      const isGeneralPhone = generalPhoneRegex.test(cleanInput);
-
-      if (!isEmail && !isCamPhone && !isGeneralPhone) {
+      // Accept almost anything that looks like a contact info
+      if (input.length < 3) {
         setError(lang === 'fr' 
-          ? "Veuillez entrer un email ou un numéro de téléphone valide (ex: +237 678831868)." 
-          : "Please enter a valid email or phone number (e.g., +237 678831868).");
+          ? "Veuillez entrer une information de contact valide." 
+          : "Please enter valid contact information.");
         return;
       }
 
-      // Prepend +237 if it's a 9-digit Cameroon number without prefix
-      let finalInput = input;
-      if (isCamPhone && !cleanInput.startsWith('+') && !cleanInput.startsWith('237')) {
-        finalInput = `+237 ${input.trim()}`;
-      } else if (isCamPhone && cleanInput.startsWith('237')) {
-        finalInput = `+${input.trim()}`;
-      }
-      
       setIsTyping(true);
-      setAnswers({ ...answers, contact: finalInput });
-      handleSubmit(finalInput);
+      setAnswers({ ...answers, contact: input });
+      handleSubmit(input);
       return;
     }
 
@@ -1667,13 +1669,13 @@ function CommunityPortal({ lang, t, onBack }: { lang: 'fr' | 'en', t: any, onBac
   };
 
 return (
-<div className="min-h-[90vh] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
+<div className="min-h-[90vh] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden transition-colors duration-300">
 {/* Background elements */}
 <div className="absolute inset-0 pointer-events-none">
   <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px] animate-pulse" />
   <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-orange-500/5 rounded-full blur-[100px] animate-pulse" />
   <div 
-    className="absolute inset-0 opacity-[0.03]"
+    className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]"
     style={{
       backgroundImage: `radial-gradient(#22d3ee 0.5px, transparent 0.5px)`,
       backgroundSize: '24px 24px',
@@ -1700,7 +1702,7 @@ return (
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="text-4xl md:text-8xl font-bold text-white mb-8 tracking-tighter leading-[0.9]"
+        className="text-4xl md:text-8xl font-bold text-slate-900 dark:text-white mb-8 tracking-tighter leading-[0.9]"
       >
         {t.report.communityPortal.hero.title}
       </motion.h1>
@@ -1708,7 +1710,7 @@ return (
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="text-lg md:text-2xl text-zinc-400 mb-12 max-w-2xl mx-auto font-light leading-relaxed"
+        className="text-lg md:text-2xl text-slate-600 dark:text-zinc-400 mb-12 max-w-2xl mx-auto font-light leading-relaxed"
       >
         {t.report.communityPortal.hero.desc}
       </motion.p>
@@ -1720,11 +1722,11 @@ return (
         className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
       >
         {[t.report.communityPortal.future.vision1, t.report.communityPortal.future.vision2, t.report.communityPortal.future.vision3].map((v, i) => (
-          <div key={i} className="p-8 bg-zinc-900/40 backdrop-blur-md rounded-3xl border border-zinc-800/50 text-left hover:border-cyan-500/30 transition-all group">
+          <div key={i} className="p-8 bg-white dark:bg-zinc-900/40 backdrop-blur-md rounded-3xl border border-slate-200 dark:border-zinc-800/50 text-left hover:border-cyan-500/30 transition-all group shadow-sm dark:shadow-none">
             <div className="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500 group-hover:text-zinc-950 transition-all">
               <CheckCircle2 size={14} />
             </div>
-            <p className="text-xs md:text-sm text-zinc-300 leading-relaxed font-medium">{v}</p>
+            <p className="text-xs md:text-sm text-slate-700 dark:text-zinc-300 leading-relaxed font-medium">{v}</p>
           </div>
         ))}
       </motion.div>
@@ -1745,7 +1747,7 @@ return (
   ) : (
     <div className="max-w-2xl mx-auto">
       {/* Progress Bar */}
-      <div className="w-full h-1 bg-zinc-800 rounded-full mb-8 overflow-hidden">
+      <div className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-full mb-8 overflow-hidden">
         <motion.div 
           initial={{ width: 0 }}
           animate={{ width: `${(step / 13) * 100}%` }}
@@ -1753,7 +1755,7 @@ return (
         />
       </div>
 
-      <div className="bg-zinc-900/40 backdrop-blur-2xl rounded-[2.5rem] border border-zinc-800/50 p-6 md:p-12 shadow-2xl relative overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900/40 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200 dark:border-zinc-800/50 p-6 md:p-12 shadow-2xl relative overflow-hidden transition-colors duration-300">
         <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[100px] -mr-32 -mt-32" />
         
         <div className="flex items-center gap-4 mb-12 relative z-10">
@@ -1761,7 +1763,7 @@ return (
             <Bot className="text-white" size={28} />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">{t.report.communityPortal.onboarding.aiName}</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">{t.report.communityPortal.onboarding.aiName}</h2>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
               <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t.chat.status}</p>
@@ -1800,7 +1802,7 @@ return (
                 </motion.div>
               )}
 
-              <div className="bg-zinc-800/30 p-6 md:p-8 rounded-3xl rounded-tl-none border border-zinc-700/50 text-zinc-100 text-sm md:text-lg font-light leading-relaxed">
+              <div className="bg-slate-100 dark:bg-zinc-800/30 p-6 md:p-8 rounded-3xl rounded-tl-none border border-slate-200 dark:border-zinc-700/50 text-slate-800 dark:text-zinc-100 text-sm md:text-lg font-light leading-relaxed transition-colors duration-300">
                 {step === -1 && (
                   <div className="space-y-6">
                     <p>{t.report.communityPortal.onboarding.browseNo}</p>
@@ -1815,12 +1817,12 @@ return (
                 )}
                 {step === 1 && (
                   <div className="space-y-6">
-                    <p className="text-cyan-400 font-bold italic text-base md:text-xl">"{t.report.communityPortal.onboarding.aiIntro}"</p>
+                    <p className="text-cyan-600 dark:text-cyan-400 font-bold italic text-base md:text-xl">"{t.report.communityPortal.onboarding.aiIntro}"</p>
                     <div className="flex items-center justify-between gap-4">
-                      <p className="text-zinc-300">{humanQuestion?.q || "Génération de la question..."}</p>
+                      <p className="text-slate-600 dark:text-zinc-300">{humanQuestion?.q || "Génération de la question..."}</p>
                       <button 
                         onClick={generateHumanQuestion}
-                        className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-500 hover:text-cyan-400"
+                        className="p-2 hover:bg-slate-200 dark:hover:bg-zinc-800 rounded-full transition-colors text-slate-400 dark:text-zinc-500 hover:text-cyan-500 dark:hover:text-cyan-400"
                         title="Changer de question"
                       >
                         <RefreshCw size={16} className={isTyping ? "animate-spin" : ""} />
@@ -1844,7 +1846,7 @@ return (
                     <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto border border-emerald-500/30">
                       <CheckCircle2 className="text-emerald-400" size={40} />
                     </div>
-                    <p className="text-xl font-bold text-white">{t.report.communityPortal.onboarding.success}</p>
+                    <p className="text-xl font-bold text-slate-900 dark:text-white">{t.report.communityPortal.onboarding.success}</p>
                     <div className="flex items-center justify-center gap-2 text-amber-400 font-bold uppercase tracking-widest text-xs">
                       <Star size={16} fill="currentColor" />
                       <span>{t.report.communityPortal.onboarding.meritStar}</span>
@@ -1856,7 +1858,7 @@ return (
           </AnimatePresence>
 
           {isTyping && (
-            <div className="flex gap-2 p-4 bg-zinc-800/30 rounded-2xl w-fit">
+            <div className="flex gap-2 p-4 bg-slate-100 dark:bg-zinc-800/30 rounded-2xl w-fit">
               <span className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
               <span className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
               <span className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" />
@@ -1873,7 +1875,7 @@ return (
               onChange={(e) => setCurrentInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && currentInput.trim() && handleNext()}
               placeholder={t.report.communityPortal.onboarding.placeholder}
-              className="w-full bg-zinc-950/80 border border-zinc-800 rounded-2xl px-6 py-5 focus:ring-4 focus:ring-cyan-500/20 outline-none text-white transition-all text-lg placeholder:text-zinc-700"
+              className="w-full bg-white dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800 rounded-2xl px-6 py-5 focus:ring-4 focus:ring-cyan-500/20 outline-none text-slate-900 dark:text-white transition-all text-lg placeholder:text-zinc-400 dark:placeholder:text-zinc-700 shadow-xl dark:shadow-none"
             />
             <button 
               onClick={handleNext}
@@ -1928,18 +1930,18 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
             <Sparkles className="text-cyan-400" size={16} />
             <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Elite Network</span>
           </motion.div>
-          <h2 className="text-4xl md:text-7xl font-bold text-white mb-6 tracking-tighter leading-tight">
+          <h2 className="text-4xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 tracking-tighter leading-tight">
             {t.report.communityPortal.foundersPortal.members.title}
           </h2>
-          <p className="text-zinc-500 max-w-2xl mx-auto text-sm md:text-base font-light">
+          <p className="text-slate-500 dark:text-zinc-500 max-w-2xl mx-auto text-sm md:text-base font-light">
             {t.report.communityPortal.foundersPortal.members.membersDesc}
           </p>
         </div>
 
         {members.length === 0 ? (
-          <div className="text-center py-20 bg-zinc-900/20 rounded-[3rem] border border-zinc-800/50">
-            <Users className="mx-auto text-zinc-700 mb-4" size={48} />
-            <p className="text-zinc-500 uppercase tracking-widest text-xs font-bold">Chargement des membres...</p>
+          <div className="text-center py-20 bg-slate-100 dark:bg-zinc-900/20 rounded-[3rem] border border-slate-200 dark:border-zinc-800/50">
+            <Users className="mx-auto text-slate-300 dark:text-zinc-700 mb-4" size={48} />
+            <p className="text-slate-400 dark:text-zinc-500 uppercase tracking-widest text-xs font-bold">Chargement des membres...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -1950,12 +1952,12 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ y: -10, scale: 1.02 }}
-              className="bg-zinc-900/40 backdrop-blur-xl border border-zinc-800/50 rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden group transition-all hover:border-cyan-500/30 hover:shadow-2xl hover:shadow-cyan-500/10"
+              className="bg-white dark:bg-zinc-900/40 backdrop-blur-xl border border-slate-200 dark:border-zinc-800/50 rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden group transition-all hover:border-cyan-500/30 hover:shadow-2xl hover:shadow-cyan-500/10 shadow-sm dark:shadow-none"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-cyan-500/10 transition-all" />
               
               {member.is_founder === 1 ? (
-                <div className="absolute top-6 right-6 px-3 py-1 bg-gradient-to-r from-cyan-500 to-cyan-600 text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">
+                <div className="absolute top-6 right-6 px-3 py-1 bg-gradient-to-r from-cyan-500 to-cyan-600 text-white dark:text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">
                   {t.report.communityPortal.foundersPortal.members.founders}
                 </div>
               ) : member.has_star === 1 && (
@@ -1966,26 +1968,26 @@ function MembersSection({ t, members }: { t: any, members: any[] }) {
               )}
 
               <div className="flex items-center gap-5 mb-8">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-zinc-800 group-hover:border-cyan-500/50 shadow-2xl transition-all">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-zinc-800 group-hover:border-cyan-500/50 shadow-2xl transition-all">
                   <img src={member.image_url} alt={member.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" referrerPolicy="no-referrer" />
                 </div>
                 <div>
-                  <h3 className="text-lg md:text-xl font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">{member.name}</h3>
-                  <p className="text-xs md:text-sm text-cyan-400/80 font-medium tracking-tight">{member.role}</p>
+                  <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-cyan-400 transition-colors">{member.name}</h3>
+                  <p className="text-xs md:text-sm text-cyan-500 dark:text-cyan-400/80 font-medium tracking-tight">{member.role}</p>
                 </div>
               </div>
 
               <div className="relative">
                 <div className="absolute -left-4 top-0 text-cyan-500/20 text-4xl font-serif">"</div>
-                <p className="text-zinc-400 text-xs md:text-sm leading-relaxed mb-8 font-light italic pl-2">
+                <p className="text-slate-600 dark:text-zinc-400 text-xs md:text-sm leading-relaxed mb-8 font-light italic pl-2">
                   {member.bio}
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-zinc-800/50 flex items-center justify-between">
+              <div className="pt-6 border-t border-slate-100 dark:border-zinc-800/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Calendar size={12} className="text-zinc-600" />
-                  <span className="text-[9px] md:text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
+                  <Calendar size={12} className="text-slate-400 dark:text-zinc-600" />
+                  <span className="text-[9px] md:text-[10px] text-slate-400 dark:text-zinc-600 uppercase tracking-widest font-bold">
                     {t.report.communityPortal.foundersPortal.members.joined} {new Date(member.joined_at).toLocaleDateString()}
                   </span>
                 </div>
@@ -2015,14 +2017,24 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
   const [error, setError] = useState<string | null>(null);
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const [lastClickTime, setLastClickTime] = useState(0);
   const [activeTab, setActiveTab] = useState<'applications' | 'members'>('applications');
   const [notification, setNotification] = useState<string | null>(null);
 
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    // Auto-login if password exists in localStorage
+    // Auto-login if password exists in localStorage or URL param
     const savedPassword = localStorage.getItem('powerai_founder_key');
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessParam = urlParams.get('access');
+
+    if (accessParam === 'founder') {
+      handleLogin('PowerAi_Founders_2026!');
+      return;
+    }
+
     if (savedPassword && !isAuthorized) {
       handleLogin(savedPassword);
     }
@@ -2105,27 +2117,46 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
     }
   };
 
+  const handleSecretTrigger = () => {
+    const now = Date.now();
+    if (now - lastClickTime < 500) {
+      const newCount = clickCount + 1;
+      setClickCount(newCount);
+      if (newCount >= 7) {
+        localStorage.setItem('powerai_founder_key', 'PowerAi_Founders_2026!');
+        setIsAuthorized(true);
+        setClickCount(0);
+      }
+    } else {
+      setClickCount(1);
+    }
+    setLastClickTime(now);
+  };
+
   if (!isAuthorized) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4 bg-black">
+      <div className="min-h-[80vh] flex items-center justify-center px-4 bg-slate-50 dark:bg-black transition-colors duration-300">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full bg-zinc-900 border border-zinc-800 p-8 rounded-[2.5rem] shadow-2xl shadow-cyan-500/5 relative overflow-hidden"
+          className="max-w-md w-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 p-8 rounded-[2.5rem] shadow-2xl shadow-cyan-500/5 relative overflow-hidden dark:shadow-none"
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50" />
           
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center border border-cyan-500/20 mb-6">
-              <ShieldAlert className="text-cyan-400" size={32} />
+            <div 
+              onClick={handleSecretTrigger}
+              className="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center border border-cyan-500/20 mb-6 cursor-default select-none active:scale-95 transition-transform"
+            >
+              <ShieldAlert className="text-cyan-500 dark:text-cyan-400" size={32} />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">{t.report.communityPortal.foundersPortal.login}</h2>
-            <p className="text-zinc-500 text-sm">{t.report.communityPortal.foundersPortal.password}</p>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{t.report.communityPortal.foundersPortal.login}</h2>
+            <p className="text-slate-500 dark:text-zinc-500 text-sm">{t.report.communityPortal.foundersPortal.password}</p>
           </div>
 
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-2">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-500 ml-2">
                 {t.report.communityPortal.foundersPortal.password}
               </label>
               <div className="relative">
@@ -2134,7 +2165,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-cyan-500/50 outline-none text-white transition-all text-center tracking-widest text-lg"
+                  className="w-full bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-cyan-500/50 outline-none text-slate-900 dark:text-white transition-all text-center tracking-widest text-lg"
                   placeholder="••••••••"
                   autoFocus
                   autoComplete="current-password"
@@ -2142,7 +2173,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                 <button 
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-cyan-400 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-600 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -2154,7 +2185,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                 <motion.p 
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="text-red-400 text-xs text-center font-medium bg-red-400/10 py-2 rounded-lg border border-red-400/20"
+                  className="text-red-500 dark:text-red-400 text-xs text-center font-medium bg-red-500/10 dark:bg-red-400/10 py-2 rounded-lg border border-red-500/20 dark:border-red-400/20"
                 >
                   {error}
                 </motion.p>
@@ -2164,7 +2195,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                     setPassword('');
                     setError(null);
                   }}
-                  className="w-full text-[10px] text-zinc-500 hover:text-cyan-400 transition-colors uppercase tracking-widest font-bold"
+                  className="w-full text-[10px] text-slate-400 dark:text-zinc-500 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors uppercase tracking-widest font-bold"
                 >
                   Réinitialiser la clé
                 </button>
@@ -2174,10 +2205,10 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
             <button 
               onClick={() => handleLogin()}
               disabled={loading}
-              className="w-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-cyan-500/20 active:scale-95 flex items-center justify-center gap-2"
+              className="w-full bg-cyan-500 hover:bg-cyan-400 text-white dark:text-zinc-950 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-cyan-500/20 active:scale-95 flex items-center justify-center gap-2"
             >
               {loading ? (
-                <span className="w-5 h-5 border-2 border-zinc-950/30 border-t-zinc-950 rounded-full animate-spin" />
+                <span className="w-5 h-5 border-2 border-white/30 dark:border-zinc-950/30 border-t-white dark:border-t-zinc-950 rounded-full animate-spin" />
               ) : (
                 <>
                   <Zap size={18} fill="currentColor" />
@@ -2186,10 +2217,10 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
               )}
             </button>
 
-            <div className="pt-4 border-t border-zinc-800/50">
+            <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/50">
               <button 
                 onClick={onBack}
-                className="w-full py-3 text-zinc-400 text-xs font-bold uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 text-slate-400 dark:text-zinc-400 text-xs font-bold uppercase tracking-widest hover:text-slate-900 dark:hover:text-white transition-colors flex items-center justify-center gap-2"
               >
                 <ArrowRight className="rotate-180" size={14} />
                 {t.report.communityPortal.onboarding.back}
@@ -2213,10 +2244,10 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
             className="mb-8 bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-2xl flex items-center justify-between gap-4"
           >
             <div className="flex items-center gap-3">
-              <Bot className="text-cyan-400" size={20} />
-              <p className="text-cyan-400 text-sm font-medium">{notification}</p>
+              <Bot className="text-cyan-500 dark:text-cyan-400" size={20} />
+              <p className="text-cyan-600 dark:text-cyan-400 text-sm font-medium">{notification}</p>
             </div>
-            <button onClick={() => setNotification(null)} className="text-cyan-400/50 hover:text-cyan-400">
+            <button onClick={() => setNotification(null)} className="text-cyan-400/50 hover:text-cyan-500 dark:hover:text-cyan-400">
               <X size={16} />
             </button>
           </motion.div>
@@ -2226,16 +2257,16 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-cyan-500/10 rounded-2xl flex items-center justify-center border border-cyan-500/20">
-            <BarChart3 className="text-cyan-400" size={24} />
+            <BarChart3 className="text-cyan-500 dark:text-cyan-400" size={24} />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">{t.report.communityPortal.foundersPortal.title}</h1>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">{t.report.communityPortal.foundersPortal.title}</h1>
             <div className="flex gap-4 mt-2">
               <button 
                 onClick={() => setActiveTab('applications')}
                 className={cn(
                   "text-[10px] uppercase tracking-widest font-bold transition-all",
-                  activeTab === 'applications' ? "text-cyan-400" : "text-zinc-500 hover:text-zinc-300"
+                  activeTab === 'applications' ? "text-cyan-500 dark:text-cyan-400" : "text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300"
                 )}
               >
                 {applications.length} {lang === 'fr' ? 'Candidatures' : 'Applications'}
@@ -2244,7 +2275,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                 onClick={() => setActiveTab('members')}
                 className={cn(
                   "text-[10px] uppercase tracking-widest font-bold transition-all",
-                  activeTab === 'members' ? "text-cyan-400" : "text-zinc-500 hover:text-zinc-300"
+                  activeTab === 'members' ? "text-cyan-500 dark:text-cyan-400" : "text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300"
                 )}
               >
                 {members.length} {lang === 'fr' ? 'Membres' : 'Members'}
@@ -2256,7 +2287,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
           <button 
             onClick={() => fetchApplications()}
             disabled={loading}
-            className="p-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-cyan-400 rounded-full transition-all border border-zinc-700 disabled:opacity-50"
+            className="p-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-400 dark:text-zinc-400 hover:text-cyan-500 dark:hover:text-cyan-400 rounded-full transition-all border border-slate-200 dark:border-zinc-700 disabled:opacity-50"
             title="Rafraîchir"
           >
             <RefreshCw size={14} className={cn(loading && "animate-spin")} />
@@ -2266,7 +2297,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
               localStorage.removeItem('powerai_founder_key');
               onBack();
             }}
-            className="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full text-xs font-bold border border-zinc-700 transition-all flex items-center gap-2"
+            className="px-6 py-2 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-900 dark:text-white rounded-full text-xs font-bold border border-slate-200 dark:border-zinc-700 transition-all flex items-center gap-2"
           >
             <LogOut size={14} />
             {t.report.communityPortal.foundersPortal.logout}
@@ -2279,44 +2310,44 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
       {activeTab === 'applications' ? (
         <div className="space-y-6">
           {/* Desktop Table */}
-          <div className="hidden lg:block bg-zinc-900/50 border border-zinc-800 rounded-[2rem] overflow-hidden shadow-2xl">
+          <div className="hidden lg:block bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-[2rem] overflow-hidden shadow-xl dark:shadow-none">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-zinc-950 border-b border-zinc-800">
-                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.name}</th>
-                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.email}</th>
-                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.role}</th>
-                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.aiAssessment}</th>
-                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">{t.report.communityPortal.foundersPortal.table.actions}</th>
+                  <tr className="bg-slate-50 dark:bg-zinc-950 border-b border-slate-200 dark:border-zinc-800">
+                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-500">{t.report.communityPortal.foundersPortal.table.name}</th>
+                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-500">{t.report.communityPortal.foundersPortal.table.email}</th>
+                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-500">{t.report.communityPortal.foundersPortal.table.role}</th>
+                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-500">{t.report.communityPortal.foundersPortal.table.aiAssessment}</th>
+                    <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-500">{t.report.communityPortal.foundersPortal.table.actions}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800">
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                   {applications.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="p-12 text-center text-zinc-500 italic">
+                      <td colSpan={5} className="p-12 text-center text-slate-400 dark:text-zinc-500 italic">
                         {t.report.communityPortal.foundersPortal.noApplications}
                       </td>
                     </tr>
                   ) : (
                     applications.map((app) => (
-                      <tr key={app.id} className="hover:bg-zinc-800/30 transition-colors group">
+                      <tr key={app.id} className="hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors group">
                         <td className="p-6">
-                          <p className="text-sm font-bold text-white">{app.name}</p>
-                          <p className="text-[10px] text-zinc-600 font-mono mt-1">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">{app.name}</p>
+                          <p className="text-[10px] text-slate-400 dark:text-zinc-600 font-mono mt-1">
                             {new Date(app.submitted_at).toLocaleDateString()}
                           </p>
                         </td>
                         <td className="p-6">
-                          <p className="text-xs text-cyan-400 font-mono">{app.email}</p>
+                          <p className="text-xs text-cyan-600 dark:text-cyan-400 font-mono">{app.email}</p>
                         </td>
                         <td className="p-6">
-                          <p className="text-xs text-zinc-300">{app.role}</p>
-                          <p className="text-[10px] text-zinc-500 mt-1">{app.status}</p>
+                          <p className="text-xs text-slate-600 dark:text-zinc-300">{app.role}</p>
+                          <p className="text-[10px] text-slate-400 dark:text-zinc-500 mt-1">{app.status}</p>
                         </td>
                         <td className="p-6 max-w-xs">
                           <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-xl">
-                            <p className="text-[11px] text-cyan-200/80 italic leading-relaxed">
+                            <p className="text-[11px] text-cyan-700 dark:text-cyan-200/80 italic leading-relaxed">
                               <Sparkles size={12} className="inline mr-2 mb-1" />
                               {app.ai_assessment || "En attente d'analyse..."}
                             </p>
@@ -2327,14 +2358,14 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                             <div className="flex gap-2">
                               <button 
                                 onClick={() => handleModeration(app.id, 'accepted')}
-                                className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-zinc-950 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-emerald-500/20 transition-all flex items-center gap-2"
+                                className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-600 dark:text-emerald-400 hover:text-white dark:hover:text-zinc-950 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-emerald-500/20 transition-all flex items-center gap-2"
                               >
                                 <Star size={14} fill="currentColor" />
                                 {t.report.communityPortal.foundersPortal.actions.accept}
                               </button>
                               <button 
                                 onClick={() => handleModeration(app.id, 'rejected')}
-                                className="px-4 py-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-zinc-950 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-red-500/20 transition-all"
+                                className="px-4 py-2 bg-red-500/10 hover:bg-red-500 text-red-600 dark:text-red-400 hover:text-white dark:hover:text-zinc-950 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-red-500/20 transition-all"
                               >
                                 {t.report.communityPortal.foundersPortal.actions.reject}
                               </button>
@@ -2342,7 +2373,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                           ) : (
                             <span className={cn(
                               "text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border",
-                              app.moderation_status === 'accepted' ? "text-emerald-400 border-emerald-500/20 bg-emerald-500/5" : "text-red-400 border-red-500/20 bg-red-500/5"
+                              app.moderation_status === 'accepted' ? "text-emerald-600 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/5" : "text-red-600 dark:text-red-400 border-red-500/20 bg-red-500/5"
                             )}>
                               {app.moderation_status === 'accepted' ? t.report.communityPortal.foundersPortal.actions.accepted : t.report.communityPortal.foundersPortal.actions.rejected}
                             </span>
@@ -2359,7 +2390,7 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
           {/* Mobile Cards */}
           <div className="lg:hidden space-y-4">
             {applications.length === 0 ? (
-              <div className="p-12 text-center text-zinc-500 italic bg-zinc-900/50 border border-zinc-800 rounded-3xl">
+              <div className="p-12 text-center text-slate-400 dark:text-zinc-500 italic bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-3xl shadow-sm dark:shadow-none">
                 {t.report.communityPortal.foundersPortal.noApplications}
               </div>
             ) : (
@@ -2368,18 +2399,18 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                   key={app.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-3xl space-y-6"
+                  className="p-6 bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-3xl space-y-6 shadow-sm dark:shadow-none"
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="text-lg font-bold text-white">{app.name}</h3>
-                      <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">{app.status}</p>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">{app.name}</h3>
+                      <p className="text-[10px] text-slate-400 dark:text-zinc-500 uppercase tracking-widest mt-1">{app.status}</p>
                     </div>
                     <span className={cn(
                       "px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border",
-                      app.moderation_status === 'accepted' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : 
-                      app.moderation_status === 'rejected' ? "bg-red-500/10 text-red-400 border-red-500/20" : 
-                      "bg-zinc-800 text-zinc-500 border-zinc-700"
+                      app.moderation_status === 'accepted' ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : 
+                      app.moderation_status === 'rejected' ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : 
+                      "bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 border-slate-200 dark:border-zinc-700"
                     )}>
                       {app.moderation_status}
                     </span>
@@ -2387,16 +2418,16 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
 
                   <div className="grid grid-cols-2 gap-4 text-[11px]">
                     <div>
-                      <p className="text-zinc-600 uppercase tracking-widest font-bold mb-1">Email</p>
-                      <p className="text-zinc-300 font-mono break-all">{app.email}</p>
+                      <p className="text-slate-400 dark:text-zinc-600 uppercase tracking-widest font-bold mb-1">Email</p>
+                      <p className="text-slate-600 dark:text-zinc-300 font-mono break-all">{app.email}</p>
                     </div>
                     <div>
-                      <p className="text-zinc-600 uppercase tracking-widest font-bold mb-1">Role</p>
-                      <p className="text-zinc-300">{app.role}</p>
+                      <p className="text-slate-400 dark:text-zinc-600 uppercase tracking-widest font-bold mb-1">Role</p>
+                      <p className="text-slate-600 dark:text-zinc-300">{app.role}</p>
                     </div>
                   </div>
 
-                  <div className="p-4 bg-cyan-500/5 border border-cyan-500/10 rounded-2xl text-[11px] text-cyan-400 italic leading-relaxed">
+                  <div className="p-4 bg-cyan-500/5 border border-cyan-500/10 rounded-2xl text-[11px] text-cyan-600 dark:text-cyan-400 italic leading-relaxed">
                     <div className="flex items-center gap-2 mb-2">
                       <Bot size={14} />
                       <span className="font-bold uppercase tracking-widest">POWER Assessment</span>
@@ -2408,14 +2439,14 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                     <div className="flex gap-3 pt-2">
                       <button 
                         onClick={() => handleModeration(app.id, 'accepted')}
-                        className="flex-1 py-3 bg-emerald-500 text-zinc-950 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                        className="flex-1 py-3 bg-emerald-500 text-white dark:text-zinc-950 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
                       >
                         <Star size={14} fill="currentColor" />
                         {t.report.communityPortal.foundersPortal.actions.accept}
                       </button>
                       <button 
                         onClick={() => handleModeration(app.id, 'rejected')}
-                        className="w-12 h-12 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-zinc-950 rounded-xl transition-all border border-red-500/20 flex items-center justify-center"
+                        className="w-12 h-12 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white dark:hover:text-zinc-950 rounded-xl transition-all border border-red-500/20 flex items-center justify-center"
                       >
                         <X size={18} />
                       </button>
@@ -2428,9 +2459,9 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
         </div>
       ) : (
         members.length === 0 ? (
-          <div className="text-center py-20 bg-zinc-900/20 rounded-[3rem] border border-zinc-800/50">
-            <Users className="mx-auto text-zinc-700 mb-4" size={48} />
-            <p className="text-zinc-500 uppercase tracking-widest text-xs font-bold">Aucun membre trouvé ou chargement...</p>
+          <div className="text-center py-20 bg-slate-50 dark:bg-zinc-900/20 rounded-[3rem] border border-slate-200 dark:border-zinc-800/50 shadow-sm dark:shadow-none">
+            <Users className="mx-auto text-slate-300 dark:text-zinc-700 mb-4" size={48} />
+            <p className="text-slate-400 dark:text-zinc-500 uppercase tracking-widest text-xs font-bold">Aucun membre trouvé ou chargement...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -2439,32 +2470,32 @@ function FoundersPortal({ t, lang, onBack, members, onRefreshMembers }: {
                 key={member.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-zinc-900/50 border border-zinc-800 rounded-[2rem] p-6 relative overflow-hidden group"
+                className="bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-[2rem] p-6 relative overflow-hidden group shadow-sm dark:shadow-none"
               >
                 {member.is_founder === 1 && (
-                  <div className="absolute top-4 right-4 px-3 py-1 bg-cyan-500 text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full">
+                  <div className="absolute top-4 right-4 px-3 py-1 bg-cyan-500 text-white dark:text-zinc-950 text-[8px] font-black uppercase tracking-[0.2em] rounded-full">
                     {t.report.communityPortal.foundersPortal.members.founders}
                   </div>
                 )}
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-zinc-700">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-slate-100 dark:border-zinc-700">
                     <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white">{member.name}</h3>
-                    <p className="text-xs text-cyan-400 font-medium">{member.role}</p>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">{member.name}</h3>
+                    <p className="text-xs text-cyan-600 dark:text-cyan-400 font-medium">{member.role}</p>
                   </div>
                 </div>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-4 group-hover:line-clamp-none transition-all">
+                <p className="text-slate-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-4 group-hover:line-clamp-none transition-all">
                   {member.bio}
                 </p>
-                <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                  <span className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
+                <div className="pt-4 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+                  <span className="text-[10px] text-slate-400 dark:text-zinc-600 uppercase tracking-widest font-bold">
                     {t.report.communityPortal.foundersPortal.members.joined} {new Date(member.joined_at).toLocaleDateString()}
                   </span>
                   <div className="flex gap-2">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    {member.has_star === 1 && <Star size={14} className="text-amber-400" fill="currentColor" />}
+                    {member.has_star === 1 && <Star size={14} className="text-amber-500 dark:text-amber-400" fill="currentColor" />}
                   </div>
                 </div>
               </motion.div>

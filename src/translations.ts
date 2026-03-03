@@ -6,7 +6,11 @@ export const translations = {
       scrollInfo: "Faites défiler pour découvrir le projet",
       location: "Lieu",
       city: "Douala, Cameroun",
-      presentation: "Présentation Stratégique Interactive"
+      presentation: "Présentation Stratégique Interactive",
+      theme: {
+        light: "Mode Clair",
+        dark: "Mode Sombre"
+      }
     },
     chat: {
       welcome: "Bonjour ! Je suis l'assistant IA de PowerAi. Comment puis-je vous aider à découvrir notre vision aujourd'hui ?",
@@ -290,7 +294,11 @@ export const translations = {
       scrollInfo: "Scroll down to discover the project",
       location: "Location",
       city: "Douala, Cameroon",
-      presentation: "Interactive Strategic Presentation"
+      presentation: "Interactive Strategic Presentation",
+      theme: {
+        light: "Light Mode",
+        dark: "Dark Mode"
+      }
     },
     chat: {
       welcome: "Hello! I am the PowerAi AI assistant. How can I help you discover our vision today?",

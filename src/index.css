@@ -44,8 +44,26 @@
 }
 
 @layer base {
+  :root {
+    --bg-app: #f8fafc;
+    --text-app: #0f172a;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --accent-cyan: #06b6d4;
+  }
+
+  .dark {
+    --bg-app: #000000;
+    --text-app: #f4f4f5;
+    --card-bg: #09090b;
+    --card-border: #27272a;
+    --accent-cyan: #22d3ee;
+  }
+
   body {
-    @apply bg-black text-zinc-200 font-sans;
+    background-color: var(--bg-app);
+    color: var(--text-app);
+    @apply font-sans transition-colors duration-300;
   }
   
   h1, h2, h3, h4, h5, h6 {
