@@ -136,7 +136,7 @@ export function ProjectsSection({ t }: { t: any }) {
                                         style={{ padding: '0.6rem 1.4rem', fontSize: '0.85rem' }}
                                     >
                                         <span>🐙</span>
-                                        <span>View code on GitHub</span>
+                                        <span>{t.viewCode || 'View code on GitHub'}</span>
                                     </a>
                                     {project.colabUrl && (
                                         <a
@@ -146,7 +146,7 @@ export function ProjectsSection({ t }: { t: any }) {
                                             style={{ padding: '0.6rem 1.4rem', fontSize: '0.85rem' }}
                                         >
                                             <span>📓</span>
-                                            <span>View notebook</span>
+                                            <span>{t.viewNotebook || 'View notebook'}</span>
                                         </a>
                                     )}
                                 </div>
@@ -168,7 +168,7 @@ export function ProjectsSection({ t }: { t: any }) {
                         color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0,
                         fontFamily: 'Inter, sans-serif', lineHeight: 1.7, fontStyle: 'italic',
                     }}>
-                        📁 This portfolio shows a selection of my projects as a Level 3 math student. I have also worked on other small websites, PowerPoint projects and data experiments that are not all listed here yet.
+                        📁 {t.note?.replace('📁 ', '') || 'This portfolio shows a selection of my projects.'}
                     </p>
                 </div>
             </div>

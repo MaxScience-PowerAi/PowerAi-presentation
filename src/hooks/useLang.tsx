@@ -34,6 +34,11 @@ export function LangProvider({ children }: { children: ReactNode }) {
         if (!stored) setLangState(detectBrowserLang());
     }, []);
 
+    // Sync the html lang attribute for SEO and accessibility
+    useEffect(() => {
+        document.documentElement.lang = lang;
+    }, [lang]);
+
     return React.createElement(LangContext.Provider, { value: { lang, setLang } }, children);
 }
 

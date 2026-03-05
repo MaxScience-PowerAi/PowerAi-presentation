@@ -126,7 +126,7 @@ export function HeroSection({ t }: { t: any }) {
                     display: 'flex', flexWrap: 'wrap', gap: '0.5rem',
                     justifyContent: 'center', marginBottom: '1.5rem',
                 }}>
-                    {['🤖 AI Engineer', '📐 Math Student', '🌍 Douala, Cameroon', '🚀 PowerAi Co-founder'].map((tag, i) => (
+                    {(t.tags || []).map((tag: string, i: number) => (
                         <span key={tag} style={{
                             padding: '0.3rem 0.9rem', borderRadius: 9999,
                             fontSize: '0.8rem', fontWeight: 600,
@@ -161,7 +161,7 @@ export function HeroSection({ t }: { t: any }) {
                     marginBottom: '2.5rem',
                     fontFamily: 'Inter, sans-serif', fontStyle: 'italic',
                 }}>
-                    Looking for an internship in AI / Data Science and opportunities to build useful AI projects for Africa.
+                    {t.internship}
                 </p>
 
                 {/* CTA Buttons */}
@@ -231,7 +231,7 @@ export function HeroSection({ t }: { t: any }) {
                     color: 'var(--text-muted)', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase',
                     fontFamily: 'Inter, sans-serif',
                 }}>
-                    <span>Scroll to explore</span>
+                    <span>{t.scroll}</span>
                     <div style={{
                         width: 24, height: 38, border: '2px solid var(--border)',
                         borderRadius: 12, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '0.3rem',

@@ -92,8 +92,11 @@ export function ServicesSection({ t }: { t: ServicesT }) {
                             color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.7,
                             fontFamily: 'Inter, sans-serif', maxWidth: 620, margin: '1.5rem auto 0',
                         }}
-                        dangerouslySetInnerHTML={{ __html: t.pitch }}
-                    />
+                    >
+                        {t.pitch.split(/<strong>(.*?)<\/strong>/g).map((part: string, i: number) =>
+                            i % 2 === 1 ? <strong key={i}>{part}</strong> : <span key={i}>{part}</span>
+                        )}
+                    </p>
                 </div>
 
                 {/* Services Grid */}

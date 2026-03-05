@@ -124,7 +124,18 @@ export function SkillsSection({ t }: { t: any }) {
                         color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0,
                         fontFamily: 'Inter, sans-serif', lineHeight: 1.7, fontStyle: 'italic',
                     }}>
-                        ✨ These are my main skills, but I am <strong style={{ color: 'var(--color-foreground)' }}>continuously learning and exploring</strong> new tools and technologies every day.
+                        ✨ {t.note && t.noteHighlight
+                            ? t.note.split(t.noteHighlight).map((part: string, i: number) =>
+                                i === 0
+                                    ? <span key={i}>{part.replace('✨ ', '')}</span>
+                                    : <span key={i}>{part}</span>
+                            ).reduce((acc: any[], part: any, i: number) => {
+                                if (i > 0) acc.push(<strong key={`h${i}`} style={{ color: 'var(--color-foreground)' }}>{t.noteHighlight}</strong>);
+                                acc.push(part);
+                                return acc;
+                            }, [])
+                            : t.note
+                        }
                     </p>
                 </div>
             </div>

@@ -14,6 +14,9 @@ export const portfolioTranslations = {
             cta1: 'Voir mes projets',
             cta2: 'Me contacter',
             badge: 'Disponible pour un stage',
+            tags: ['🤖 Ingénieur IA', '📐 Étudiant en Maths', '🌍 Douala, Cameroun', '🚀 Co-fondateur PowerAi'],
+            internship: 'À la recherche d\'un stage en IA / Data Science et d\'opportunités pour créer des projets IA utiles pour l\'Afrique.',
+            scroll: 'Défiler pour explorer',
         },
         about: {
             tag: '01 · À propos',
@@ -42,11 +45,20 @@ export const portfolioTranslations = {
             langs: [
                 { flag: '🇬🇧', lang: 'Anglais', level: 'Courant' },
                 { flag: '🇫🇷', lang: 'Français', level: 'Courant' },
-            ]
+            ],
+            subtitle: 'Ingénieur IA · Douala 🇨🇲',
+            quickFacts: [
+                { icon: '🎓', label: 'Mathématiques L3', sub: 'Université de Douala' },
+                { icon: '📍', label: 'Douala, Cameroun', sub: 'Disponible à distance / sur site' },
+                { icon: '🚀', label: 'Co-fondateur', sub: 'Communauté PowerAi' },
+                { icon: '✝️', label: 'Guidé par la foi', sub: 'Dieu est mon moteur' },
+            ],
         },
         skills: {
             tag: '02 · Compétences',
             title: 'Mes compétences',
+            note: '✨ Ce sont mes compétences principales, mais j\'apprends et explore continuellement de nouveaux outils et technologies chaque jour.',
+            noteHighlight: 'apprends et explore continuellement',
             groups: [
                 { icon: '💻', title: 'Programmation', color: 'var(--color-brand-cyan)', skills: ['Python', 'HTML', 'CSS', 'JavaScript (bases)', 'Markdown'] },
                 { icon: '🤖', title: 'Data / IA', color: 'var(--color-brand-violet)', skills: ['TensorFlow', 'Keras', 'PyTorch', 'Transfer Learning', 'Deep Learning', 'Analyse de Données (Pandas, NumPy)'] },
@@ -110,6 +122,9 @@ export const portfolioTranslations = {
         projects: {
             tag: '03 · Projets',
             title: 'Mes projets',
+            viewCode: 'Voir le code sur GitHub',
+            viewNotebook: 'Voir le notebook',
+            note: '📁 Ce portfolio présente une sélection de mes projets en tant qu\'étudiant en Maths L3. J\'ai également travaillé sur d\'autres petits sites web, projets PowerPoint et expériences data qui ne sont pas encore tous listés ici.',
             items: [
                 {
                     id: 1,
@@ -176,9 +191,9 @@ export const portfolioTranslations = {
         footer: {
             tagline: 'Étudiant en maths, passionné d\'IA, développeur créatif depuis Douala, Cameroun. Toujours en train de construire, toujours en train d\'apprendre.',
             nav: 'Navigation',
+            navLinks: ['Accueil', 'À propos', 'Compétences', 'Projets'],
             socials: 'Réseaux',
             rights: 'Tous droits réservés.',
-            builtWith: 'Fait avec React & CSS',
         }
     },
 
@@ -195,6 +210,9 @@ export const portfolioTranslations = {
             cta1: 'View my projects',
             cta2: 'Contact me',
             badge: 'Open to internships',
+            tags: ['🤖 AI Engineer', '📐 Math Student', '🌍 Douala, Cameroon', '🚀 PowerAi Co-founder'],
+            internship: 'Looking for an internship in AI / Data Science and opportunities to build useful AI projects for Africa.',
+            scroll: 'Scroll to explore',
         },
         about: {
             tag: '01 · About',
@@ -223,11 +241,20 @@ export const portfolioTranslations = {
             langs: [
                 { flag: '🇬🇧', lang: 'English', level: 'Fluent' },
                 { flag: '🇫🇷', lang: 'French', level: 'Fluent' },
-            ]
+            ],
+            subtitle: 'AI Engineer · Douala 🇨🇲',
+            quickFacts: [
+                { icon: '🎓', label: 'Level 3 Mathematics', sub: 'University of Douala' },
+                { icon: '📍', label: 'Douala, Cameroon', sub: 'Available remote / on-site' },
+                { icon: '🚀', label: 'Co-founder', sub: 'PowerAi Community' },
+                { icon: '✝️', label: 'Faith-driven', sub: 'God is my engine' },
+            ],
         },
         skills: {
             tag: '02 · Skills',
             title: 'My skills',
+            note: '✨ These are my main skills, but I am continuously learning and exploring new tools and technologies every day.',
+            noteHighlight: 'continuously learning and exploring',
             groups: [
                 { icon: '💻', title: 'Programming', color: 'var(--color-brand-cyan)', skills: ['Python', 'HTML', 'CSS', 'JavaScript (basics)', 'Markdown'] },
                 { icon: '🤖', title: 'Data / AI', color: 'var(--color-brand-violet)', skills: ['TensorFlow', 'Keras', 'PyTorch', 'Transfer Learning', 'Deep Learning', 'Data Analysis (Pandas, NumPy)'] },
@@ -291,6 +318,9 @@ export const portfolioTranslations = {
         projects: {
             tag: '03 · Projects',
             title: 'My projects',
+            viewCode: 'View code on GitHub',
+            viewNotebook: 'View notebook',
+            note: '📁 This portfolio shows a selection of my projects as a Level 3 math student. I have also worked on other small websites, PowerPoint projects and data experiments that are not all listed here yet.',
             items: [
                 {
                     id: 1,
@@ -357,9 +387,9 @@ export const portfolioTranslations = {
         footer: {
             tagline: 'Math student, AI enthusiast, creative developer from Douala, Cameroon. Always building, always learning.',
             nav: 'Navigation',
+            navLinks: ['Home', 'About', 'Skills', 'Projects'],
             socials: 'Socials',
             rights: 'All rights reserved.',
-            builtWith: 'Built with React & CSS',
         }
     }
 };

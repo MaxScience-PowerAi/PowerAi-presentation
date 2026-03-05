@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface FooterT {
-    tagline: string; nav: string; socials: string; rights: string; builtWith: string;
+    tagline: string; nav: string; navLinks: string[]; socials: string; rights: string;
 }
 
 const scrollTo = (id: string) => {
@@ -56,21 +56,24 @@ export function PortfolioFooter({ t }: { t: FooterT }) {
                         <div>
                             <h4 style={{ color: 'var(--color-foreground)', fontWeight: 600, fontSize: '0.95rem', marginBottom: '1rem', fontFamily: 'Inter, sans-serif' }}>{t.nav}</h4>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                {['Home', 'About', 'Skills', 'Projects'].map(link => (
-                                    <button
-                                        key={link}
-                                        onClick={() => scrollTo(link.toLowerCase())}
-                                        style={{
-                                            background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
-                                            color: 'var(--text-muted)', fontSize: '0.9rem', fontFamily: 'Inter, sans-serif',
-                                            padding: 0, transition: 'color 0.2s',
-                                        }}
-                                        onMouseEnter={e => e.currentTarget.style.color = 'var(--color-brand-cyan)'}
-                                        onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-                                    >
-                                        {link}
-                                    </button>
-                                ))}
+                                {(t.navLinks || ['Home', 'About', 'Skills', 'Projects']).map((label: string, idx: number) => {
+                                    const ids = ['home', 'about', 'skills', 'projects'];
+                                    return (
+                                        <button
+                                            key={label}
+                                            onClick={() => scrollTo(ids[idx])}
+                                            style={{
+                                                background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
+                                                color: 'var(--text-muted)', fontSize: '0.9rem', fontFamily: 'Inter, sans-serif',
+                                                padding: 0, transition: 'color 0.2s',
+                                            }}
+                                            onMouseEnter={e => e.currentTarget.style.color = 'var(--color-brand-cyan)'}
+                                            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                                        >
+                                            {label}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -112,12 +115,6 @@ export function PortfolioFooter({ t }: { t: FooterT }) {
                         fontFamily: 'Inter, sans-serif', margin: 0,
                     }}>
                         © {currentYear} LINZE LOWE CHRIST MAXIME. {t.rights}
-                    </p>
-                    <p style={{
-                        color: 'var(--text-muted)', fontSize: '0.85rem',
-                        fontFamily: 'Inter, sans-serif', margin: 0,
-                    }}>
-                        {t.builtWith}
                     </p>
                 </div>
             </div>

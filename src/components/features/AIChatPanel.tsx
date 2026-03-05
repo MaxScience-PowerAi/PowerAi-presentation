@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Bot, Send, Loader2, Sparkles, User, RotateCcw } from 'lucide-react';
+import { X, Send, Loader2, User, RotateCcw } from 'lucide-react';
 
 interface ChatMessage {
     role: 'user' | 'assistant';
@@ -15,7 +15,7 @@ interface AIChatPanelProps {
     t: any;
 }
 
-const GEMINI_MODEL = "gemini-2.0-flash";
+// AI calls are proxied through the server — no API key in the client
 
 /** Render simple markdown: **bold**, newlines → <br /> */
 function renderMarkdown(text: string) {
@@ -86,23 +86,23 @@ export const AIChatPanel = ({ isOpen, onClose, lang, t }: AIChatPanelProps) => {
         setIsLoading(true);
 
         try {
-            const { GoogleGenAI } = await import('@google/genai');
-            const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || '';
-            const ai = new GoogleGenAI({ apiKey });
-
             const history = messages.map(m => ({
-                role: m.role === 'assistant' ? 'model' : 'user',
+                role: m.role === 'assistant' ? 'model' as const : 'user' as const,
                 parts: [{ text: m.content }],
             }));
 
-            const chat = ai.chats.create({
-                model: GEMINI_MODEL,
-                config: { systemInstruction: t.chat.systemInstruction },
-                history,
+            const resp = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userText,
+                    history,
+                    systemInstruction: t.chat.systemInstruction,
+                }),
             });
 
-            const response = await chat.sendMessage({ message: userText });
-            const assistantText = response.text?.trim() || t.chat.fallback;
+            const data = await resp.json();
+            const assistantText = data.text?.trim() || t.chat.fallback;
 
             setMessages(prev => [...prev, {
                 role: 'assistant',
@@ -159,8 +159,8 @@ export const AIChatPanel = ({ isOpen, onClose, lang, t }: AIChatPanelProps) => {
                             {/* Header */}
                             <div className="flex items-center gap-3 px-5 py-4 border-b border-cyan-500/20 bg-black/10 relative flex-shrink-0">
                                 <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 via-cyan-400 to-indigo-500 animate-[shine_2s_infinite]" />
-                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(34,211,238,0.5)] animate-pulse-slow">
-                                    <Sparkles size={18} className="text-white drop-shadow-md" />
+                                <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 shadow-[0_0_15px_rgba(34,211,238,0.5)] ring-2 ring-cyan-500/30">
+                                    <img src="/avatar.webp" alt="POWER AI" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="font-bold text-slate-900 dark:text-white text-sm drop-shadow-sm">{t.chat.bot}</p>
@@ -195,12 +195,12 @@ export const AIChatPanel = ({ isOpen, onClose, lang, t }: AIChatPanelProps) => {
                                             transition={{ duration: 0.25 }}
                                             className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
                                         >
-                                            <div className={`w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 ${msg.role === 'assistant'
-                                                ? 'bg-gradient-to-br from-cyan-500 to-purple-600 shadow-[0_0_10px_rgba(34,211,238,0.4)]'
+                                            <div className={`w-7 h-7 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0 mt-1 ${msg.role === 'assistant'
+                                                ? 'shadow-[0_0_10px_rgba(34,211,238,0.4)] ring-1 ring-cyan-500/30'
                                                 : 'glass dark:bg-white/10 border border-white/20'
                                                 }`}>
                                                 {msg.role === 'assistant'
-                                                    ? <Bot size={12} className="text-white" />
+                                                    ? <img src="/avatar.webp" alt="POWER" className="w-full h-full object-cover" />
                                                     : <User size={12} className="text-slate-600 dark:text-white" />
                                                 }
                                             </div>
@@ -225,8 +225,8 @@ export const AIChatPanel = ({ isOpen, onClose, lang, t }: AIChatPanelProps) => {
                                         exit={{ opacity: 0 }}
                                         className="flex gap-2"
                                     >
-                                        <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.4)] animate-pulse-slow">
-                                            <Bot size={12} className="text-white" />
+                                        <div className="w-7 h-7 rounded-xl overflow-hidden flex-shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.4)] ring-1 ring-cyan-500/30 animate-pulse-slow">
+                                            <img src="/avatar.webp" alt="POWER" className="w-full h-full object-cover" />
                                         </div>
                                         <div className="px-4 py-3.5 glass dark:bg-black/40 border border-cyan-500/20 rounded-2xl rounded-tl-sm flex items-center gap-1 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
                                             {[0, 1, 2].map(i => (

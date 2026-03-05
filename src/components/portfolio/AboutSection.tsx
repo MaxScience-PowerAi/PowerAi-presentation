@@ -67,7 +67,7 @@ export function AboutSection({ t }: { t: any }) {
                         <div style={{ position: 'relative', marginBottom: '0.5rem' }}>
                             <div className="avatar-ring" style={{ width: 'fit-content' }}>
                                 <img
-                                    src="/maxime.jpg"
+                                    src="/avatar.webp"
                                     alt="Christ Lowe – LINZE LOWE CHRIST MAXIME"
                                     style={{
                                         width: 240, height: 240, borderRadius: '50%',
@@ -102,18 +102,18 @@ export function AboutSection({ t }: { t: any }) {
                                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                             }}>Christ Lowe</div>
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontFamily: 'Inter, sans-serif', letterSpacing: '0.05em' }}>
-                                AI Engineer · Douala 🇨🇲
+                                {t.subtitle || 'AI Engineer · Douala 🇨🇲'}
                             </div>
                         </div>
 
                         {/* Quick facts card */}
                         <div className="glass-card" style={{ borderRadius: '1rem', padding: '1.25rem', width: '100%', background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
-                            {[
+                            {(t.quickFacts || [
                                 { icon: '🎓', label: 'Level 3 Mathematics', sub: 'University of Douala' },
                                 { icon: '📍', label: 'Douala, Cameroon', sub: 'Available remote / on-site' },
                                 { icon: '🚀', label: 'Co-founder', sub: 'PowerAi Community' },
                                 { icon: '✝️', label: 'Faith-driven', sub: 'God is my engine' },
-                            ].map(f => (
+                            ]).map((f: any) => (
                                 <div key={f.label} style={{
                                     display: 'flex', alignItems: 'center', gap: '0.75rem',
                                     padding: '0.65rem 0',
@@ -134,11 +134,11 @@ export function AboutSection({ t }: { t: any }) {
                         <p style={{
                             color: 'var(--color-text-muted)', fontSize: '1.05rem', lineHeight: 1.85,
                             fontFamily: 'Inter, sans-serif', margin: 0,
-                        }} dangerouslySetInnerHTML={{ __html: t.intro }} />
+                        }}>{t.intro}</p>
                         <p style={{
                             color: 'var(--color-text-muted)', fontSize: '1.05rem', lineHeight: 1.85,
                             fontFamily: 'Inter, sans-serif', margin: 0,
-                        }} dangerouslySetInnerHTML={{ __html: t.intro2 }} />
+                        }}>{t.intro2}</p>
 
                         {/* "What I'm looking for" card */}
                         <div style={{
