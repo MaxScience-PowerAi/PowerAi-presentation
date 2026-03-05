@@ -4,6 +4,9 @@ import Database from "better-sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,50 +60,83 @@ if (foundersCount.count === 0) {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT || 3000);
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:3000")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
-  // Enable CORS for all origins and allow specific headers
+  const founderPasswords = (process.env.FOUNDER_PASSWORDS || "")
+    .split(",")
+    .map((password) => password.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (founderPasswords.length === 0) {
+    throw new Error("Missing FOUNDER_PASSWORDS environment variable. Refusing to start with insecure defaults.");
+  }
+
+  // Restrictive CORS configuration (explicit allowlist)
   app.use(cors({
-    origin: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error("CORS blocked for origin"));
+    },
     credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-founders-password', 'Accept', 'Origin']
+    methods: ["GET", "POST", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-founders-password", "Accept", "Origin"]
   }));
 
-  app.use(express.json());
+  app.use(express.json({ limit: "30kb" }));
 
-  const FOUNDER_PASSWORDS = [
-    "PowerAi_Founders_2026!".toLowerCase(),
-    "PowerAi Founders 2026!".toLowerCase(),
-    "PowerAi_Founders_2026".toLowerCase(),
-    "PowerAi Founders 2026".toLowerCase(),
-    "powerai2026",
-    "powerai",
-    "admin"
-  ];
+  const isValidEmail = (value: string) => /^\S+@\S+\.\S+$/.test(value);
+  const normalizeText = (value: unknown, maxLength: number) => {
+    if (typeof value !== "string") return "";
+    return value.trim().slice(0, maxLength);
+  };
+
+  const normalizeApplicationPayload = (payload: any) => {
+    const candidate = {
+      name: normalizeText(payload?.name, 120),
+      email: normalizeText(payload?.email, 200),
+      role: normalizeText(payload?.role, 120),
+      status: normalizeText(payload?.status, 300),
+      understanding: normalizeText(payload?.understanding, 2000),
+      contribution: normalizeText(payload?.contribution, 2000),
+      ai_assessment: normalizeText(payload?.ai_assessment, 1000),
+    };
+
+    if (!candidate.name || !candidate.email || !candidate.role) {
+      return { error: "Missing required fields" };
+    }
+
+    if (!isValidEmail(candidate.email)) {
+      return { error: "Invalid email format" };
+    }
+
+    return { value: candidate };
+  };
 
   const checkPassword = (req: express.Request) => {
     const headerPassword = (req.headers["x-founders-password"] as string)?.trim().toLowerCase();
     const bodyPassword = req.body?.password?.trim().toLowerCase();
-    const queryPassword = (req.query?.password as string)?.trim().toLowerCase();
 
-    const provided = bodyPassword || headerPassword || queryPassword;
+    const provided = bodyPassword || headerPassword;
     if (!provided) return false;
 
-    const isMatch = FOUNDER_PASSWORDS.includes(provided);
-
-    if (!isMatch) {
-      console.warn(`[AUTH] Failed login attempt. Provided: "${provided}" (length: ${provided.length})`);
-    } else {
-      console.log(`[AUTH] Successful login with password: "${provided}"`);
-    }
-
-    return isMatch;
+    return founderPasswords.includes(provided);
   };
 
   // API Routes
   app.post("/api/applications", (req, res) => {
-    const { name, email, role, status, understanding, contribution, ai_assessment } = req.body;
+    const result = normalizeApplicationPayload(req.body);
+    if (result.error || !result.value) {
+      return res.status(400).json({ error: result.error || "Invalid payload" });
+    }
+
+    const { name, email, role, status, understanding, contribution, ai_assessment } = result.value;
     try {
       const stmt = db.prepare(`
         INSERT INTO applications (name, email, role, status, understanding, contribution, ai_assessment)
@@ -116,13 +152,20 @@ async function startServer() {
 
   app.patch("/api/applications/:id", (req, res) => {
     if (!checkPassword(req)) {
-      const provided = req.body?.password || req.headers["x-founders-password"];
-      console.warn(`Unauthorized moderation attempt with password: ${provided}`);
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { id } = req.params;
+    const { id: idParam } = req.params;
     const { moderation_status } = req.body;
+    const id = Number(idParam);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({ error: "Invalid application id" });
+    }
+
+    if (moderation_status !== "accepted" && moderation_status !== "rejected") {
+      return res.status(400).json({ error: "Invalid moderation_status" });
+    }
 
     try {
       const updateStmt = db.prepare("UPDATE applications SET moderation_status = ? WHERE id = ?");
@@ -164,8 +207,6 @@ async function startServer() {
         res.status(500).json({ error: "Failed to fetch applications" });
       }
     } else {
-      const provided = req.body?.password || req.headers["x-founders-password"];
-      console.warn(`Unauthorized login attempt with password: ${provided}`);
       res.status(401).json({ error: "Unauthorized" });
     }
   });

@@ -21,7 +21,7 @@ const GEMINI_MODEL = "gemini-2.0-flash";
 
 async function getAI() {
     const { GoogleGenAI } = await import("@google/genai");
-    const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || (window as any).process?.env?.GEMINI_API_KEY || '';
+    const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY || '';
     return new GoogleGenAI({ apiKey });
 }
 

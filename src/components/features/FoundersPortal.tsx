@@ -58,9 +58,9 @@ export const FoundersPortal = ({ t, lang, onBack, theme }: FoundersPortalProps) 
     const [moderating, setModerating] = useState<number | null>(null);
     const [storedPassword, setStoredPassword] = useState('');
 
-    // Try auto-login from localStorage on mount
+    // Try auto-login from sessionStorage on mount
     useEffect(() => {
-        const saved = localStorage.getItem('powerai_founder_key') || '';
+        const saved = sessionStorage.getItem('powerai_founder_key') || '';
         if (saved) {
             setPassword(saved);
             setStoredPassword(saved);
@@ -82,10 +82,10 @@ export const FoundersPortal = ({ t, lang, onBack, theme }: FoundersPortalProps) 
                 const data = await resp.json();
                 setApplications(data.applications || []);
                 setIsAuthorized(true);
-                localStorage.setItem('powerai_founder_key', pass.trim());
+                sessionStorage.setItem('powerai_founder_key', pass.trim());
                 fetchMembers();
             } else {
-                localStorage.removeItem('powerai_founder_key');
+                sessionStorage.removeItem('powerai_founder_key');
                 setLoginError(t.report.communityPortal.foundersPortal.error);
             }
         } catch {
@@ -139,7 +139,7 @@ export const FoundersPortal = ({ t, lang, onBack, theme }: FoundersPortalProps) 
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('powerai_founder_key');
+        sessionStorage.removeItem('powerai_founder_key');
         setIsAuthorized(false);
         setPassword('');
         setStoredPassword('');
