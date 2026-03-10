@@ -54,7 +54,7 @@ export function SkillsSection({ t }: { t: any }) {
                 >
                     {(t.groups || []).map((group: any, gi: number) => (
                         <motion.div
-                            key={group.title}
+                            key={gi}
                             variants={fadeUp}
                             className="glass-card relative overflow-hidden group p-8 flex flex-col h-full border-t flex-1"
                             style={{ borderTopColor: group.color ? `${group.color}40` : 'var(--border)' }}
@@ -82,9 +82,9 @@ export function SkillsSection({ t }: { t: any }) {
 
                             {/* Skills tags */}
                             <div className="flex flex-wrap gap-2.5 flex-1 content-start">
-                                {group.skills.map((skill: string) => (
+                                {group.skills.map((skill: string, si: number) => (
                                     <span
-                                        key={skill}
+                                        key={si}
                                         className="inline-block px-3 py-1.5 rounded-lg bg-surface-hover border border-border/50 text-foreground text-xs font-semibold font-body transition-colors hover:border-brand-cyan/50 hover:text-brand-cyan cursor-default"
                                     >
                                         {skill}

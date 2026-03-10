@@ -27,7 +27,7 @@ export const SplitText = ({ text, className = "", delay = 0 }: SplitTextProps) =
     };
 
     return (
-        <motion.div
+        <motion.span
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
@@ -39,12 +39,13 @@ export const SplitText = ({ text, className = "", delay = 0 }: SplitTextProps) =
                     },
                 },
             }}
+            key={text}
             className={`inline-block ${className}`}
             style={{ perspective: "1000px" }}
         >
             {items.map((item, index) => (
                 <motion.span
-                    key={`${item}-${index}`}
+                    key={index}
                     variants={itemVariants}
                     className="inline-block"
                     style={{ whiteSpace: item === " " ? "pre" : "normal" }}
@@ -52,6 +53,6 @@ export const SplitText = ({ text, className = "", delay = 0 }: SplitTextProps) =
                     {item}{!isShort && index < items.length - 1 ? "\u00A0" : ""}
                 </motion.span>
             ))}
-        </motion.div>
+        </motion.span>
     );
 };

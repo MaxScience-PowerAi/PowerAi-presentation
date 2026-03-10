@@ -73,7 +73,7 @@ export function JourneySection({ t }: { t: JourneyT }) {
                         className="flex flex-col gap-12 relative"
                     >
                         {t.items.map((item, i) => (
-                            <ReflectionCard key={item.title} item={item} index={i} />
+                            <ReflectionCard key={i} item={item} index={i} />
                         ))}
                     </motion.div>
                 </div>

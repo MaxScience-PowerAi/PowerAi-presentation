@@ -8,8 +8,8 @@ export const portfolioTranslations = {
             lightMode: 'Mode clair', darkMode: 'Mode sombre',
         },
         hero: {
-            greeting_base: 'Salut, Je suis',
-            greeting_full: 'Salut, Je suis Christ Lowe',
+            greeting_base: 'Salut, je suis',
+            greeting_full: 'Salut, je suis Christ Lowe',
             role: 'Etudiant en Mathematiques et Ingenieur IA en devenir',
             sub: 'Co-fondateur de PowerAi - Douala, Cameroun',
             cta1: 'Voir mes projets',

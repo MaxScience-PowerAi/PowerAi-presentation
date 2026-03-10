@@ -81,8 +81,8 @@ export function ProjectsSection({ t }: { t: any }) {
 
                                 {/* Tech stack */}
                                 <div className="flex flex-wrap gap-2.5 mb-10">
-                                    {project.tech.map((t: string) => (
-                                        <span key={t} className="px-3 py-1.5 bg-surface rounded-lg border border-border/50 text-foreground text-xs font-semibold font-body">
+                                    {project.tech.map((t: string, i: number) => (
+                                        <span key={i} className="px-3 py-1.5 bg-surface rounded-lg border border-border/50 text-foreground text-xs font-semibold font-body">
                                             {t}
                                         </span>
                                     ))}

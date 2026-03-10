@@ -74,7 +74,7 @@ export function ServicesSection({ t }: { t: ServicesT }) {
                 >
                     {t.items.map((service, i) => {
                         const colors = CARD_COLORS[i % CARD_COLORS.length];
-                        return <ServiceCard key={service.title} service={service} colors={colors} />;
+                        return <ServiceCard key={i} service={service} colors={colors} />;
                     })}
                 </motion.div>
 
@@ -154,9 +154,9 @@ function ServiceCard({ service, colors }: {
                 </Magnetic>
 
                 <div className="flex flex-wrap gap-2 justify-end">
-                    {service.audiences.map(aud => (
+                    {service.audiences.map((aud, i) => (
                         <span
-                            key={aud}
+                            key={i}
                             className="text-[0.68rem] font-bold font-body px-2.5 py-1 rounded-full uppercase tracking-wider border"
                             style={{
                                 backgroundColor: `${AUDIENCE_COLORS[aud] || 'var(--color-brand-cyan)'}15`,
@@ -181,9 +181,9 @@ function ServiceCard({ service, colors }: {
                     {service.desc}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-auto">
-                    {service.tags.map(tag => (
+                    {service.tags.map((tag, i) => (
                         <span
-                            key={tag}
+                            key={i}
                             className="text-xs font-semibold font-body px-3 py-1.5 rounded-lg bg-surface border border-border/50 text-muted"
                         >
                             {tag}

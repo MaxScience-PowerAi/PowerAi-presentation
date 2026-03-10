@@ -36,6 +36,7 @@ export function HeroSection({ t }: { t: any }) {
             <div className="container-xl relative z-10 text-center max-w-4xl px-4 flex flex-col items-center">
 
                 <motion.div
+                    key={t.greeting_base}
                     variants={staggerContainer}
                     initial="hidden"
                     animate="visible"
@@ -55,9 +56,12 @@ export function HeroSection({ t }: { t: any }) {
                     <motion.div variants={fadeUp} className="mb-4">
                         <h1 className="font-heading font-black text-5xl sm:text-6xl md:text-[5.5rem] leading-[1.05] tracking-tight text-foreground flex flex-wrap justify-center items-end gap-x-4">
                             <SplitText text={t.greeting_base} className="" delay={0.8} />
-                            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 text-transparent bg-clip-text animate-shimmer bg-[length:200%_auto] pb-1">
-                                <SplitText text="Christ Lowe" className="" delay={1.2} />
-                            </span>
+                            <motion.span
+                                variants={fadeUp}
+                                className="bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 text-transparent bg-clip-text animate-shimmer bg-[length:200%_auto] pb-1"
+                            >
+                                Christ Lowe
+                            </motion.span>
                         </h1>
                     </motion.div>
 
@@ -69,7 +73,7 @@ export function HeroSection({ t }: { t: any }) {
                     {/* Tags */}
                     <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-3 mb-8">
                         {(t.tags || []).map((tag: string, i: number) => (
-                            <span key={tag} className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold font-body bg-white/5 border border-white/10 text-muted backdrop-blur-sm">
+                            <span key={i} className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold font-body bg-white/5 border border-white/10 text-muted backdrop-blur-sm">
                                 {tag}
                             </span>
                         ))}
