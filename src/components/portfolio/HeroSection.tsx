@@ -56,12 +56,13 @@ export function HeroSection({ t }: { t: any }) {
                     <motion.div variants={fadeUp} className="mb-4">
                         <h1 className="font-heading font-black text-5xl sm:text-6xl md:text-[5.5rem] leading-[1.05] tracking-tight text-foreground flex flex-wrap justify-center items-end gap-x-4">
                             <SplitText text={t.greeting_base} className="" delay={0.8} />
-                            <motion.span
-                                variants={fadeUp}
-                                className="bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 text-transparent bg-clip-text animate-shimmer bg-[length:200%_auto] pb-1"
-                            >
-                                Christ Lowe
-                            </motion.span>
+                            <div className="pb-1 inline-block">
+                                <SplitText
+                                    text="Christ Lowe"
+                                    delay={1.2}
+                                    itemClassName="bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 text-transparent bg-clip-text animate-shimmer bg-[length:200%_auto] inline-block"
+                                />
+                            </div>
                         </h1>
                     </motion.div>
 

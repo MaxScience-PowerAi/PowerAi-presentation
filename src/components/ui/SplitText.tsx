@@ -3,10 +3,11 @@ import { motion } from 'framer-motion';
 interface SplitTextProps {
     text: string;
     className?: string;
+    itemClassName?: string;
     delay?: number;
 }
 
-export const SplitText = ({ text, className = "", delay = 0 }: SplitTextProps) => {
+export const SplitText = ({ text, className = "", itemClassName = "", delay = 0 }: SplitTextProps) => {
     // If text is very short (like a name), we use character animation.
     // Otherwise, we use word animation for performance.
     const isShort = text.length < 20;
@@ -47,7 +48,7 @@ export const SplitText = ({ text, className = "", delay = 0 }: SplitTextProps) =
                 <motion.span
                     key={index}
                     variants={itemVariants}
-                    className="inline-block"
+                    className={`inline-block ${itemClassName}`}
                     style={{ whiteSpace: item === " " ? "pre" : "normal" }}
                 >
                     {item}{!isShort && index < items.length - 1 ? "\u00A0" : ""}
