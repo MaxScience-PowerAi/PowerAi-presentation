@@ -10,7 +10,7 @@ export const portfolioTranslations = {
         hero: {
             greeting_base: 'Salut, je suis',
             greeting_full: 'Salut, je suis Christ Lowe',
-            role: 'Etudiant en Mathematiques et Ingenieur IA en devenir',
+            role: 'Étudiant en Mathématiques, Praticien en IA, Data Scientist (Compétiteur Kaggle) & AI Generalist',
             sub: 'Co-fondateur de PowerAi - Douala, Cameroun',
             cta1: 'Voir mes projets',
             cta2: 'Me contacter',
@@ -145,7 +145,7 @@ export const portfolioTranslations = {
         journey: {
             tag: '05 · Parcours & Réflexion',
             title: 'Mon parcours & ma réflexion',
-            intro: `En parallèle de mes projets, je prends le temps de réfléchir à ce que j'apprends — sur la data, l'IA, mais aussi sur <strong>moi-même</strong> en tant qu'étudiant et futur ingénieur.`,
+            intro: `En parallèle de mes projets, je prends le temps de réfléchir à ce que j'apprends — sur la data, l'IA, mais aussi sur <strong>moi-même</strong> en tant qu'ingénieur en IA.`,
             quote: '« Je peux tout faire par Christ qui me fortifie. »',
             quoteRef: 'Philippiens 4:13 · La force derrière chaque ligne de code.',
             items: [
@@ -175,7 +175,7 @@ export const portfolioTranslations = {
                     tag: 'Objectifs & Ambitions',
                     title: 'Mes prochains horizons',
                     body: "Je cible un stage en data science ou IA, de nouveaux projets (NLP, Computer Vision), des rencontres avec des mentors, et je continue à faire grandir notre communauté. Chaque jour est une brique de plus.",
-                    lesson: '💡 Vision : Devenir un ingénieur IA qui construit des solutions pour l\'Afrique et pour le monde.',
+                    lesson: '💡 Vision : Bâtir des solutions d\'IA innovantes pour l\'Afrique et pour le monde.',
                 },
             ],
         },
@@ -209,7 +209,7 @@ export const portfolioTranslations = {
         hero: {
             greeting_base: "Hi, I'm",
             greeting_full: "Hi, I'm Christ Lowe",
-            role: 'Mathematics Student & Aspiring AI Engineer',
+            role: 'Mathematics Student, AI Practitioner, Data Scientist (Kaggle Competitor) & AI Generalist',
             sub: 'Co-founder of PowerAi · Douala, Cameroon',
             cta1: 'View my projects',
             cta2: 'Contact me',
@@ -344,7 +344,7 @@ export const portfolioTranslations = {
         journey: {
             tag: '05 · Journey & Reflection',
             title: 'My journey & reflections',
-            intro: `Alongside my projects, I take time to reflect on what I learn — about data, AI, but also about <strong>myself</strong> as a student and future engineer.`,
+            intro: `Alongside my projects, I take time to reflect on what I learn — about data, AI, but also about <strong>myself</strong> as an AI engineer.`,
             quote: '"I can do all things through Christ who strengthens me."',
             quoteRef: 'Philippians 4:13 · The power behind every line of code.',
             items: [
@@ -374,7 +374,7 @@ export const portfolioTranslations = {
                     tag: 'Goals & Ambitions',
                     title: 'My next horizons',
                     body: "I'm targeting a data science or AI internship, new projects (NLP, Computer Vision), meetings with mentors, and continuing to grow our community. Every day is another brick in the building.",
-                    lesson: "💡 Vision: Become an AI engineer building solutions for Africa and the world.",
+                    lesson: "💡 Vision: Build innovative AI solutions for Africa and the world.",
                 },
             ],
         },
