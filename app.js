@@ -1,10 +1,9 @@
 // Mock Data
 const DOC_TYPES = [
-    { id: 'cni', label: 'Carte d\'Identité (CNI)', reward: 5000 },
-    { id: 'passport', label: 'Passeport', reward: 10000 },
-    { id: 'driving_license', label: 'Permis de Conduire', reward: 5000 },
-    { id: 'diploma', label: 'Diplôme', reward: 5000 },
-    { id: 'other', label: 'Autre Document', reward: 'variable' }
+    { id: 'cni', label: 'CNI / Passeport', reward: 2100 },
+    { id: 'actes', label: 'Actes Officiels', reward: 1600 },
+    { id: 'student', label: 'Carte Étudiant / Badge', reward: 550 },
+    { id: 'other', label: 'Titres de Haute Valeur', reward: 'variable' }
 ];
 
 const foundItems = [
@@ -21,10 +20,10 @@ const missingPersons = [
 // Reusable SVG string for chat bubbles
 const logoSVG = `
 <svg viewBox="0 0 100 100" class="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="100" rx="20" fill="#059669" />
-    <path d="M50 20C33.4 20 20 33.4 20 50C20 66.6 33.4 80 50 80C66.6 80 80 66.6 80 50C80 33.4 66.6 20 50 20ZM50 72C37.8 72 28 62.2 28 50C28 37.8 37.8 28 50 28C62.2 28 72 37.8 72 50C72 62.2 62.2 72 50 72Z" fill="white" />
-    <path d="M50 35C41.7 35 35 41.7 35 50C35 58.3 41.7 65 50 65C58.3 65 65 58.3 65 50C65 41.7 58.3 35 50 35ZM50 57C46.1 57 43 53.9 43 50C43 46.1 46.1 43 50 43C53.9 43 57 46.1 57 50C57 53.9 53.9 57 50 57Z" fill="white" />
-    <circle cx="50" cy="50" r="4" fill="#10B981" />
+    <path d="M 30 10 L 30 80 Q 30 90 40 90 L 40 10 Z" fill="#0A192F" />
+    <path d="M 30 10 C 60 -10, 80 10, 70 35 C 60 60, 40 50, 40 50 L 30 40 Z" fill="#E11D48" />
+    <path d="M 45 55 L 75 85 Q 85 95 70 100 L 40 70 Z" fill="#FACC15" />
+    <circle cx="45" cy="55" r="10" fill="#059669" />
 </svg>`;
 
 // State
@@ -97,14 +96,14 @@ function switchMode(mode, targetAppTab = 'docs') {
             }, 50);
 
             // Toggle Navs
-            navVitrine.classList.add('hidden');
-            navApp.classList.remove('hidden');
-            navApp.classList.add('flex');
+            navVitrine?.classList.add('hidden');
+            navApp?.classList.remove('hidden');
+            navApp?.classList.add('flex');
 
-            mobNavVitrine.classList.add('hidden');
-            mobNavApp.classList.remove('hidden');
+            mobNavVitrine?.classList.add('hidden');
+            mobNavApp?.classList.remove('hidden');
 
-            headerCta.classList.add('hidden'); // Hide CTA in app mode
+            headerCta?.classList.add('hidden'); // Hide CTA in app mode
 
             navigateApp(targetAppTab);
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -127,14 +126,14 @@ function switchMode(mode, targetAppTab = 'docs') {
             }, 50);
 
             // Toggle Navs
-            navApp.classList.add('hidden');
-            navApp.classList.remove('flex');
-            navVitrine.classList.remove('hidden');
+            navApp?.classList.add('hidden');
+            navApp?.classList.remove('flex');
+            navVitrine?.classList.remove('hidden');
 
-            mobNavApp.classList.add('hidden');
-            mobNavVitrine.classList.remove('hidden');
+            mobNavApp?.classList.add('hidden');
+            mobNavVitrine?.classList.remove('hidden');
 
-            headerCta.classList.remove('hidden');
+            headerCta?.classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 300);
     }
