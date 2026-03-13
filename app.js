@@ -1,9 +1,15 @@
 // Mock Data
 const DOC_TYPES = [
-    { id: 'cni', label: 'CNI / Passeport', reward: 2100 },
+    { id: 'cni', label: 'Carte d\'Identité (CNI)', reward: 2100 },
+    { id: 'passport', label: 'Passeport', reward: 2100 },
     { id: 'actes', label: 'Actes Officiels', reward: 1600 },
-    { id: 'student', label: 'Carte Étudiant / Badge', reward: 550 },
-    { id: 'other', label: 'Titres de Haute Valeur', reward: 'variable' }
+    { id: 'student', label: 'Carte Étudiant', reward: 550 },
+    { id: 'driving_license', label: 'Permis / Badge', reward: 550 },
+    { id: 'other', label: 'Autre Document', reward: 'variable' }
+];
+
+const QUARTIERS_RELAIS = [
+    'Mokolo', 'Bastos', 'Bonanjo', 'Akwa', 'Deido', 'Mvan', 'Bonamoussadi'
 ];
 
 const foundItems = [
@@ -325,7 +331,22 @@ function renderChat() {
             `;
             setTimeout(() => advanceChat(2), 2000); // Simulate API call
         } else {
-            const rewardText = docType.reward === 'variable' ? 'Montant libre' : `${docType.reward} FCFA`;
+            let rewardHtml = '';
+            if (docType.reward === 'variable') {
+                rewardHtml = `
+                    <p>Ce document est de type <strong>Haute Valeur (Autre)</strong>.</p>
+                    <p class="mt-2 text-xs text-slate-500 border-t pt-2 leading-relaxed">
+                        <strong>Rappel de facturation :</strong> Vous définissez votre propre offre. <br/>
+                        Répartition = (Offre / 2) pour l'Agence et le Samaritain. +100 FCFA de frais techniques.
+                    </p>
+                `;
+            } else {
+                rewardHtml = `
+                    <p>Le montant à régler pour ce document est de <strong>${docType.reward} FCFA</strong>.</p>
+                    <p class="mt-2 text-xs text-slate-500 border-t pt-2">Rappel: Le montant est réparti entre le Samaritain, l'Agence et les frais techniques.</p>
+                `;
+            }
+
             container.innerHTML += `
                 <div class="flex gap-3 animate-fade-in">
                     <div class="bg-emerald-100 p-2 rounded-full h-10 w-10 flex items-center justify-center shrink-0">${logoSVG}</div>
@@ -333,8 +354,7 @@ function renderChat() {
                         <p class="text-emerald-600 font-bold flex items-center gap-2 mb-2">
                             <i class="ph ph-shield-check"></i> Identité vérifiée !
                         </p>
-                        <p>La récompense pour ce document est de <strong>${rewardText}</strong>.</p>
-                        <p class="mt-2 text-xs text-slate-500 border-t pt-2">Rappel: 50% au citoyen, 50% au relais.</p>
+                        ${rewardHtml}
                     </div>
                 </div>
             `;
